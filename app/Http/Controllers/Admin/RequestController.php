@@ -32,16 +32,22 @@ class RequestController extends Controller
 
     public function accept(Request $request, NodeRequest $nodeRequest)
     {
-        $request->validate([
+        $validated = $request->validate([
             'admin_note' => 'nullable|string|max:500',
+            'sort_order' => 'nullable|integer|min:1',
         ]);
 
         if ($nodeRequest->node_id && ($node = Node::find($nodeRequest->node_id))) {
-            $node->update(['status' => 'active']);
+            $updateData = ['status' => 'active'];
+            if (!empty($validated['sort_order'])) {
+                $updateData['sort_order'] = (int) $validated['sort_order'];
+            }
+            $node->update($updateData);
         } else {
             // Fallback: Create the node if not created yet
             $parent = Node::find($nodeRequest->parent_node_id);
             $level  = $parent ? $parent->level + 1 : 0;
+            $sortOrder = !empty($validated['sort_order']) ? (int) $validated['sort_order'] : ($nodeRequest->sort_order ?: 1);
 
             $node = Node::create([
                 'parent_id'   => $nodeRequest->parent_node_id,
@@ -55,6 +61,7 @@ class RequestController extends Controller
                 'deskripsi'   => $nodeRequest->deskripsi,
                 'status'      => 'active',
                 'level'       => $level,
+                'sort_order'  => $sortOrder,
             ]);
 
             if ($nodeRequest->gender === 'male' && $nodeRequest->spouse_name) {

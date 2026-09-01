@@ -42,6 +42,7 @@ class NodeRequestController extends Controller
             'tahun_wafat'     => 'nullable|string|max:10',
             'foto'            => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'deskripsi'       => 'nullable|string|max:1000',
+            'anak_ke'         => 'nullable|integer|min:1',
             // Spouse (only if male)
             'spouse_name'     => 'nullable|string|max:255',
             'spouse_marga'    => 'nullable|string|max:100',
@@ -56,9 +57,16 @@ class NodeRequestController extends Controller
             $validated['foto'] = $request->file('foto')->store('requests', 'public');
         }
 
-        // Create pending Node so it appears on the tree structure (greyed out)
+        // Determine sort order (birth order position)
         $parent = Node::find($validated['parent_node_id']);
         $level  = $parent ? $parent->level + 1 : 0;
+
+        if (!empty($validated['anak_ke'])) {
+            $sortOrder = (int) $validated['anak_ke'];
+        } else {
+            $existingSiblings = Node::where('parent_id', $validated['parent_node_id'])->count();
+            $sortOrder = $existingSiblings + 1;
+        }
 
         $pendingNode = Node::create([
             'parent_id'   => $validated['parent_node_id'],
@@ -72,6 +80,7 @@ class NodeRequestController extends Controller
             'deskripsi'   => $validated['deskripsi'] ?? null,
             'status'      => 'pending',
             'level'       => $level,
+            'sort_order'  => $sortOrder,
         ]);
 
         if ($validated['gender'] === 'male' && !empty($validated['spouse_name'])) {
@@ -82,7 +91,8 @@ class NodeRequestController extends Controller
             ]);
         }
 
-        $validated['node_id'] = $pendingNode->id;
+        $validated['node_id']    = $pendingNode->id;
+        $validated['sort_order'] = $sortOrder;
         $nodeRequest = NodeRequest::create($validated);
 
         // Send confirmation email

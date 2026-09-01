@@ -12,6 +12,7 @@ const form = useForm({
     name: '',
     gender: 'male',
     marga: '',
+    anak_ke: '',
     asal_daerah: '',
     tahun_lahir: '',
     tahun_wafat: '',
@@ -135,11 +136,19 @@ const levelLabel = (level) => {
                             </div>
                         </div>
 
-                        <!-- Marga -->
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-1.5">Marga</label>
-                            <input v-model="form.marga" type="text" placeholder="Contoh: Simanjuntak, Siregar, dll"
-                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                        <!-- Marga & Anak ke -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-400 text-sm mb-1.5">Marga</label>
+                                <input v-model="form.marga" type="text" placeholder="Contoh: Simanjuntak, Siregar, dll"
+                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 text-sm mb-1.5">Anak ke- (Urutan Kelahiran)</label>
+                                <input v-model="form.anak_ke" type="number" min="1" placeholder="Contoh: 1 (Sulung/Tertua)"
+                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                <p class="text-gray-500 text-xs mt-1">Anak ke-1 posisi paling kiri, ke-2 di sebelahnya, dst.</p>
+                            </div>
                         </div>
                     </div>
 

@@ -21,6 +21,7 @@ const form = useForm({
     foto:        null,
     deskripsi:   props.node?.deskripsi  || '',
     status:      props.node?.status     || 'active',
+    sort_order:  props.node?.sort_order  || 1,
     spouses: props.node?.spouses?.map(s => ({
         name: s.name, marga: s.marga || '', deskripsi: s.deskripsi || '',
     })) || [],
@@ -87,8 +88,8 @@ const submit = () => {
                         <div v-if="form.errors.name" class="text-red-400 text-xs mt-1">{{ form.errors.name }}</div>
                     </div>
 
-                    <!-- Gender & Status -->
-                    <div class="grid grid-cols-2 gap-4">
+                    <!-- Gender, Status & Sort Order -->
+                    <div class="grid grid-cols-3 gap-4">
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">Gender <span class="text-red-400">*</span></label>
                             <select v-model="form.gender"
@@ -104,6 +105,11 @@ const submit = () => {
                                 <option value="active">✅ Aktif</option>
                                 <option value="pending">⏳ Pending</option>
                             </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm mb-1.5">Urutan Posisi (Sort Order)</label>
+                            <input v-model="form.sort_order" type="number" min="1" required
+                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors"/>
                         </div>
                     </div>
 

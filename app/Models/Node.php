@@ -20,10 +20,12 @@ class Node extends Model
         'deskripsi',
         'status',
         'level',
+        'sort_order',
     ];
 
     protected $casts = [
         'level' => 'integer',
+        'sort_order' => 'integer',
     ];
 
     // Relationships
@@ -34,17 +36,25 @@ class Node extends Model
 
     public function activeChildren(): HasMany
     {
-        return $this->hasMany(Node::class, 'parent_id')->where('status', 'active');
+        return $this->hasMany(Node::class, 'parent_id')
+            ->where('status', 'active')
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('id', 'asc');
     }
 
     public function children(): HasMany
     {
-        return $this->hasMany(Node::class, 'parent_id')->whereIn('status', ['active', 'pending']);
+        return $this->hasMany(Node::class, 'parent_id')
+            ->whereIn('status', ['active', 'pending'])
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('id', 'asc');
     }
 
     public function allChildren(): HasMany
     {
-        return $this->hasMany(Node::class, 'parent_id');
+        return $this->hasMany(Node::class, 'parent_id')
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('id', 'asc');
     }
 
     public function spouses(): HasMany

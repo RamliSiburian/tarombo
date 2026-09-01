@@ -53,6 +53,7 @@ class NodeController extends Controller
             'foto'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'deskripsi'   => 'nullable|string|max:1000',
             'status'      => 'required|in:active,pending',
+            'sort_order'  => 'nullable|integer|min:1',
             // Spouses
             'spouses'         => 'nullable|array',
             'spouses.*.name'  => 'required|string|max:255',
@@ -60,13 +61,18 @@ class NodeController extends Controller
             'spouses.*.deskripsi' => 'nullable|string|max:1000',
         ]);
 
-        // Calculate level
+        // Calculate level & sort order
         $level = 0;
         if (!empty($validated['parent_id'])) {
             $parent = Node::find($validated['parent_id']);
             $level  = $parent ? $parent->level + 1 : 0;
         }
         $validated['level'] = $level;
+
+        if (empty($validated['sort_order'])) {
+            $siblingCount = Node::where('parent_id', $validated['parent_id'])->count();
+            $validated['sort_order'] = $siblingCount + 1;
+        }
 
         // Handle photo
         if ($request->hasFile('foto')) {
@@ -116,6 +122,7 @@ class NodeController extends Controller
             'foto'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'deskripsi'   => 'nullable|string|max:1000',
             'status'      => 'required|in:active,pending',
+            'sort_order'  => 'nullable|integer|min:1',
             'spouses'     => 'nullable|array',
             'spouses.*.name'      => 'required|string|max:255',
             'spouses.*.marga'     => 'nullable|string|max:100',

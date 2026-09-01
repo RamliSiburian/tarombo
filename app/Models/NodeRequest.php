@@ -24,6 +24,8 @@ class NodeRequest extends Model
         'spouse_deskripsi',
         'requester_name',
         'requester_email',
+        'anak_ke',
+        'sort_order',
         'status',
         'admin_note',
         'reviewed_by',
@@ -31,6 +33,8 @@ class NodeRequest extends Model
     ];
 
     protected $casts = [
+        'anak_ke' => 'integer',
+        'sort_order' => 'integer',
         'reviewed_at' => 'datetime',
     ];
 

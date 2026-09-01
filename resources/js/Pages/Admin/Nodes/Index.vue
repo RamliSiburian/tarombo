@@ -84,9 +84,14 @@ const levelBadge = (l) => ['Gen 1', 'Gen 2', 'Gen 3', 'Gen 4', 'Gen 5', 'Gen 6']
                             <span class="text-gray-400 text-sm">{{ node.parent?.name || '— (Root)' }}</span>
                         </td>
                         <td class="px-4 py-3">
-                            <span class="text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded-full">
-                                {{ levelBadge(node.level) }}
-                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded-full">
+                                    {{ levelBadge(node.level) }}
+                                </span>
+                                <span v-if="node.sort_order" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full" title="Posisi/Urutan Anak">
+                                    Anak ke-{{ node.sort_order }}
+                                </span>
+                            </div>
                         </td>
                         <td class="px-4 py-3">
                             <span v-if="node.spouses?.length > 0" class="text-xs text-pink-400">

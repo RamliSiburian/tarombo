@@ -12,7 +12,7 @@ const props = defineProps({
 const activeStatus = ref(props.filters?.status || 'pending');
 const rejectModal = ref(null);
 const acceptModal = ref(null);
-const noteForm = useForm({ admin_note: '' });
+const noteForm = useForm({ admin_note: '', sort_order: 1 });
 
 const setStatus = (s) => {
     activeStatus.value = s;
@@ -22,6 +22,7 @@ const setStatus = (s) => {
 const openAccept = (req) => {
     acceptModal.value = req;
     noteForm.admin_note = '';
+    noteForm.sort_order = req.sort_order || req.anak_ke || 1;
 };
 
 const openReject = (req) => {
@@ -102,6 +103,9 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                             <span v-if="req.marga" class="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
                                 Marga {{ req.marga }}
                             </span>
+                            <span v-if="req.anak_ke || req.sort_order" class="text-xs text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-full">
+                                Anak ke-{{ req.anak_ke || req.sort_order }}
+                            </span>
                         </div>
 
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-1 text-xs text-gray-500 mb-3">
@@ -177,6 +181,12 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                     Anda akan menyetujui request dari <strong class="text-white">{{ acceptModal.name }}</strong> untuk bergabung di bawah <strong class="text-white">{{ acceptModal.parent_node?.name }}</strong>.
                     Data akan otomatis muncul di pohon silsilah publik.
                 </p>
+                <div class="mb-4">
+                    <label class="block text-gray-400 text-sm mb-1.5">Urutan Posisi Anak (1 = Paling Kiri / Sulung)</label>
+                    <input v-model="noteForm.sort_order" type="number" min="1" required
+                           class="w-full bg-gray-800 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-500/40 transition-colors"/>
+                    <p class="text-gray-500 text-xs mt-1">Anak ke-1 berada di posisi paling kiri di bawah induknya.</p>
+                </div>
                 <div class="mb-4">
                     <label class="block text-gray-400 text-sm mb-1.5">Catatan untuk pemohon (opsional)</label>
                     <textarea v-model="noteForm.admin_note" rows="2" placeholder="Catatan atau pesan untuk pemohon..."
