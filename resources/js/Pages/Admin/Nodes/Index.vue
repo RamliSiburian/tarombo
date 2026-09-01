@@ -9,12 +9,18 @@ const props = defineProps({
 });
 
 const search = ref(props.filters?.search || '');
+const activeStatus = ref(props.filters?.status || 'active');
 let searchTimeout = null;
+
+const setStatus = (s) => {
+    activeStatus.value = s;
+    router.get(route('admin.nodes.index'), { search: search.value, status: s }, { preserveState: true, replace: true });
+};
 
 const doSearch = () => {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
-        router.get(route('admin.nodes.index'), { search: search.value }, { preserveState: true, replace: true });
+        router.get(route('admin.nodes.index'), { search: search.value, status: activeStatus.value }, { preserveState: true, replace: true });
     }, 400);
 };
 
@@ -23,6 +29,12 @@ const deleteNode = (node) => {
         router.delete(route('admin.nodes.destroy', node.id));
     }
 };
+
+const statusTabs = [
+    { key: 'active', label: 'Aktif (Sudah ACC)', icon: '✅' },
+    { key: 'pending', label: 'Belum ACC (Pending)', icon: '⏳' },
+    { key: 'all', label: 'Semua', icon: '📋' },
+];
 
 const genderIcon = (g) => g === 'female' ? '👩' : '👨';
 const levelBadge = (l) => ['Gen 1', 'Gen 2', 'Gen 3', 'Gen 4', 'Gen 5', 'Gen 6'][l] || `Gen ${l + 1}`;
@@ -34,7 +46,7 @@ const levelBadge = (l) => ['Gen 1', 'Gen 2', 'Gen 3', 'Gen 4', 'Gen 5', 'Gen 6']
         <template #title>Kelola Node Silsilah</template>
 
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
             <div class="flex-1 max-w-sm">
                 <div class="flex items-center gap-2 bg-gray-900 border border-white/10 rounded-xl px-3 py-2.5">
                     <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,6 +60,14 @@ const levelBadge = (l) => ['Gen 1', 'Gen 2', 'Gen 3', 'Gen 4', 'Gen 5', 'Gen 6']
                   class="bg-amber-500 hover:bg-amber-400 text-gray-900 font-semibold text-sm px-4 py-2.5 rounded-xl transition-colors flex items-center gap-2 whitespace-nowrap">
                 ➕ Tambah Node
             </Link>
+        </div>
+
+        <!-- Filter Status Tabs -->
+        <div class="flex gap-1 mb-6 bg-gray-900 border border-white/5 p-1 rounded-xl w-fit">
+            <button v-for="tab in statusTabs" :key="tab.key" @click="setStatus(tab.key)"
+                    :class="['px-4 py-2 rounded-lg text-sm font-medium transition-all', activeStatus === tab.key ? 'bg-amber-500 text-gray-900' : 'text-gray-400 hover:text-white']">
+                {{ tab.icon }} {{ tab.label }}
+            </button>
         </div>
 
         <!-- Table -->

@@ -12,17 +12,26 @@ class NodeController extends Controller
 {
     public function index(Request $request)
     {
+        $status = $request->get('status', 'active');
+
         $nodes = Node::with(['parent', 'spouses'])
-            ->when($request->search, fn($q) => $q->where('name', 'like', "%{$request->search}%")
-                ->orWhere('marga', 'like', "%{$request->search}%"))
+            ->when($status !== 'all', fn($q) => $q->where('status', $status))
+            ->when($request->search, fn($q) => $q->where(function ($sub) use ($request) {
+                $sub->where('name', 'like', "%{$request->search}%")
+                    ->orWhere('marga', 'like', "%{$request->search}%");
+            }))
             ->orderBy('level')
+            ->orderBy('sort_order')
             ->orderBy('name')
             ->paginate(10)
             ->withQueryString();
 
         return Inertia::render('Admin/Nodes/Index', [
             'nodes'   => $nodes,
-            'filters' => $request->only(['search']),
+            'filters' => [
+                'search' => $request->search,
+                'status' => $status,
+            ],
         ]);
     }
 
@@ -129,11 +138,8 @@ class NodeController extends Controller
             'spouses.*.deskripsi' => 'nullable|string|max:1000',
         ]);
 
-        // Recalculate level if parent changed
-        if (isset($validated['parent_id']) && $validated['parent_id'] != $node->parent_id) {
-            $parent = Node::find($validated['parent_id']);
-            $validated['level'] = $parent ? $parent->level + 1 : 0;
-        }
+        // Parent ID is fixed for existing node
+        $validated['parent_id'] = $node->parent_id;
 
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('nodes', 'public');

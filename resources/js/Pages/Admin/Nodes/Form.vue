@@ -42,9 +42,11 @@ const removeSpouse = (i) => form.spouses.splice(i, 1);
 
 const submit = () => {
     if (isEdit.value) {
-        form.post(route('admin.nodes.update', props.node.id), {
-            forceFormData: true,
+        form.transform((data) => ({
+            ...data,
             _method: 'PUT',
+        })).post(route('admin.nodes.update', props.node.id), {
+            forceFormData: true,
         });
     } else {
         form.post(route('admin.nodes.store'), { forceFormData: true });
@@ -71,13 +73,14 @@ const submit = () => {
                     <!-- Parent -->
                     <div>
                         <label class="block text-gray-400 text-sm mb-1.5">Parent (Induk)</label>
-                        <select v-model="form.parent_id"
-                                class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors">
+                        <select v-model="form.parent_id" :disabled="isEdit"
+                                :class="['w-full border rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors', isEdit ? 'bg-gray-800/50 text-gray-400 border-white/5 cursor-not-allowed' : 'bg-gray-800 text-white border-white/10 focus:border-amber-500/50']">
                             <option value="">— Tidak ada (root) —</option>
                             <option v-for="p in parents" :key="p.id" :value="p.id">
                                 {{ p.name }} {{ p.marga ? `(${p.marga})` : '' }}
                             </option>
                         </select>
+                        <p v-if="isEdit" class="text-gray-500 text-xs mt-1">⚠️ Parent (Induk) tidak dapat diubah pada mode edit.</p>
                     </div>
 
                     <!-- Name -->
