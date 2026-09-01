@@ -3,7 +3,7 @@ defineProps({
     node: { type: Object, default: null },
 });
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'exportLineage']);
 
 const formatYear = (year) => year || '—';
 const genderLabel = (gender) => gender === 'female' ? '♀ Perempuan' : '♂ Laki-laki';
@@ -94,8 +94,12 @@ const genderClass = (gender) => gender === 'female' ? 'text-pink-400 bg-pink-500
             </div>
 
             <!-- Footer -->
-            <div class="p-4 border-t border-white/10">
-                <p class="text-gray-600 text-xs text-center">Klik di luar panel atau tekan × untuk menutup</p>
+            <div class="p-4 border-t border-white/10 space-y-2">
+                <button @click="emit('exportLineage')"
+                        class="w-full py-2.5 px-4 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 font-semibold text-xs rounded-xl flex items-center justify-center gap-2 transition-colors">
+                    <span>📥 Export Garis Leluhur Node Ini</span>
+                </button>
+                <p class="text-gray-600 text-[11px] text-center">Klik di luar panel atau tekan × untuk menutup</p>
             </div>
         </div>
 

@@ -311,7 +311,15 @@ onUnmounted(() => {
     window.removeEventListener('resize', buildTree);
 });
 
-defineExpose({ zoomIn, zoomOut, resetView, centerOnNode });
+function getSvgElement() {
+    return svgRef.value;
+}
+
+function getHighlightedIds() {
+    return highlightedIds.value;
+}
+
+defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, getSvgElement, getHighlightedIds });
 </script>
 
 <template>

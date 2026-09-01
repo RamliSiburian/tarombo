@@ -1,10 +1,11 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import TreeCanvas from '@/Components/TreeCanvas.vue';
 import NodeDetail from '@/Components/NodeDetail.vue';
 import SearchBar from '@/Components/SearchBar.vue';
+import ExportModal from '@/Components/ExportModal.vue';
 
 const props = defineProps({
     tree: Object,
@@ -15,6 +16,10 @@ const selectedNode = ref(null);
 const searchHighlightId = ref(null);
 const treeRef = ref(null);
 const panelOpen = ref(false);
+const showExportModal = ref(false);
+
+const svgElement = computed(() => treeRef.value?.getSvgElement());
+const ancestorIds = computed(() => treeRef.value?.getHighlightedIds());
 
 const onNodeClick = (node) => {
     selectedNode.value = node;
@@ -82,9 +87,16 @@ const closePanel = () => {
                     </div>
                 </div>
 
-                <!-- Search Bar -->
-                <div class="max-w-md mx-auto">
-                    <SearchBar @select="onSearch" />
+                <!-- Search & Export Bar -->
+                <div class="flex items-center justify-center gap-3 max-w-lg mx-auto">
+                    <div class="flex-1">
+                        <SearchBar @select="onSearch" />
+                    </div>
+                    <button @click="showExportModal = true"
+                            type="button"
+                            class="h-11 px-4 bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-200 hover:text-white rounded-xl font-semibold text-sm transition-all flex items-center gap-2 shadow-lg backdrop-blur-sm whitespace-nowrap">
+                        <span>📥 Export Silsilah</span>
+                    </button>
                 </div>
             </div>
 
@@ -109,10 +121,20 @@ const closePanel = () => {
                 >
                     <div v-if="panelOpen"
                          class="absolute right-4 top-0 bottom-4 w-[340px] md:w-[360px] bg-gray-900/95 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden shadow-2xl z-20">
-                        <NodeDetail :node="selectedNode" @close="closePanel" />
+                        <NodeDetail :node="selectedNode" @close="closePanel" @export-lineage="showExportModal = true" />
                     </div>
                 </transition>
             </div>
+
+            <!-- Export Modal -->
+            <ExportModal
+                :show="showExportModal"
+                :tree="tree"
+                :selected-node="selectedNode"
+                :ancestor-ids="ancestorIds"
+                :svg-element="svgElement"
+                @close="showExportModal = false"
+            />
 
             <!-- Empty State -->
             <div v-if="!tree" class="flex flex-col items-center justify-center py-24 text-center px-4">
