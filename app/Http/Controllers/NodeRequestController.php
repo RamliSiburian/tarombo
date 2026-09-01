@@ -56,6 +56,33 @@ class NodeRequestController extends Controller
             $validated['foto'] = $request->file('foto')->store('requests', 'public');
         }
 
+        // Create pending Node so it appears on the tree structure (greyed out)
+        $parent = Node::find($validated['parent_node_id']);
+        $level  = $parent ? $parent->level + 1 : 0;
+
+        $pendingNode = Node::create([
+            'parent_id'   => $validated['parent_node_id'],
+            'name'        => $validated['name'],
+            'gender'      => $validated['gender'],
+            'marga'       => $validated['marga'],
+            'asal_daerah' => $validated['asal_daerah'] ?? null,
+            'tahun_lahir' => $validated['tahun_lahir'] ?? null,
+            'tahun_wafat' => $validated['tahun_wafat'] ?? null,
+            'foto'        => $validated['foto'] ?? null,
+            'deskripsi'   => $validated['deskripsi'] ?? null,
+            'status'      => 'pending',
+            'level'       => $level,
+        ]);
+
+        if ($validated['gender'] === 'male' && !empty($validated['spouse_name'])) {
+            $pendingNode->spouses()->create([
+                'name'      => $validated['spouse_name'],
+                'marga'     => $validated['spouse_marga'] ?? null,
+                'deskripsi' => $validated['spouse_deskripsi'] ?? null,
+            ]);
+        }
+
+        $validated['node_id'] = $pendingNode->id;
         $nodeRequest = NodeRequest::create($validated);
 
         // Send confirmation email

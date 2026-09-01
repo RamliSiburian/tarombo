@@ -32,9 +32,14 @@ class Node extends Model
         return $this->belongsTo(Node::class, 'parent_id');
     }
 
-    public function children(): HasMany
+    public function activeChildren(): HasMany
     {
         return $this->hasMany(Node::class, 'parent_id')->where('status', 'active');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Node::class, 'parent_id')->whereIn('status', ['active', 'pending']);
     }
 
     public function allChildren(): HasMany

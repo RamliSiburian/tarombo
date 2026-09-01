@@ -36,32 +36,37 @@ class RequestController extends Controller
             'admin_note' => 'nullable|string|max:500',
         ]);
 
-        // Create the node from request data
-        $parent = Node::find($nodeRequest->parent_node_id);
-        $level  = $parent ? $parent->level + 1 : 0;
+        if ($nodeRequest->node_id && ($node = Node::find($nodeRequest->node_id))) {
+            $node->update(['status' => 'active']);
+        } else {
+            // Fallback: Create the node if not created yet
+            $parent = Node::find($nodeRequest->parent_node_id);
+            $level  = $parent ? $parent->level + 1 : 0;
 
-        $node = Node::create([
-            'parent_id'   => $nodeRequest->parent_node_id,
-            'name'        => $nodeRequest->name,
-            'gender'      => $nodeRequest->gender,
-            'marga'       => $nodeRequest->marga,
-            'asal_daerah' => $nodeRequest->asal_daerah,
-            'tahun_lahir' => $nodeRequest->tahun_lahir,
-            'tahun_wafat' => $nodeRequest->tahun_wafat,
-            'foto'        => $nodeRequest->foto,
-            'deskripsi'   => $nodeRequest->deskripsi,
-            'status'      => 'active',
-            'level'       => $level,
-        ]);
-
-        // Create spouse if male and spouse data provided
-        if ($nodeRequest->gender === 'male' && $nodeRequest->spouse_name) {
-            $node->spouses()->create([
-                'name'       => $nodeRequest->spouse_name,
-                'marga'      => $nodeRequest->spouse_marga,
-                'foto'       => $nodeRequest->spouse_foto,
-                'deskripsi'  => $nodeRequest->spouse_deskripsi,
+            $node = Node::create([
+                'parent_id'   => $nodeRequest->parent_node_id,
+                'name'        => $nodeRequest->name,
+                'gender'      => $nodeRequest->gender,
+                'marga'       => $nodeRequest->marga,
+                'asal_daerah' => $nodeRequest->asal_daerah,
+                'tahun_lahir' => $nodeRequest->tahun_lahir,
+                'tahun_wafat' => $nodeRequest->tahun_wafat,
+                'foto'        => $nodeRequest->foto,
+                'deskripsi'   => $nodeRequest->deskripsi,
+                'status'      => 'active',
+                'level'       => $level,
             ]);
+
+            if ($nodeRequest->gender === 'male' && $nodeRequest->spouse_name) {
+                $node->spouses()->create([
+                    'name'       => $nodeRequest->spouse_name,
+                    'marga'      => $nodeRequest->spouse_marga,
+                    'foto'       => $nodeRequest->spouse_foto,
+                    'deskripsi'  => $nodeRequest->spouse_deskripsi,
+                ]);
+            }
+
+            $nodeRequest->update(['node_id' => $node->id]);
         }
 
         // Update request status
@@ -88,9 +93,14 @@ class RequestController extends Controller
             'admin_note' => 'nullable|string|max:500',
         ]);
 
-        // Store note before deleting
+        // Store note before updating
         $requesterEmail = $nodeRequest->requester_email;
         $requesterName  = $nodeRequest->requester_name;
+
+        // If a pending node was created for this request, delete it from the tree
+        if ($nodeRequest->node_id && ($node = Node::find($nodeRequest->node_id))) {
+            $node->delete();
+        }
 
         $nodeRequest->update([
             'status'      => 'rejected',

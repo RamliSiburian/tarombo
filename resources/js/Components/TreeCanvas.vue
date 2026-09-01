@@ -85,20 +85,24 @@ function updateHighlights() {
     svgElement.selectAll('.node-card')
         .transition().duration(300)
         .attr('stroke', d => {
+            if (d.data.status === 'pending') return '#64748b';
             if (d.data.id === selectedNodeId.value) return '#f59e0b';
             if (highlightedIds.value.has(d.data.id)) return '#a78bfa';
             return d.data.gender === 'female' ? '#f472b6' : '#6366f1';
         })
         .attr('stroke-width', d => {
+            if (d.data.status === 'pending') return 1.5;
             if (d.data.id === selectedNodeId.value || highlightedIds.value.has(d.data.id)) return 2;
             return 1;
         })
         .attr('fill', d => {
+            if (d.data.status === 'pending') return '#1e293b';
             if (d.data.id === selectedNodeId.value) return '#451a03';
             if (highlightedIds.value.has(d.data.id)) return '#1e1b4b';
             return d.data.gender === 'female' ? '#1f0a16' : '#0f0f23';
         })
         .attr('opacity', d => {
+            if (d.data.status === 'pending') return 0.6;
             if (highlightedIds.value.size === 0) return 1;
             return highlightedIds.value.has(d.data.id) ? 1 : 0.35;
         });
@@ -163,8 +167,11 @@ function buildTree() {
         .append('g')
         .attr('class', 'tree-node')
         .attr('transform', d => `translate(${d.x},${d.y})`)
-        .style('cursor', 'pointer')
-        .on('click', (event, d) => onNodeClick(d.data));
+        .style('cursor', d => d.data.status === 'pending' ? 'not-allowed' : 'pointer')
+        .on('click', (event, d) => {
+            if (d.data.status === 'pending') return;
+            onNodeClick(d.data);
+        });
 
     // Node card background
     nodeEnter.append('rect')
@@ -175,23 +182,34 @@ function buildTree() {
         .attr('height', NODE_HEIGHT)
         .attr('rx', 10)
         .attr('ry', 10)
-        .attr('fill', d => d.data.gender === 'female' ? '#1f0a16' : '#0f0f23')
-        .attr('stroke', d => d.data.gender === 'female' ? '#f472b6' : '#6366f1')
-        .attr('stroke-width', 1)
-        .style('filter', 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))');
+        .attr('fill', d => {
+            if (d.data.status === 'pending') return '#1e293b';
+            return d.data.gender === 'female' ? '#1f0a16' : '#0f0f23';
+        })
+        .attr('stroke', d => {
+            if (d.data.status === 'pending') return '#64748b';
+            return d.data.gender === 'female' ? '#f472b6' : '#6366f1';
+        })
+        .attr('stroke-width', d => d.data.status === 'pending' ? 1.5 : 1)
+        .attr('stroke-dasharray', d => d.data.status === 'pending' ? '4 4' : 'none')
+        .attr('opacity', d => d.data.status === 'pending' ? 0.6 : 1)
+        .style('filter', d => d.data.status === 'pending' ? 'none' : 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))');
 
     // Gender indicator dot
     nodeEnter.append('circle')
         .attr('cx', NODE_WIDTH / 2 - 12)
         .attr('cy', -NODE_HEIGHT / 2 + 10)
         .attr('r', 5)
-        .attr('fill', d => d.data.gender === 'female' ? '#ec4899' : '#818cf8');
+        .attr('fill', d => {
+            if (d.data.status === 'pending') return '#64748b';
+            return d.data.gender === 'female' ? '#ec4899' : '#818cf8';
+        });
 
     // Node name
     nodeEnter.append('text')
         .attr('text-anchor', 'middle')
         .attr('dy', d => d.data.marga ? '-8' : '5')
-        .attr('fill', '#f1f5f9')
+        .attr('fill', d => d.data.status === 'pending' ? '#94a3b8' : '#f1f5f9')
         .attr('font-size', '12px')
         .attr('font-weight', '600')
         .attr('font-family', 'Inter, sans-serif')
@@ -205,13 +223,24 @@ function buildTree() {
         .append('text')
         .attr('text-anchor', 'middle')
         .attr('dy', '10')
-        .attr('fill', '#94a3b8')
+        .attr('fill', d => d.data.status === 'pending' ? '#64748b' : '#94a3b8')
         .attr('font-size', '10px')
         .attr('font-family', 'Inter, sans-serif')
         .text(d => `Marga ${d.data.marga}`);
 
+    // Pending status badge label
+    nodeEnter.filter(d => d.data.status === 'pending')
+        .append('text')
+        .attr('text-anchor', 'middle')
+        .attr('x', 0)
+        .attr('y', NODE_HEIGHT / 2 - 6)
+        .attr('fill', '#94a3b8')
+        .attr('font-size', '9px')
+        .attr('font-style', 'italic')
+        .text('⏳ Belum Aktif');
+
     // Children count badge
-    nodeEnter.filter(d => d.data.gender === 'male' && d.data.children_recursive?.length > 0)
+    nodeEnter.filter(d => d.data.status !== 'pending' && d.data.gender === 'male' && d.data.children_recursive?.length > 0)
         .append('text')
         .attr('text-anchor', 'middle')
         .attr('x', 0)
@@ -223,12 +252,14 @@ function buildTree() {
     // Hover effect
     nodeEnter
         .on('mouseenter', function(event, d) {
+            if (d.data.status === 'pending') return;
             d3.select(this).select('.node-card')
                 .transition().duration(150)
                 .attr('stroke-width', 2)
                 .style('filter', 'drop-shadow(0 6px 20px rgba(99,102,241,0.4))');
         })
         .on('mouseleave', function(event, d) {
+            if (d.data.status === 'pending') return;
             d3.select(this).select('.node-card')
                 .transition().duration(150)
                 .attr('stroke-width', highlightedIds.value.has(d.data.id) ? 2 : 1)
@@ -340,6 +371,10 @@ defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, getSvgElement, getHighl
         <!-- Legend -->
         <div class="absolute bottom-4 left-4 z-10 bg-gray-900/80 backdrop-blur-sm border border-white/10 rounded-xl p-3 text-xs space-y-1.5">
             <div class="text-gray-400 font-medium mb-2">Legenda</div>
+            <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-slate-500 border border-dashed border-slate-300"></div>
+                <span class="text-gray-300">Belum Aktif (Menunggu ACC)</span>
+            </div>
             <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-indigo-500"></div>
                 <span class="text-gray-300">Laki-laki (ada keturunan)</span>

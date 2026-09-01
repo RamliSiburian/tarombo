@@ -111,13 +111,18 @@ const levelBadge = (l) => ['Gen 1', 'Gen 2', 'Gen 3', 'Gen 4', 'Gen 5', 'Gen 6']
             </table>
 
             <!-- Pagination -->
-            <div v-if="nodes.links?.length > 3" class="px-5 py-3 border-t border-white/5 flex items-center gap-1">
-                <template v-for="link in nodes.links" :key="link.label">
-                    <Link v-if="link.url" :href="link.url"
-                          :class="['px-3 py-1.5 rounded-lg text-xs transition-colors', link.active ? 'bg-amber-500 text-gray-900 font-semibold' : 'text-gray-400 hover:text-white hover:bg-white/5']"
-                          v-html="link.label" />
-                    <span v-else class="px-3 py-1.5 text-xs text-gray-700" v-html="link.label"></span>
-                </template>
+            <div v-if="nodes.total > 0" class="px-5 py-4 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="text-xs text-gray-400">
+                    Menampilkan <span class="font-medium text-white">{{ nodes.from || 0 }}</span> - <span class="font-medium text-white">{{ nodes.to || 0 }}</span> dari <span class="font-medium text-white">{{ nodes.total }}</span> node (10 per halaman)
+                </div>
+                <div v-if="nodes.links?.length > 3" class="flex items-center gap-1">
+                    <template v-for="(link, key) in nodes.links" :key="key">
+                        <Link v-if="link.url" :href="link.url"
+                              :class="['px-3 py-1.5 rounded-lg text-xs transition-colors', link.active ? 'bg-amber-500 text-gray-900 font-semibold' : 'text-gray-400 hover:text-white hover:bg-white/5']"
+                              v-html="link.label" />
+                        <span v-else class="px-3 py-1.5 text-xs text-gray-700" v-html="link.label"></span>
+                    </template>
+                </div>
             </div>
         </div>
     </AdminLayout>

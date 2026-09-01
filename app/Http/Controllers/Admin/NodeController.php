@@ -17,7 +17,7 @@ class NodeController extends Controller
                 ->orWhere('marga', 'like', "%{$request->search}%"))
             ->orderBy('level')
             ->orderBy('name')
-            ->paginate(20)
+            ->paginate(10)
             ->withQueryString();
 
         return Inertia::render('Admin/Nodes/Index', [

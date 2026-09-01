@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class NodeRequest extends Model
 {
     protected $fillable = [
+        'node_id',
         'parent_node_id',
         'name',
         'gender',
@@ -32,6 +33,11 @@ class NodeRequest extends Model
     protected $casts = [
         'reviewed_at' => 'datetime',
     ];
+
+    public function node(): BelongsTo
+    {
+        return $this->belongsTo(Node::class, 'node_id');
+    }
 
     public function parentNode(): BelongsTo
     {
