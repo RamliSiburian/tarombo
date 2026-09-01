@@ -33,67 +33,74 @@ const submit = () => {
     <GuestLayout>
         <Head title="Log in" />
 
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+        <div class="mb-6 text-center">
+            <h2 class="text-xl font-bold text-white tracking-tight">Masuk Admin Panel</h2>
+            <p class="text-xs text-gray-400 mt-1">Silakan masuk menggunakan akun pengelola Tarombo</p>
+        </div>
+
+        <div v-if="status" class="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-400">
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="space-y-4">
             <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
+                <label for="email" class="block text-xs font-medium text-gray-300 mb-1.5">Alamat Email</label>
+                <input
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="w-full px-4 py-2.5 bg-gray-950/60 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
                     v-model="form.email"
+                    placeholder="nama@email.com"
                     required
                     autofocus
                     autocomplete="username"
                 />
-
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-1.5" :message="form.errors.email" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
+            <div>
+                <label for="password" class="block text-xs font-medium text-gray-300 mb-1.5">Kata Sandi</label>
+                <input
                     id="password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="w-full px-4 py-2.5 bg-gray-950/60 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
                     v-model="form.password"
+                    placeholder="••••••••"
                     required
                     autocomplete="current-password"
                 />
-
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError class="mt-1.5" :message="form.errors.password" />
             </div>
 
-            <div class="mt-4 block">
-                <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600"
-                        >Remember me</span
-                    >
+            <div class="flex items-center justify-between pt-1">
+                <label class="flex items-center cursor-pointer">
+                    <input
+                        type="checkbox"
+                        v-model="form.remember"
+                        class="rounded border-white/20 bg-gray-950 text-amber-500 focus:ring-amber-500 focus:ring-offset-gray-900"
+                    />
+                    <span class="ms-2 text-xs text-gray-400">Ingat saya</span>
                 </label>
-            </div>
 
-            <div class="mt-4 flex items-center justify-end">
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    class="text-xs text-gray-400 hover:text-amber-400 transition-colors"
                 >
-                    Forgot your password?
+                    Lupa kata sandi?
                 </Link>
+            </div>
 
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
+            <div class="pt-2">
+                <button
+                    type="submit"
+                    class="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-bold text-sm rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2"
+                    :class="{ 'opacity-50 cursor-not-allowed': form.processing }"
                     :disabled="form.processing"
                 >
-                    Log in
-                </PrimaryButton>
+                    <span v-if="form.processing" class="animate-spin text-base">⏳</span>
+                    <span>Masuk ke Admin Panel</span>
+                </button>
             </div>
         </form>
     </GuestLayout>
