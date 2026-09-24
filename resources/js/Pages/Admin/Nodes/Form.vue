@@ -22,9 +22,16 @@ const form = useForm({
     deskripsi:   props.node?.deskripsi  || '',
     status:      props.node?.status     || 'active',
     sort_order:  props.node?.sort_order  || 1,
+    reparent_children: [],
     spouses: props.node?.spouses?.map(s => ({
         name: s.name, marga: s.marga || '', deskripsi: s.deskripsi || '',
     })) || [],
+});
+
+const parentChildren = computed(() => {
+    if (!form.parent_id) return [];
+    const parent = props.parents?.find(p => p.id == form.parent_id);
+    return parent?.children || [];
 });
 
 const fotoPreview = ref(props.node?.foto ? `/storage/${props.node.foto}` : null);
@@ -72,15 +79,39 @@ const submit = () => {
 
                     <!-- Parent -->
                     <div>
-                        <label class="block text-gray-400 text-sm mb-1.5">Parent (Induk)</label>
-                        <select v-model="form.parent_id" :disabled="isEdit"
-                                :class="['w-full border rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors', isEdit ? 'bg-gray-800/50 text-gray-400 border-white/5 cursor-not-allowed' : 'bg-gray-800 text-white border-white/10 focus:border-amber-500/50']">
+                        <label class="block text-gray-400 text-sm mb-1.5">Parent (Orang Tua / Induk)</label>
+                        <select v-model="form.parent_id"
+                                class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors">
                             <option value="">— Tidak ada (root) —</option>
                             <option v-for="p in parents" :key="p.id" :value="p.id">
-                                {{ p.name }} {{ p.marga ? `(${p.marga})` : '' }}
+                                {{ p.name }} {{ p.marga ? `(${p.marga})` : '' }} — Gen {{ p.level + 1 }}
                             </option>
                         </select>
-                        <p v-if="isEdit" class="text-gray-500 text-xs mt-1">⚠️ Parent (Induk) tidak dapat diubah pada mode edit.</p>
+                    </div>
+
+                    <!-- Reparent Existing Children Checklist (Kasus Sisip Generasi Perantara) -->
+                    <div v-if="parentChildren.length > 0 && !isEdit" class="bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-4 space-y-3">
+                        <div class="flex items-start gap-2.5">
+                            <span class="text-indigo-400 text-lg flex-shrink-0">🔀</span>
+                            <div>
+                                <div class="text-white text-sm font-semibold">Sisipkan sebagai Orang Tua dari Keturunan yang Ada?</div>
+                                <div class="text-gray-400 text-xs mt-0.5 leading-relaxed">
+                                    Centang anak-anak di bawah ini jika node baru ini adalah ayah/orang tua mereka. Anak yang dicentang akan otomatis dipindahkan menjadi anak dari node baru ini (generasinya akan otomatis turun 1 tingkat):
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                            <label v-for="child in parentChildren" :key="child.id"
+                                   class="flex items-center gap-3 bg-gray-900/90 border border-white/10 hover:border-indigo-500/50 rounded-xl p-3 cursor-pointer transition-colors">
+                                <input type="checkbox" :value="child.id" v-model="form.reparent_children"
+                                       class="rounded bg-gray-800 border-white/20 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-gray-900 w-4 h-4"/>
+                                <div>
+                                    <div class="text-gray-200 text-sm font-medium">{{ child.name }}</div>
+                                    <div v-if="child.marga" class="text-gray-500 text-xs">Marga {{ child.marga }}</div>
+                                </div>
+                            </label>
+                        </div>
                     </div>
 
                     <!-- Name -->

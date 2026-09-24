@@ -8,7 +8,7 @@ const props = defineProps({
     searchHighlightId: { type: Number, default: null },
 });
 
-const emit = defineEmits(['nodeClick']);
+const emit = defineEmits(['nodeClick', 'export']);
 
 const svgRef = ref(null);
 const containerRef = ref(null);
@@ -144,6 +144,67 @@ function buildTree() {
     const maxX = d3.max(nodes, d => d.x);
     const treeWidth = maxX - minX;
 
+    // Generation Levels (Depth grouping)
+    const depthMap = new Map();
+    nodes.forEach(d => {
+        const depth = d.depth;
+        if (!depthMap.has(depth)) {
+            depthMap.set(depth, {
+                depth: depth,
+                levelNumber: (d.data.level !== undefined && d.data.level !== null) ? d.data.level + 1 : depth + 1,
+                y: d.y,
+            });
+        }
+    });
+    const levels = Array.from(depthMap.values()).sort((a, b) => a.depth - b.depth);
+
+    // Horizontal Guidelines inside moving canvas group (g)
+    const genGroup = g.append('g').attr('class', 'generation-guides');
+    genGroup.selectAll('.gen-line')
+        .data(levels)
+        .enter()
+        .append('line')
+        .attr('class', 'gen-line')
+        .attr('x1', minX - 5000)
+        .attr('x2', maxX + 5000)
+        .attr('y1', d => d.y)
+        .attr('y2', d => d.y)
+        .attr('stroke', '#334155')
+        .attr('stroke-width', 1)
+        .attr('stroke-dasharray', '4 4')
+        .attr('opacity', 0.25);
+
+    // Sticky Generation Badges Group (pinned to left margin)
+    const stickyGenGroup = svg.append('g').attr('class', 'sticky-gen-badges');
+
+    const levelBadge = stickyGenGroup.selectAll('.gen-badge')
+        .data(levels)
+        .enter()
+        .append('g')
+        .attr('class', 'gen-badge')
+        .style('cursor', 'default');
+
+    // Badge circle background
+    levelBadge.append('circle')
+        .attr('r', 15)
+        .attr('fill', '#090d16')
+        .attr('stroke', '#6366f1')
+        .attr('stroke-width', 1.5)
+        .style('filter', 'drop-shadow(0 2px 8px rgba(0,0,0,0.6))');
+
+    // Badge number text
+    levelBadge.append('text')
+        .attr('text-anchor', 'middle')
+        .attr('dy', '0.35em')
+        .attr('fill', '#e0e7ff')
+        .attr('font-size', '12px')
+        .attr('font-weight', '700')
+        .attr('font-family', 'Inter, sans-serif')
+        .text(d => d.levelNumber);
+
+    levelBadge.append('title')
+        .text(d => `Generasi ${d.levelNumber}`);
+
     // Links
     const linkGroup = g.append('g').attr('class', 'links');
     linkGroup.selectAll('.tree-link')
@@ -271,6 +332,13 @@ function buildTree() {
         .scaleExtent([0.1, 3])
         .on('zoom', (event) => {
             g.attr('transform', event.transform);
+            stickyGenGroup.selectAll('.gen-badge')
+                .attr('transform', d => `translate(28, ${event.transform.applyY(d.y)})`)
+                .attr('opacity', d => {
+                    const screenY = event.transform.applyY(d.y);
+                    if (screenY < -20 || screenY > height + 20) return 0;
+                    return 1;
+                });
         });
 
     svg.call(zoomBehavior);
@@ -355,22 +423,31 @@ defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, getSvgElement, getHighl
 
 <template>
     <div ref="containerRef" class="relative w-full h-full">
-        <!-- Controls -->
+        <!-- Controls (Zoom & Export - Nomor 2) -->
         <div class="absolute top-4 right-4 z-10 flex flex-col gap-2">
-            <button @click="zoomIn" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 border border-white/10 rounded-lg text-white flex items-center justify-center transition-colors shadow-lg" title="Zoom In">
+            <button @click="zoomIn" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 border border-white/10 rounded-xl text-white flex items-center justify-center transition-colors shadow-lg" title="Perbesar (Zoom In)">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             </button>
-            <button @click="zoomOut" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 border border-white/10 rounded-lg text-white flex items-center justify-center transition-colors shadow-lg" title="Zoom Out">
+            <button @click="zoomOut" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 border border-white/10 rounded-xl text-white flex items-center justify-center transition-colors shadow-lg" title="Perkecil (Zoom Out)">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
             </button>
-            <button @click="resetView" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 border border-white/10 rounded-lg text-white flex items-center justify-center transition-colors shadow-lg" title="Reset View">
+            <button @click="resetView" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 border border-white/10 rounded-xl text-white flex items-center justify-center transition-colors shadow-lg" title="Reset Tampilan">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12a9 9 0 1 0 18 0A9 9 0 0 0 3 12z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3"/></svg>
+            </button>
+            <div class="w-full h-px bg-white/10 my-0.5"></div>
+            <!-- Export Icon Button with Tooltip (Nomor 2) -->
+            <button @click="emit('export')" class="w-9 h-9 bg-indigo-600/50 hover:bg-indigo-600 border border-indigo-500/40 rounded-xl text-indigo-100 hover:text-white flex items-center justify-center transition-all shadow-lg hover:scale-105" title="Export Silsilah">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
             </button>
         </div>
 
-        <!-- Legend -->
-        <div class="absolute bottom-4 left-4 z-10 bg-gray-900/80 backdrop-blur-sm border border-white/10 rounded-xl p-3 text-xs space-y-1.5">
-            <div class="text-gray-400 font-medium mb-2">Legenda</div>
+        <!-- Legend & Instructions -->
+        <div class="absolute bottom-4 left-4 z-10 bg-gray-900/85 backdrop-blur-md border border-white/10 rounded-xl p-3 text-xs space-y-1.5 shadow-xl max-w-xs">
+            <div class="flex items-center justify-between gap-3 mb-2 pb-1.5 border-b border-white/5">
+                <span class="text-[11px] text-amber-400/90 font-medium">💡 Klik node untuk detail</span>
+            </div>
             <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-slate-500 border border-dashed border-slate-300"></div>
                 <span class="text-gray-300">Belum Aktif (Menunggu ACC)</span>
@@ -391,11 +468,6 @@ defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, getSvgElement, getHighl
                 <div class="w-3 h-3 rounded-full bg-amber-400"></div>
                 <span class="text-gray-300">Node terpilih</span>
             </div>
-        </div>
-
-        <!-- Instruction -->
-        <div class="absolute top-4 left-4 z-10 bg-gray-900/80 backdrop-blur-sm border border-white/10 rounded-xl px-3 py-2 text-xs text-gray-400">
-            💡 Klik node untuk melihat detail & jalur silsilah
         </div>
 
         <svg ref="svgRef" class="w-full h-full"></svg>

@@ -15,7 +15,7 @@ class TreeController extends Controller
     {
         $root = Node::active()
             ->root()
-            ->with(['childrenRecursive', 'spouses'])
+            ->with(['childrenRecursive', 'spouses', 'parent.spouses'])
             ->first();
 
         $totalNodes = Node::active()->count();
@@ -39,22 +39,32 @@ class TreeController extends Controller
         $ids[] = $node->id; // include self
 
         return response()->json([
-            'node' => $node->load('spouses'),
+            'node' => $node->load(['spouses', 'parent.spouses']),
             'ancestor_ids' => $ids,
         ]);
     }
 
     /**
-     * Search nodes by name.
+     * Search nodes by name or marga.
      */
     public function search(Request $request)
     {
         $query = $request->get('q', '');
+        $limit = (int) $request->get('limit', 12);
+        $gender = $request->get('gender', null);
 
         $results = Node::active()
-            ->where('name', 'like', "%{$query}%")
-            ->orWhere('marga', 'like', "%{$query}%")
-            ->limit(20)
+            ->when($gender, fn($q) => $q->where('gender', $gender))
+            ->when($query, function ($q) use ($query) {
+                $q->where(function ($sub) use ($query) {
+                    $sub->where('name', 'like', "%{$query}%")
+                        ->orWhere('marga', 'like', "%{$query}%");
+                });
+            })
+            ->with(['spouses' => fn($q) => $q->orderBy('id', 'asc')])
+            ->orderBy('level')
+            ->orderBy('name')
+            ->limit($limit)
             ->get(['id', 'name', 'marga', 'gender', 'level']);
 
         return response()->json($results);

@@ -39,6 +39,7 @@ class NodeController extends Controller
     {
         $parents = Node::active()
             ->where('gender', 'male')
+            ->with(['children' => fn($q) => $q->select('id', 'name', 'marga', 'parent_id', 'level')])
             ->orderBy('level')
             ->orderBy('name')
             ->get(['id', 'name', 'marga', 'level']);
@@ -63,6 +64,8 @@ class NodeController extends Controller
             'deskripsi'   => 'nullable|string|max:1000',
             'status'      => 'required|in:active,pending',
             'sort_order'  => 'nullable|integer|min:1',
+            'reparent_children' => 'nullable|array',
+            'reparent_children.*' => 'exists:nodes,id',
             // Spouses
             'spouses'         => 'nullable|array',
             'spouses.*.name'  => 'required|string|max:255',
@@ -89,9 +92,24 @@ class NodeController extends Controller
         }
 
         $spouses = $validated['spouses'] ?? [];
-        unset($validated['spouses']);
+        $reparentChildren = $validated['reparent_children'] ?? [];
+        unset($validated['spouses'], $validated['reparent_children']);
 
         $node = Node::create($validated);
+
+        // Reparent selected children to this new node
+        if (!empty($reparentChildren)) {
+            Node::whereIn('id', $reparentChildren)->update([
+                'parent_id' => $node->id,
+                'level' => $node->level + 1,
+            ]);
+
+            // Update all descendants levels recursively for reparented nodes
+            foreach ($reparentChildren as $childId) {
+                $child = Node::find($childId);
+                $child?->updateDescendantLevels();
+            }
+        }
 
         // Create spouses if male
         if ($node->gender === 'male' && !empty($spouses)) {
@@ -108,6 +126,7 @@ class NodeController extends Controller
         $parents = Node::active()
             ->where('gender', 'male')
             ->where('id', '!=', $node->id)
+            ->with(['children' => fn($q) => $q->select('id', 'name', 'marga', 'parent_id', 'level')])
             ->orderBy('level')
             ->orderBy('name')
             ->get(['id', 'name', 'marga', 'level']);
@@ -138,8 +157,10 @@ class NodeController extends Controller
             'spouses.*.deskripsi' => 'nullable|string|max:1000',
         ]);
 
-        // Parent ID is fixed for existing node
-        $validated['parent_id'] = $node->parent_id;
+        if (!empty($validated['parent_id']) && $validated['parent_id'] != $node->parent_id) {
+            $parent = Node::find($validated['parent_id']);
+            $validated['level'] = $parent ? $parent->level + 1 : 0;
+        }
 
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('nodes', 'public');
@@ -149,6 +170,9 @@ class NodeController extends Controller
         unset($validated['spouses']);
 
         $node->update($validated);
+
+        // Recalculate descendant levels if level changed
+        $node->updateDescendantLevels();
 
         // Sync spouses
         if ($node->gender === 'male' && $spouses !== null) {

@@ -70,7 +70,18 @@ class Node extends Model
     // Recursive children for full tree
     public function childrenRecursive(): HasMany
     {
-        return $this->children()->with(['childrenRecursive', 'spouses']);
+        return $this->children()->with(['childrenRecursive', 'spouses', 'parent.spouses']);
+    }
+
+    // Recursively update descendants level when this node's level changes
+    public function updateDescendantLevels(): void
+    {
+        $children = $this->children()->get();
+        foreach ($children as $child) {
+            $child->level = $this->level + 1;
+            $child->save();
+            $child->updateDescendantLevels();
+        }
     }
 
     // Get ancestry path from this node up to root

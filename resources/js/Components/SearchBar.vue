@@ -54,12 +54,12 @@ const genderIcon = (gender) => gender === 'female' ? '👩' : '👨';
 </script>
 
 <template>
-    <div class="relative">
-        <div class="flex items-center gap-2 bg-gray-800/80 backdrop-blur-sm border border-white/10 rounded-xl px-4 py-2.5 focus-within:border-amber-500/50 transition-colors">
-            <svg v-if="!loading" class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="relative w-full">
+        <div class="flex items-center gap-2 bg-gray-800/90 backdrop-blur-md border border-white/10 rounded-xl px-3 py-1.5 h-9 focus-within:border-amber-500/50 focus-within:bg-gray-800 transition-all shadow-inner">
+            <svg v-if="!loading" class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
-            <div v-else class="w-4 h-4 border-2 border-amber-400 border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+            <div v-else class="w-3.5 h-3.5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
 
             <input
                 v-model="query"
@@ -68,11 +68,11 @@ const genderIcon = (gender) => gender === 'female' ? '👩' : '👨';
                 @blur="setTimeout(() => showResults = false, 200)"
                 type="text"
                 placeholder="Cari nama atau marga..."
-                class="flex-1 bg-transparent text-white placeholder-gray-500 text-sm outline-none min-w-0"
+                class="flex-1 bg-transparent text-white placeholder-gray-400 text-xs sm:text-sm outline-none min-w-0 border-none"
             />
 
-            <button v-if="query" @click="clear" class="text-gray-500 hover:text-white flex-shrink-0 transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button v-if="query" @click="clear" class="text-gray-400 hover:text-white flex-shrink-0 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
