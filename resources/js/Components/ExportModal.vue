@@ -42,9 +42,9 @@ function handleExport() {
         : 'tarombo-seluruh-silsilah';
 
     if (exportFormat.value === 'PNG') {
-        exportTreeAsPNG(props.svgElement, `${prefix}.png`);
+        exportTreeAsPNG(props.tree, props.selectedNode, ancestorSet.value, `${prefix}.png`);
     } else if (exportFormat.value === 'SVG') {
-        exportTreeAsSVG(props.svgElement, `${prefix}.svg`);
+        exportTreeAsSVG(props.tree, props.selectedNode, ancestorSet.value, `${prefix}.svg`);
     } else if (exportFormat.value === 'CSV') {
         exportTreeAsCSV(props.tree, ancestorSet.value, `${prefix}.csv`);
     } else if (exportFormat.value === 'PDF_TABLE') {

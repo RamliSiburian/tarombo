@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import ImportModal from '@/Components/ImportModal.vue';
 
 const props = defineProps({
     nodes: Object,
@@ -10,6 +11,7 @@ const props = defineProps({
 
 const search = ref(props.filters?.search || '');
 const activeStatus = ref(props.filters?.status || 'active');
+const showImportModal = ref(false);
 let searchTimeout = null;
 
 const setStatus = (s) => {
@@ -38,6 +40,11 @@ const statusTabs = [
 
 const genderIcon = (g) => g === 'female' ? '👩' : '👨';
 const levelBadge = (l) => ['Gen 1', 'Gen 2', 'Gen 3', 'Gen 4', 'Gen 5', 'Gen 6'][l] || `Gen ${l + 1}`;
+
+function onImported() {
+    // Reload page after successful import to show updated node count
+    setTimeout(() => router.reload(), 800);
+}
 </script>
 
 <template>
@@ -56,10 +63,16 @@ const levelBadge = (l) => ['Gen 1', 'Gen 2', 'Gen 3', 'Gen 4', 'Gen 5', 'Gen 6']
                            class="flex-1 bg-transparent text-white text-sm placeholder-gray-600 outline-none"/>
                 </div>
             </div>
-            <Link :href="route('admin.nodes.create')"
-                  class="bg-amber-500 hover:bg-amber-400 text-gray-900 font-semibold text-sm px-4 py-2.5 rounded-xl transition-colors flex items-center gap-2 whitespace-nowrap">
-                ➕ Tambah Node
-            </Link>
+            <div class="flex items-center gap-2">
+                <button @click="showImportModal = true"
+                        class="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-gray-300 hover:text-white font-semibold text-sm px-4 py-2.5 rounded-xl transition-colors flex items-center gap-2 whitespace-nowrap">
+                    📂 Import CSV / JSON
+                </button>
+                <Link :href="route('admin.nodes.create')"
+                      class="bg-amber-500 hover:bg-amber-400 text-gray-900 font-semibold text-sm px-4 py-2.5 rounded-xl transition-colors flex items-center gap-2 whitespace-nowrap">
+                    ➕ Tambah Node
+                </Link>
+            </div>
         </div>
 
         <!-- Filter Status Tabs -->
@@ -151,4 +164,7 @@ const levelBadge = (l) => ['Gen 1', 'Gen 2', 'Gen 3', 'Gen 4', 'Gen 5', 'Gen 6']
             </div>
         </div>
     </AdminLayout>
+
+    <!-- Import Modal -->
+    <ImportModal v-if="showImportModal" @close="showImportModal = false" @imported="onImported" />
 </template>

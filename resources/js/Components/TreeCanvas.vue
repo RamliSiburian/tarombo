@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import * as d3 from 'd3';
 import axios from 'axios';
 
@@ -16,6 +16,28 @@ const selectedNodeId = ref(null);
 const highlightedIds = ref(new Set());
 let svgElement = null;
 let zoomBehavior = null;
+
+// Parallax Background State
+const bgOffsetX = ref(0);
+const bgOffsetY = ref(0);
+const bgMouseX = ref(0);
+const bgMouseY = ref(0);
+const bgScale = ref(1.05);
+
+const bgTransformStyle = computed(() => {
+    const totalX = bgOffsetX.value + bgMouseX.value;
+    const totalY = bgOffsetY.value + bgMouseY.value;
+    return `translate3d(${totalX}px, ${totalY}px, 0) scale(${bgScale.value})`;
+});
+
+const handleMouseMove = (e) => {
+    if (!containerRef.value) return;
+    const rect = containerRef.value.getBoundingClientRect();
+    const normX = (e.clientX - rect.left) / rect.width - 0.5;
+    const normY = (e.clientY - rect.top) / rect.height - 0.5;
+    bgMouseX.value = normX * 22;
+    bgMouseY.value = normY * 22;
+};
 
 const NODE_WIDTH = 180;
 const NODE_HEIGHT = 70;
@@ -339,6 +361,11 @@ function buildTree() {
                     if (screenY < -20 || screenY > height + 20) return 0;
                     return 1;
                 });
+
+            // Smooth background parallax translation & scaling
+            bgOffsetX.value = event.transform.x * 0.08;
+            bgOffsetY.value = event.transform.y * 0.08;
+            bgScale.value = 1.05 + Math.min(Math.max((event.transform.k - 1) * 0.04, -0.05), 0.12);
         });
 
     svg.call(zoomBehavior);
@@ -366,6 +393,9 @@ function resetView() {
         zoomBehavior.transform,
         d3.zoomIdentity.translate(width / 2, 60).scale(0.85)
     );
+    bgOffsetX.value = 0;
+    bgOffsetY.value = 0;
+    bgScale.value = 1.05;
     selectedNodeId.value = null;
     highlightedIds.value = new Set();
     updateHighlights();
@@ -422,21 +452,41 @@ defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, getSvgElement, getHighl
 </script>
 
 <template>
-    <div ref="containerRef" class="relative w-full h-full">
-        <!-- Controls (Zoom & Export - Nomor 2) -->
+    <div ref="containerRef" @mousemove="handleMouseMove" class="relative w-full h-full overflow-hidden select-none">
+        <!-- Parallax Batak Rumah Bolon Background Layer -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+            <div 
+                class="absolute -inset-[18%] w-[136%] h-[136%] bg-cover bg-center transition-transform duration-100 ease-out will-change-transform"
+                :style="{
+                    backgroundImage: `url('/images/bg-batak-parallax.jpg')`,
+                    transform: bgTransformStyle
+                }"
+            ></div>
+            
+            <!-- Dark Vignette & Atmospheric Fog Overlay -->
+            <div class="absolute inset-0 bg-gray-950/75 backdrop-blur-[1px]"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/40 to-gray-950/85"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-gray-950/85 via-transparent to-gray-950/85"></div>
+            
+            <!-- Ambient Batak Cultural Lights -->
+            <div class="absolute -top-32 -left-32 w-[500px] h-[500px] bg-amber-600/10 rounded-full blur-[120px]"></div>
+            <div class="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px]"></div>
+        </div>
+
+        <!-- Controls (Zoom & Export) -->
         <div class="absolute top-4 right-4 z-10 flex flex-col gap-2">
-            <button @click="zoomIn" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 border border-white/10 rounded-xl text-white flex items-center justify-center transition-colors shadow-lg" title="Perbesar (Zoom In)">
+            <button @click="zoomIn" class="w-9 h-9 bg-gray-900/80 hover:bg-gray-800 border border-white/15 rounded-xl text-white flex items-center justify-center transition-all shadow-xl hover:scale-105 backdrop-blur-md" title="Perbesar (Zoom In)">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             </button>
-            <button @click="zoomOut" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 border border-white/10 rounded-xl text-white flex items-center justify-center transition-colors shadow-lg" title="Perkecil (Zoom Out)">
+            <button @click="zoomOut" class="w-9 h-9 bg-gray-900/80 hover:bg-gray-800 border border-white/15 rounded-xl text-white flex items-center justify-center transition-all shadow-xl hover:scale-105 backdrop-blur-md" title="Perkecil (Zoom Out)">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
             </button>
-            <button @click="resetView" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 border border-white/10 rounded-xl text-white flex items-center justify-center transition-colors shadow-lg" title="Reset Tampilan">
+            <button @click="resetView" class="w-9 h-9 bg-gray-900/80 hover:bg-gray-800 border border-white/15 rounded-xl text-white flex items-center justify-center transition-all shadow-xl hover:scale-105 backdrop-blur-md" title="Reset Tampilan">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12a9 9 0 1 0 18 0A9 9 0 0 0 3 12z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3"/></svg>
             </button>
-            <div class="w-full h-px bg-white/10 my-0.5"></div>
-            <!-- Export Icon Button with Tooltip (Nomor 2) -->
-            <button @click="emit('export')" class="w-9 h-9 bg-indigo-600/50 hover:bg-indigo-600 border border-indigo-500/40 rounded-xl text-indigo-100 hover:text-white flex items-center justify-center transition-all shadow-lg hover:scale-105" title="Export Silsilah">
+            <div class="w-full h-px bg-white/15 my-0.5"></div>
+            <!-- Export Icon Button with Tooltip -->
+            <button @click="emit('export')" class="w-9 h-9 bg-amber-500/20 hover:bg-amber-500 border border-amber-500/40 rounded-xl text-amber-300 hover:text-gray-950 flex items-center justify-center transition-all shadow-xl hover:scale-105 backdrop-blur-md" title="Export Silsilah">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                 </svg>
@@ -444,32 +494,36 @@ defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, getSvgElement, getHighl
         </div>
 
         <!-- Legend & Instructions -->
-        <div class="absolute bottom-4 left-4 z-10 bg-gray-900/85 backdrop-blur-md border border-white/10 rounded-xl p-3 text-xs space-y-1.5 shadow-xl max-w-xs">
-            <div class="flex items-center justify-between gap-3 mb-2 pb-1.5 border-b border-white/5">
-                <span class="text-[11px] text-amber-400/90 font-medium">💡 Klik node untuk detail</span>
+        <div class="absolute bottom-4 left-4 z-10 bg-gray-900/90 backdrop-blur-md border border-white/10 rounded-xl p-3 text-xs space-y-1.5 shadow-2xl max-w-xs">
+            <div class="flex items-center justify-between gap-3 mb-2 pb-1.5 border-b border-white/10">
+                <span class="text-[11px] text-amber-400 font-semibold flex items-center gap-1">
+                    <span>🏛️</span>
+                    <span>Tarombo Batak</span>
+                </span>
+                <span class="text-[10px] text-gray-400">💡 Klik node untuk detail</span>
             </div>
             <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-slate-500 border border-dashed border-slate-300"></div>
-                <span class="text-gray-300">Belum Aktif (Menunggu ACC)</span>
+                <span class="text-gray-300 text-[11px]">Belum Aktif (Menunggu ACC)</span>
             </div>
             <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-indigo-500"></div>
-                <span class="text-gray-300">Laki-laki (ada keturunan)</span>
+                <div class="w-3 h-3 rounded-full bg-indigo-500 shadow-sm shadow-indigo-500/50"></div>
+                <span class="text-gray-300 text-[11px]">Laki-laki (ada keturunan)</span>
             </div>
             <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-pink-500"></div>
-                <span class="text-gray-300">Perempuan (silsilah berhenti)</span>
+                <div class="w-3 h-3 rounded-full bg-pink-500 shadow-sm shadow-pink-500/50"></div>
+                <span class="text-gray-300 text-[11px]">Perempuan (silsilah berhenti)</span>
             </div>
             <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-violet-400"></div>
-                <span class="text-gray-300">Jalur silsilah terpilih</span>
+                <div class="w-3 h-3 rounded-full bg-violet-400 shadow-sm shadow-violet-400/50"></div>
+                <span class="text-gray-300 text-[11px]">Jalur silsilah terpilih</span>
             </div>
             <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-amber-400"></div>
-                <span class="text-gray-300">Node terpilih</span>
+                <div class="w-3 h-3 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></div>
+                <span class="text-gray-300 text-[11px]">Node terpilih</span>
             </div>
         </div>
 
-        <svg ref="svgRef" class="w-full h-full"></svg>
+        <svg ref="svgRef" class="w-full h-full relative z-[1]"></svg>
     </div>
 </template>

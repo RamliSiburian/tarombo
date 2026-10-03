@@ -224,7 +224,15 @@ const levelLabel = (level) => {
 </script>
 
 <template>
-    <Head title="Daftar Silsilah" />
+    <Head>
+        <title>Daftar & Gabung ke Pohon Silsilah Batak - Form Pengajuan</title>
+        <meta name="description" content="Ajukan pendaftaran data diri Anda untuk bergabung ke dalam pohon silsilah suku Batak (Tarombo). Hubungkan silsilah Anda dengan leluhur dan marga tercatat." />
+        <meta name="keywords" content="daftar silsilah batak, pengajuan tarombo batak, daftar marga batak, silsilah keluarga batak" />
+        <meta property="og:title" content="Daftar ke Pohon Silsilah Batak - Tarombo Digital" />
+        <meta property="og:description" content="Ajukan pendaftaran data diri untuk bergabung ke dalam pohon silsilah suku Batak secara digital." />
+        <meta property="og:image" content="/images/bg-batak-parallax.jpg" />
+        <meta property="og:type" content="website" />
+    </Head>
     <AppLayout>
         <div class="min-h-screen pt-24 pb-16 px-4">
             <div class="max-w-2xl mx-auto">

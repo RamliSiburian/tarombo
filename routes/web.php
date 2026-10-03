@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\NodeController as AdminNodeController;
 use App\Http\Controllers\Admin\RequestController as AdminRequestController;
+use App\Http\Controllers\Admin\ImportController as AdminImportController;
 use App\Http\Controllers\NodeRequestController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TreeController;
@@ -44,6 +45,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Nodes CRUD
     Route::resource('nodes', AdminNodeController::class);
     Route::post('nodes/{node}', [AdminNodeController::class, 'update'])->name('nodes.update.post');
+
+    // Import
+    Route::get('import/template', [AdminImportController::class, 'downloadTemplate'])->name('import.template');
+    Route::post('import/preview', [AdminImportController::class, 'preview'])->name('import.preview');
+    Route::post('import/confirm', [AdminImportController::class, 'confirm'])->name('import.confirm');
 
     // Requests management
     Route::get('/requests', [AdminRequestController::class, 'index'])->name('requests.index');

@@ -43,7 +43,15 @@ const closePanel = () => {
 </script>
 
 <template>
-    <Head title="Pohon Silsilah Batak" />
+    <Head>
+        <title>Pohon Silsilah Batak Interaktif - Tarombo Digital</title>
+        <meta name="description" content="Jelajahi garis keturunan dan pohon silsilah suku Batak secara interaktif. Temukan asal-usul marga, generasi leluhur, serta silsilah keluarga Batak Anda." />
+        <meta name="keywords" content="tarombo batak, silsilah marga batak, pohon silsilah batak, guru tatea bulan, raja borbor, raja batak, silsilah batak toba" />
+        <meta property="og:title" content="Tarombo Batak - Pohon Silsilah Marga Batak Digital" />
+        <meta property="og:description" content="Platform silsilah marga Batak interaktif. Telusuri garis leluhur, marga, dan generasi Batak dengan mudah." />
+        <meta property="og:image" content="/images/bg-batak-parallax.jpg" />
+        <meta property="og:type" content="website" />
+    </Head>
     <AppLayout :stats="stats">
         <!-- Search Bar Slot placed in Navbar beside Logo (Nomor 1) -->
         <template #search>
