@@ -5,12 +5,20 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 const props = defineProps({
     stats: Object,
     recentRequests: Array,
+    recentMembers: Array,
 });
 
 const statusLabel = (s) => ({ pending: 'Menunggu', accepted: 'Disetujui', rejected: 'Ditolak' }[s]);
 const statusClass = (s) => ({
     pending:  'bg-amber-500/15 text-amber-400 border-amber-500/30',
     accepted: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
+    rejected: 'bg-red-500/15 text-red-400 border-red-500/30',
+}[s]);
+
+const memberStatusLabel = (s) => ({ pending: 'Menunggu', approved: 'Disetujui', rejected: 'Ditolak' }[s]);
+const memberStatusClass = (s) => ({
+    pending:  'bg-amber-500/15 text-amber-400 border-amber-500/30',
+    approved: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
     rejected: 'bg-red-500/15 text-red-400 border-red-500/30',
 }[s]);
 
@@ -25,11 +33,11 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
         <!-- Welcome -->
         <div class="mb-6">
             <h2 class="text-2xl font-bold text-white">Selamat Datang, {{ $page.props.auth.user?.name }} 👋</h2>
-            <p class="text-gray-500 text-sm mt-1">Kelola silsilah Batak dari panel ini.</p>
+            <p class="text-gray-500 text-sm mt-1">Kelola silsilah Batak dan keanggotaan dari panel ini.</p>
         </div>
 
         <!-- Stats Grid -->
-        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <div class="bg-gray-900 border border-white/5 rounded-2xl p-5">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-3xl">🌳</span>
@@ -48,7 +56,25 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                 <div class="text-gray-500 text-sm mt-1">Marga Unik</div>
             </div>
 
-            <div :class="['bg-gray-900 border rounded-2xl p-5 col-span-2 lg:col-span-1', stats.pending_requests > 0 ? 'border-amber-500/30' : 'border-white/5']">
+            <!-- Member Stats Card -->
+            <div :class="['bg-gray-900 border rounded-2xl p-5', stats.pending_members > 0 ? 'border-amber-500/30 bg-amber-500/[0.02]' : 'border-white/5']">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-3xl">👥</span>
+                    <span v-if="stats.pending_members > 0" class="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded-full animate-pulse">
+                        {{ stats.pending_members }} Menunggu
+                    </span>
+                    <span v-else class="text-xs text-gray-600 bg-white/5 px-2 py-1 rounded-full">Komunitas</span>
+                </div>
+                <div class="text-3xl font-bold text-white">{{ stats.total_members }}</div>
+                <div class="text-gray-500 text-sm mt-1">Total Anggota</div>
+                <Link v-if="stats.pending_members > 0" :href="route('admin.members.index')"
+                      class="mt-3 block text-center bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-400 text-xs rounded-lg py-1.5 transition-colors">
+                    Tinjau Anggota →
+                </Link>
+            </div>
+
+            <!-- Request Stats Card -->
+            <div :class="['bg-gray-900 border rounded-2xl p-5', stats.pending_requests > 0 ? 'border-amber-500/30' : 'border-white/5']">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-3xl">📬</span>
                     <span v-if="stats.pending_requests > 0" class="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded-full animate-pulse">
@@ -61,40 +87,27 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                 <div class="text-gray-500 text-sm mt-1">Request Pending</div>
                 <Link v-if="stats.pending_requests > 0" :href="route('admin.requests.index')"
                       class="mt-3 block text-center bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-400 text-xs rounded-lg py-1.5 transition-colors">
-                    Tinjau Sekarang →
+                    Tinjau Request →
                 </Link>
-            </div>
-
-            <div class="bg-gray-900 border border-white/5 rounded-2xl p-5">
-                <div class="text-3xl mb-3">✅</div>
-                <div class="text-3xl font-bold text-emerald-400">{{ stats.accepted_requests }}</div>
-                <div class="text-gray-500 text-sm mt-1">Request Disetujui</div>
-            </div>
-
-            <div class="bg-gray-900 border border-white/5 rounded-2xl p-5">
-                <div class="text-3xl mb-3">❌</div>
-                <div class="text-3xl font-bold text-red-400">{{ stats.rejected_requests }}</div>
-                <div class="text-gray-500 text-sm mt-1">Request Ditolak</div>
-            </div>
-
-            <div class="bg-gray-900 border border-white/5 rounded-2xl p-5">
-                <div class="text-3xl mb-3">📊</div>
-                <div class="text-3xl font-bold text-white">{{ stats.total_requests }}</div>
-                <div class="text-gray-500 text-sm mt-1">Total Request</div>
             </div>
         </div>
 
         <!-- Quick Actions -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
+            <Link :href="route('admin.members.index')"
+                  class="bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/20 rounded-xl p-4 text-center transition-all group">
+                <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">👥</div>
+                <div class="text-amber-300 text-sm font-medium">Daftar Anggota</div>
+            </Link>
             <Link :href="route('admin.nodes.create')"
                   class="bg-indigo-500/10 hover:bg-indigo-500/15 border border-indigo-500/20 rounded-xl p-4 text-center transition-all group">
                 <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">➕</div>
                 <div class="text-indigo-300 text-sm font-medium">Tambah Node</div>
             </Link>
             <Link :href="route('admin.requests.index')"
-                  class="bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/20 rounded-xl p-4 text-center transition-all group">
+                  class="bg-rose-500/10 hover:bg-rose-500/15 border border-rose-500/20 rounded-xl p-4 text-center transition-all group">
                 <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">📬</div>
-                <div class="text-amber-300 text-sm font-medium">Request Masuk</div>
+                <div class="text-rose-300 text-sm font-medium">Request Masuk</div>
             </Link>
             <Link :href="route('admin.nodes.index')"
                   class="bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/20 rounded-xl p-4 text-center transition-all group">
@@ -102,22 +115,61 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                 <div class="text-emerald-300 text-sm font-medium">Kelola Node</div>
             </Link>
             <Link :href="route('tree.index')"
-                  class="bg-violet-500/10 hover:bg-violet-500/15 border border-violet-500/20 rounded-xl p-4 text-center transition-all group">
+                  class="bg-violet-500/10 hover:bg-violet-500/15 border border-violet-500/20 rounded-xl p-4 text-center transition-all group col-span-2 sm:col-span-1">
                 <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">🌐</div>
                 <div class="text-violet-300 text-sm font-medium">Lihat Website</div>
             </Link>
         </div>
 
-        <!-- Recent Requests -->
-        <div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
-            <div class="px-5 py-4 border-b border-white/5 flex items-center justify-between">
-                <h3 class="text-white font-semibold">Request Terbaru</h3>
-                <Link :href="route('admin.requests.index')" class="text-amber-400 text-sm hover:text-amber-300 transition-colors">Lihat semua →</Link>
-            </div>
-            <div class="divide-y divide-white/5">
-                <div v-if="recentRequests.length === 0" class="py-12 text-center text-gray-600">
-                    Belum ada request masuk
+        <!-- Grid 2 Kolom: Anggota Terbaru & Request Terbaru -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <!-- Recent Members -->
+            <div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+                <div class="px-5 py-4 border-b border-white/5 flex items-center justify-between">
+                    <h3 class="text-white font-semibold flex items-center gap-2">
+                        <span>👥</span> Anggota Pendaftar Terbaru
+                    </h3>
+                    <Link :href="route('admin.members.index')" class="text-amber-400 text-sm hover:text-amber-300 transition-colors">Lihat semua →</Link>
                 </div>
+                <div class="divide-y divide-white/5">
+                    <div v-if="!recentMembers || recentMembers.length === 0" class="py-12 text-center text-gray-600">
+                        Belum ada anggota terdaftar
+                    </div>
+                    <div v-for="m in recentMembers" :key="m.id"
+                         class="flex items-center gap-3.5 px-5 py-3 hover:bg-white/[0.02] transition-colors">
+                        <div class="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xs flex-shrink-0">
+                            {{ m.name?.charAt(0) }}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-white text-sm font-medium truncate">{{ m.name }}</div>
+                            <div class="text-gray-500 text-xs">
+                                <span v-if="m.marga" class="text-amber-400/90 font-medium">Marga {{ m.marga }} · </span>
+                                {{ m.email }}
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            <span :class="['text-xs px-2 py-0.5 rounded-full border', memberStatusClass(m.membership_status)]">
+                                {{ memberStatusLabel(m.membership_status) }}
+                            </span>
+                            <span class="text-gray-600 text-xs">{{ formatDate(m.created_at) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Requests -->
+            <div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+                <div class="px-5 py-4 border-b border-white/5 flex items-center justify-between">
+                    <h3 class="text-white font-semibold flex items-center gap-2">
+                        <span>📬</span> Request Tambah Data Terbaru
+                    </h3>
+                    <Link :href="route('admin.requests.index')" class="text-amber-400 text-sm hover:text-amber-300 transition-colors">Lihat semua →</Link>
+                </div>
+                <div class="divide-y divide-white/5">
+                    <div v-if="recentRequests.length === 0" class="py-12 text-center text-gray-600">
+                        Belum ada request masuk
+                    </div>
                 <div v-for="req in recentRequests" :key="req.id"
                      class="flex items-center gap-4 px-5 py-3 hover:bg-white/2 transition-colors">
                     <div class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-lg flex-shrink-0">
@@ -138,5 +190,6 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                 </div>
             </div>
         </div>
+    </div>
     </AdminLayout>
 </template>

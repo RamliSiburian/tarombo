@@ -47,7 +47,7 @@ onUnmounted(() => {
                     <!-- Left: Logo & Brand + Search Bar Slot -->
                     <div class="flex items-center gap-3 sm:gap-5 flex-1 min-w-0">
                         <!-- Logo -->
-                        <Link :href="route('tree.index')" class="flex items-center gap-2.5 group flex-shrink-0">
+                        <Link :href="route('home')" class="flex items-center gap-2.5 group flex-shrink-0" title="Kembali ke Beranda">
                             <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
                                 <span class="text-gray-950 font-black text-lg">T</span>
                             </div>
@@ -116,6 +116,15 @@ onUnmounted(() => {
                                     <!-- Navigation Links -->
                                     <div class="p-2 space-y-1">
                                         <Link
+                                            :href="route('home')"
+                                            @click="closeDropdown"
+                                            class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-200 hover:text-white hover:bg-white/5 transition-colors"
+                                        >
+                                            <span class="text-base">🏠</span>
+                                            <span class="font-medium">Beranda</span>
+                                        </Link>
+
+                                        <Link
                                             :href="route('tree.index')"
                                             @click="closeDropdown"
                                             class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-200 hover:text-white hover:bg-white/5 transition-colors"
@@ -130,14 +139,15 @@ onUnmounted(() => {
                                             class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-amber-300 hover:text-amber-200 hover:bg-amber-500/10 transition-colors"
                                         >
                                             <span class="text-base">📝</span>
-                                            <span class="font-medium">Daftar Silsilah</span>
+                                            <span class="font-medium">Ajukan Data</span>
                                         </Link>
                                     </div>
 
-                                    <!-- Admin / Auth -->
-                                    <div class="p-2">
+                                    <!-- Admin / Member / Auth -->
+                                    <div class="p-2 space-y-1">
                                         <template v-if="$page.props.auth?.user">
                                             <Link
+                                                v-if="$page.props.auth.user.role === 'admin'"
                                                 :href="route('admin.dashboard')"
                                                 @click="closeDropdown"
                                                 class="flex items-center justify-between px-3 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-sm font-semibold transition-colors"
@@ -145,6 +155,18 @@ onUnmounted(() => {
                                                 <span class="flex items-center gap-2">
                                                     <span>⚙️</span>
                                                     <span>Admin Panel</span>
+                                                </span>
+                                                <span class="text-xs">→</span>
+                                            </Link>
+                                            <Link
+                                                v-else
+                                                :href="route('member.dashboard')"
+                                                @click="closeDropdown"
+                                                class="flex items-center justify-between px-3 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-sm font-semibold transition-colors"
+                                            >
+                                                <span class="flex items-center gap-2">
+                                                    <span>👤</span>
+                                                    <span>Dashboard Anggota</span>
                                                 </span>
                                                 <span class="text-xs">→</span>
                                             </Link>
@@ -157,9 +179,20 @@ onUnmounted(() => {
                                             >
                                                 <span class="flex items-center gap-2">
                                                     <span>🔐</span>
-                                                    <span>Login Admin</span>
+                                                    <span>Masuk</span>
                                                 </span>
                                                 <span class="text-xs text-gray-400">→</span>
+                                            </Link>
+                                            <Link
+                                                :href="route('register')"
+                                                @click="closeDropdown"
+                                                class="flex items-center justify-between px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 text-sm font-semibold transition-colors"
+                                            >
+                                                <span class="flex items-center gap-2">
+                                                    <span>👥</span>
+                                                    <span>Daftar Anggota</span>
+                                                </span>
+                                                <span class="text-xs text-amber-400">→</span>
                                             </Link>
                                         </template>
                                     </div>

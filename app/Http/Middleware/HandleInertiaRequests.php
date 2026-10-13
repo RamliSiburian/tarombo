@@ -39,6 +39,7 @@ class HandleInertiaRequests extends Middleware
                 'error'   => fn () => $request->session()->get('error'),
             ],
             'pendingRequestCount' => fn () => \App\Models\NodeRequest::where('status', 'pending')->count(),
+            'pendingMemberCount'  => fn () => \App\Models\User::where('role', 'member')->where('membership_status', 'pending')->count(),
         ];
     }
 }

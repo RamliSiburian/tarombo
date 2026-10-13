@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -23,11 +23,44 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'marga',
+        'phone',
+        'membership_status',
     ];
 
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->membership_status === 'approved';
+    }
+
+    public function isPending(): bool
+    {
+        return $this->membership_status === 'pending';
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->membership_status === 'rejected';
+    }
+
+    public function scopeMembers($query)
+    {
+        return $query->where('role', 'member');
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('membership_status', 'pending');
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('membership_status', 'approved');
     }
 
     /**

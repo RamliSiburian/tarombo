@@ -1,61 +1,75 @@
 <script setup>
-import { computed } from 'vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
-const props = defineProps({
-    status: {
-        type: String,
-    },
+defineProps({
+    status: String,
 });
 
 const form = useForm({});
-
-const submit = () => {
-    form.post(route('verification.send'));
-};
-
-const verificationLinkSent = computed(
-    () => props.status === 'verification-link-sent',
-);
+const submit = () => form.post(route('verification.send'));
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Email Verification" />
+    <Head title="Verifikasi Email — Tarombo Batak" />
 
-        <div class="mb-4 text-sm text-gray-600">
-            Thanks for signing up! Before getting started, could you verify your
-            email address by clicking on the link we just emailed to you? If you
-            didn't receive the email, we will gladly send you another.
-        </div>
+    <div class="min-h-screen bg-gray-950 flex items-center justify-center p-4" style="font-family: 'Inter', sans-serif;">
+        <!-- Background glow -->
+        <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(180, 83, 9, 0.12) 0%, transparent 70%);"></div>
 
-        <div
-            class="mb-4 text-sm font-medium text-green-600"
-            v-if="verificationLinkSent"
-        >
-            A new verification link has been sent to the email address you
-            provided during registration.
-        </div>
+        <div class="relative z-10 w-full max-w-md">
+            <!-- Card -->
+            <div class="bg-gray-900/80 backdrop-blur-md border border-white/10 rounded-2xl p-8 shadow-2xl text-center">
+                <!-- Icon -->
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-amber-500/20 to-amber-700/20 border border-amber-500/30 flex items-center justify-center text-4xl">
+                    📧
+                </div>
 
-        <form @submit.prevent="submit">
-            <div class="mt-4 flex items-center justify-between">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
+                <!-- Logo -->
+                <div class="flex items-center justify-center gap-2 mb-6">
+                    <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-red-700 flex items-center justify-center text-sm">🌳</div>
+                    <span class="text-sm font-bold text-white tracking-wider" style="font-family: 'Cinzel', serif;">TAROMBO BATAK</span>
+                </div>
+
+                <h1 class="text-2xl font-bold text-white mb-3">Verifikasi Email Anda</h1>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                    Terima kasih sudah mendaftar! Kami telah mengirimkan link verifikasi ke alamat email Anda.
+                    Silakan periksa kotak masuk (dan folder <strong class="text-gray-300">Spam</strong>) untuk mengaktifkan akun.
+                </p>
+
+                <!-- Success alert -->
+                <div
+                    v-if="status === 'verification-link-sent'"
+                    class="mb-6 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm"
                 >
-                    Resend Verification Email
-                </PrimaryButton>
+                    ✅ Link verifikasi baru telah dikirim ke email Anda.
+                </div>
 
-                <Link
-                    :href="route('logout')"
-                    method="post"
-                    as="button"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >Log Out</Link
-                >
+                <!-- Resend form -->
+                <form @submit.prevent="submit">
+                    <button
+                        type="submit"
+                        :disabled="form.processing"
+                        class="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-gray-900 font-bold hover:from-amber-400 hover:to-amber-500 transition-all shadow-lg shadow-amber-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {{ form.processing ? 'Mengirim...' : '🔁 Kirim Ulang Email Verifikasi' }}
+                    </button>
+                </form>
+
+                <div class="mt-4 pt-4 border-t border-white/10 flex items-center justify-center gap-4 text-sm">
+                    <Link :href="route('home')" class="text-gray-500 hover:text-gray-300 transition-colors">
+                        ← Kembali ke Beranda
+                    </Link>
+                    <span class="text-gray-700">|</span>
+                    <Link
+                        :href="route('logout')"
+                        method="post"
+                        as="button"
+                        class="text-gray-500 hover:text-red-400 transition-colors"
+                    >
+                        Keluar
+                    </Link>
+                </div>
             </div>
-        </form>
-    </GuestLayout>
+        </div>
+    </div>
 </template>

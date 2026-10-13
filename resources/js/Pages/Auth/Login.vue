@@ -34,8 +34,8 @@ const submit = () => {
         <Head title="Log in" />
 
         <div class="mb-6 text-center">
-            <h2 class="text-xl font-bold text-white tracking-tight">Masuk Admin Panel</h2>
-            <p class="text-xs text-gray-400 mt-1">Silakan masuk menggunakan akun pengelola Tarombo</p>
+            <h2 class="text-xl font-bold text-white tracking-tight">Masuk ke Tarombo Batak</h2>
+            <p class="text-xs text-gray-400 mt-1">Masuk dengan akun anggota atau admin Anda</p>
         </div>
 
         <div v-if="status" class="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-400">

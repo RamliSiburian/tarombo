@@ -33,7 +33,18 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard', absolute: false));
+        $user = $request->user();
+
+        if ($user->isAdmin()) {
+            return redirect()->intended(route('admin.dashboard', absolute: false));
+        }
+
+        // Non-admin members: if email not verified, go to verification notice
+        if (!$user->hasVerifiedEmail()) {
+            return redirect(route('verification.notice'));
+        }
+
+        return redirect()->intended(route('member.dashboard', absolute: false));
     }
 
     /**

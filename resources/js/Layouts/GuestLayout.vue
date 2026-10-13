@@ -22,10 +22,14 @@ import { Link } from '@inertiajs/vue3';
                 <slot />
             </div>
 
-            <!-- Back to Home link -->
-            <div class="mt-6 text-center">
-                <Link href="/" class="text-xs text-gray-400 hover:text-amber-400 transition-colors flex items-center gap-1">
-                    ← Kembali ke Pohon Silsilah
+            <!-- Back to Home / Tree links -->
+            <div class="mt-6 flex items-center justify-center gap-4 text-xs text-gray-400">
+                <Link :href="route('home')" class="hover:text-amber-400 transition-colors flex items-center gap-1">
+                    ← Beranda
+                </Link>
+                <span class="text-gray-700">•</span>
+                <Link :href="route('tree.index')" class="hover:text-amber-400 transition-colors flex items-center gap-1">
+                    🌳 Pohon Silsilah
                 </Link>
             </div>
         </div>

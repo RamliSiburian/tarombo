@@ -9,6 +9,8 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 const form = useForm({
     name: '',
     email: '',
+    marga: '',
+    phone: '',
     password: '',
     password_confirmation: '',
 });
@@ -22,12 +24,18 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Register" />
+        <Head title="Daftar Keanggotaan — Tarombo Batak" />
 
-        <form @submit.prevent="submit">
+        <!-- Heading -->
+        <div class="mb-6 text-center">
+            <h1 class="text-xl font-bold text-gray-900">Daftar Keanggotaan</h1>
+            <p class="text-sm text-gray-500 mt-1">Bergabunglah dengan komunitas Tarombo Batak</p>
+        </div>
+
+        <form @submit.prevent="submit" class="space-y-4">
+            <!-- Nama Lengkap -->
             <div>
-                <InputLabel for="name" value="Name" />
-
+                <InputLabel for="name" value="Nama Lengkap *" />
                 <TextInput
                     id="name"
                     type="text"
@@ -36,14 +44,14 @@ const submit = () => {
                     required
                     autofocus
                     autocomplete="name"
+                    placeholder="contoh: Budi sihotang"
                 />
-
-                <InputError class="mt-2" :message="form.errors.name" />
+                <InputError class="mt-1.5" :message="form.errors.name" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
-
+            <!-- Email -->
+            <div>
+                <InputLabel for="email" value="Alamat Email *" />
                 <TextInput
                     id="email"
                     type="email"
@@ -51,14 +59,43 @@ const submit = () => {
                     v-model="form.email"
                     required
                     autocomplete="username"
+                    placeholder="nama@email.com"
                 />
-
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-1.5" :message="form.errors.email" />
+                <p class="text-xs text-gray-400 mt-1">📧 Verifikasi email wajib dilakukan setelah pendaftaran.</p>
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+            <!-- Row: Marga + No HP -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <InputLabel for="marga" value="Marga" />
+                    <TextInput
+                        id="marga"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.marga"
+                        autocomplete="off"
+                        placeholder="contoh: sihotang"
+                    />
+                    <InputError class="mt-1.5" :message="form.errors.marga" />
+                </div>
+                <div>
+                    <InputLabel for="phone" value="No. HP / WhatsApp" />
+                    <TextInput
+                        id="phone"
+                        type="tel"
+                        class="mt-1 block w-full"
+                        v-model="form.phone"
+                        autocomplete="tel"
+                        placeholder="08xxxxxxxxxx"
+                    />
+                    <InputError class="mt-1.5" :message="form.errors.phone" />
+                </div>
+            </div>
 
+            <!-- Password -->
+            <div>
+                <InputLabel for="password" value="Password *" />
                 <TextInput
                     id="password"
                     type="password"
@@ -66,17 +103,14 @@ const submit = () => {
                     v-model="form.password"
                     required
                     autocomplete="new-password"
+                    placeholder="Min. 8 karakter"
                 />
-
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError class="mt-1.5" :message="form.errors.password" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
+            <!-- Confirm Password -->
+            <div>
+                <InputLabel for="password_confirmation" value="Konfirmasi Password *" />
                 <TextInput
                     id="password_confirmation"
                     type="password"
@@ -84,28 +118,25 @@ const submit = () => {
                     v-model="form.password_confirmation"
                     required
                     autocomplete="new-password"
+                    placeholder="Ulangi password"
                 />
-
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
+                <InputError class="mt-1.5" :message="form.errors.password_confirmation" />
             </div>
 
-            <div class="mt-4 flex items-center justify-end">
+            <!-- Submit -->
+            <div class="flex items-center justify-between pt-2">
                 <Link
                     :href="route('login')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    class="text-sm text-gray-600 hover:text-gray-900 underline focus:outline-none"
                 >
-                    Already registered?
+                    Sudah punya akun?
                 </Link>
 
                 <PrimaryButton
-                    class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Register
+                    {{ form.processing ? 'Mendaftar...' : 'Daftar Sekarang' }}
                 </PrimaryButton>
             </div>
         </form>

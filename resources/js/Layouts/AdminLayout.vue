@@ -9,6 +9,7 @@ const navItems = [
     { label: 'Kelola Node', icon: '🌳', route: 'admin.nodes.index' },
     { label: 'Request Masuk', icon: '📬', route: 'admin.requests.index', badge: true },
     { label: 'Riwayat Request', icon: '📜', route: 'admin.requests.history' },
+    { label: 'Daftar Anggota', icon: '👥', route: 'admin.members.index', memberBadge: true },
 ];
 
 const logout = () => router.post(route('logout'));
@@ -47,9 +48,16 @@ const logout = () => router.post(route('logout'));
                     >
                         <span class="text-lg flex-shrink-0">{{ item.icon }}</span>
                         <span v-if="sidebarOpen" class="whitespace-nowrap overflow-hidden flex-1">{{ item.label }}</span>
+                        <!-- Request badge -->
                         <span v-if="sidebarOpen && item.badge && $page.props.pendingRequestCount > 0"
                               class="bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
                             {{ $page.props.pendingRequestCount }}
+                        </span>
+                        <!-- Member pending approval badge -->
+                        <span v-if="sidebarOpen && item.memberBadge && $page.props.pendingMemberCount > 0"
+                              class="bg-amber-500 text-gray-950 text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center animate-pulse"
+                              title="Anggota menunggu persetujuan">
+                            {{ $page.props.pendingMemberCount }}
                         </span>
                     </Link>
                 </nav>
