@@ -10,7 +10,7 @@ const submit = () => form.post(route('verification.send'));
 </script>
 
 <template>
-    <Head title="Verifikasi Email — Tarombo Batak" />
+    <Head title="Verifikasi Email — Punguan Sihotang" />
 
     <div class="min-h-screen bg-gray-950 flex items-center justify-center p-4" style="font-family: 'Inter', sans-serif;">
         <!-- Background glow -->
@@ -25,9 +25,9 @@ const submit = () => form.post(route('verification.send'));
                 </div>
 
                 <!-- Logo -->
-                <div class="flex items-center justify-center gap-2 mb-6">
-                    <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-red-700 flex items-center justify-center text-sm">🌳</div>
-                    <span class="text-sm font-bold text-white tracking-wider" style="font-family: 'Cinzel', serif;">TAROMBO BATAK</span>
+                <div class="flex items-center justify-center gap-2.5 mb-6">
+                    <img src="/images/logo.png" alt="Logo" class="w-8 h-8 object-contain" />
+                    <span class="text-xs font-bold text-white tracking-wider" style="font-family: 'Cinzel', serif;">PUNGUAN SIHOTANG DOHOT BORUNA</span>
                 </div>
 
                 <h1 class="text-2xl font-bold text-white mb-3">Verifikasi Email Anda</h1>

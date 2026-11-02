@@ -24,12 +24,12 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Daftar Keanggotaan — Tarombo Batak" />
+        <Head title="Daftar Anggota — Punguan Sihotang" />
 
         <!-- Heading -->
         <div class="mb-6 text-center">
-            <h1 class="text-xl font-bold text-white tracking-tight">Daftar Keanggotaan</h1>
-            <p class="text-xs text-gray-400 mt-1">Bergabunglah dengan komunitas Tarombo Batak</p>
+            <h1 class="text-xl font-bold text-white tracking-tight">Daftar Anggota</h1>
+            <p class="text-xs text-gray-400 mt-1">Punguan Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna</p>
         </div>
 
         <form @submit.prevent="submit" class="space-y-4">

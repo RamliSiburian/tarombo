@@ -10,6 +10,7 @@ class Node extends Model
 {
     protected $fillable = [
         'parent_id',
+        'mother_spouse_id',
         'name',
         'gender',
         'marga',
@@ -26,12 +27,18 @@ class Node extends Model
     protected $casts = [
         'level' => 'integer',
         'sort_order' => 'integer',
+        'mother_spouse_id' => 'integer',
     ];
 
     // Relationships
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Node::class, 'parent_id');
+    }
+
+    public function mother(): BelongsTo
+    {
+        return $this->belongsTo(NodeSpouse::class, 'mother_spouse_id');
     }
 
     public function activeChildren(): HasMany
@@ -70,7 +77,7 @@ class Node extends Model
     // Recursive children for full tree
     public function childrenRecursive(): HasMany
     {
-        return $this->children()->with(['childrenRecursive', 'spouses', 'parent.spouses']);
+        return $this->children()->with(['childrenRecursive', 'spouses', 'parent.spouses', 'mother']);
     }
 
     // Recursively update descendants level when this node's level changes
@@ -94,6 +101,23 @@ class Node extends Model
             $node = $node->parent;
         }
         return $ids;
+    }
+
+    // Get ordered ancestor models from Root down to parent
+    public function getAncestors(): array
+    {
+        $ancestors = [];
+        $current = $this->parent;
+        while ($current !== null) {
+            $ancestors[] = $current->load(['spouses']);
+            $current = $current->parent;
+        }
+        return array_reverse($ancestors);
+    }
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(User::class, 'node_id');
     }
 
     // Scopes

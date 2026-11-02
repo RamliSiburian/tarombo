@@ -44,12 +44,12 @@ const closePanel = () => {
 
 <template>
     <Head>
-        <title>Pohon Silsilah Batak Interaktif - Tarombo Digital</title>
-        <meta name="description" content="Jelajahi garis keturunan dan pohon silsilah suku Batak secara interaktif. Temukan asal-usul marga, generasi leluhur, serta silsilah keluarga Batak Anda." />
-        <meta name="keywords" content="tarombo batak, silsilah marga batak, pohon silsilah batak, guru tatea bulan, raja borbor, raja batak, silsilah batak toba" />
-        <meta property="og:title" content="Tarombo Batak - Pohon Silsilah Marga Batak Digital" />
-        <meta property="og:description" content="Platform silsilah marga Batak interaktif. Telusuri garis leluhur, marga, dan generasi Batak dengan mudah." />
-        <meta property="og:image" content="/images/bg-batak-parallax.jpg" />
+        <title>Pohon Silsilah — Punguan Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna Se-Indonesia</title>
+        <meta name="description" content="Jelajahi garis keturunan dan pohon silsilah Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna secara digital dan interaktif." />
+        <meta name="keywords" content="tarombo sihotang, silsilah marga sihotang, pohon silsilah sihotang, raja sigodang ulu sihotang, sihotang dohot boruna" />
+        <meta property="og:title" content="Pohon Silsilah — Punguan Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna" />
+        <meta property="og:description" content="Platform silsilah marga Sihotang interaktif. Telusuri garis leluhur Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna Se-Indonesia." />
+        <meta property="og:image" content="/images/logo.png" />
         <meta property="og:type" content="website" />
     </Head>
     <AppLayout :stats="stats">

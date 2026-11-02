@@ -1,7 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import DatePicker from '@/Components/DatePicker.vue';
 
 const props = defineProps({
     parents: Array,
@@ -10,28 +11,100 @@ const props = defineProps({
 
 const isEdit = computed(() => !!props.node);
 
+// Helper to format initial dates to MM/DD/YYYY
+const formatInitialDate = (val) => {
+    if (!val) return '';
+    const str = String(val).trim();
+    if (/^\d{4}$/.test(str)) {
+        return `01/01/${str}`;
+    }
+    const ymd = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    if (ymd) {
+        return `${String(ymd[2]).padStart(2, '0')}/${String(ymd[3]).padStart(2, '0')}/${ymd[1]}`;
+    }
+    return str;
+};
+
+// Helper to clean "Ibu Kandung: ..." from deskripsi for display in textarea
+const extractCleanDeskripsi = (desc) => {
+    if (!desc) return '';
+    return desc.replace(/Ibu Kandung:\s*[^\n\r]+[\r\n]*/gi, '').trim();
+};
+
+// Helper to get initial mother_spouse_id
+const getInitialMotherId = () => {
+    if (props.node?.mother_spouse_id) return props.node.mother_spouse_id;
+    if (props.node?.parent_id) {
+        const parent = props.parents?.find(p => p.id == props.node.parent_id);
+        if (parent?.spouses?.length === 1) {
+            return parent.spouses[0].id;
+        }
+        if (parent?.spouses?.length > 1 && props.node?.deskripsi) {
+            const match = props.node.deskripsi.match(/Ibu Kandung:\s*([^\n\r]+)/i);
+            if (match) {
+                const text = match[1].toLowerCase();
+                const found = parent.spouses.find(s =>
+                    (s.name && text.includes(s.name.toLowerCase())) ||
+                    (s.marga && text.includes(s.marga.toLowerCase()))
+                );
+                if (found) return found.id;
+            }
+        }
+    }
+    return '';
+};
+
 const form = useForm({
-    parent_id:   props.node?.parent_id  || '',
-    name:        props.node?.name       || '',
-    gender:      props.node?.gender     || 'male',
-    marga:       props.node?.marga      || '',
-    asal_daerah: props.node?.asal_daerah || '',
-    tahun_lahir: props.node?.tahun_lahir || '',
-    tahun_wafat: props.node?.tahun_wafat || '',
-    foto:        null,
-    deskripsi:   props.node?.deskripsi  || '',
-    status:      props.node?.status     || 'active',
-    sort_order:  props.node?.sort_order  || 1,
+    parent_id:        props.node?.parent_id        || '',
+    mother_spouse_id: getInitialMotherId(),
+    name:             props.node?.name             || '',
+    gender:           props.node?.gender           || 'male',
+    marga:            props.node?.marga            || '',
+    asal_daerah:      props.node?.asal_daerah      || '',
+    tahun_lahir:      formatInitialDate(props.node?.tahun_lahir),
+    tahun_wafat:      formatInitialDate(props.node?.tahun_wafat),
+    foto:             null,
+    deskripsi:        extractCleanDeskripsi(props.node?.deskripsi),
+    status:           props.node?.status           || 'active',
+    sort_order:       props.node?.sort_order       || 1,
     reparent_children: [],
     spouses: props.node?.spouses?.map(s => ({
-        name: s.name, marga: s.marga || '', deskripsi: s.deskripsi || '',
+        name: s.name,
+        marga: s.marga || '',
+        tahun_lahir: formatInitialDate(s.tahun_lahir),
+        tahun_wafat: formatInitialDate(s.tahun_wafat),
+        deskripsi: s.deskripsi || '',
     })) || [],
 });
 
+const selectedParent = computed(() => {
+    if (!form.parent_id) return null;
+    return props.parents?.find(p => p.id == form.parent_id);
+});
+
+const parentSpouses = computed(() => {
+    return selectedParent.value?.spouses || [];
+});
+
 const parentChildren = computed(() => {
-    if (!form.parent_id) return [];
-    const parent = props.parents?.find(p => p.id == form.parent_id);
-    return parent?.children || [];
+    return selectedParent.value?.children || [];
+});
+
+// Watch when parent changes: ensure selected mother still belongs to the parent
+watch(() => form.parent_id, (newParentId) => {
+    if (!newParentId) {
+        form.mother_spouse_id = '';
+        return;
+    }
+    const currentParent = props.parents?.find(p => p.id == newParentId);
+    const spouses = currentParent?.spouses || [];
+    if (!spouses.some(s => s.id == form.mother_spouse_id)) {
+        if (spouses.length === 1) {
+            form.mother_spouse_id = spouses[0].id;
+        } else {
+            form.mother_spouse_id = '';
+        }
+    }
 });
 
 const fotoPreview = ref(props.node?.foto ? `/storage/${props.node.foto}` : null);
@@ -44,7 +117,7 @@ const onFotoChange = (e) => {
     }
 };
 
-const addSpouse = () => form.spouses.push({ name: '', marga: '', deskripsi: '' });
+const addSpouse = () => form.spouses.push({ name: '', marga: '', tahun_lahir: '', tahun_wafat: '', deskripsi: '' });
 const removeSpouse = (i) => form.spouses.splice(i, 1);
 
 const submit = () => {
@@ -87,6 +160,66 @@ const submit = () => {
                                 {{ p.name }} {{ p.marga ? `(${p.marga})` : '' }} — Gen {{ p.level + 1 }}
                             </option>
                         </select>
+                    </div>
+
+                    <!-- Mother Selection (Ibu Kandung) -->
+                    <div v-if="form.parent_id" class="p-4 rounded-xl border border-pink-500/20 bg-pink-500/5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <label class="block text-pink-300 text-sm font-semibold flex items-center gap-2">
+                                <span>👩</span>
+                                <span>Ibu Kandung (Istri dari {{ selectedParent?.name }})</span>
+                            </label>
+                            <span v-if="parentSpouses.length > 0" class="text-xs text-pink-400 bg-pink-500/10 px-2.5 py-1 rounded-full border border-pink-500/20">
+                                {{ parentSpouses.length }} Istri Terdata
+                            </span>
+                        </div>
+
+                        <!-- If parent has spouses -->
+                        <div v-if="parentSpouses.length > 0" class="space-y-2">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <label
+                                    v-for="(spouse, idx) in parentSpouses"
+                                    :key="spouse.id"
+                                    :class="[
+                                        'flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all text-sm',
+                                        form.mother_spouse_id == spouse.id
+                                            ? 'border-pink-500 bg-pink-500/20 shadow-md shadow-pink-500/10 text-white font-medium'
+                                            : 'border-white/10 bg-gray-800/80 hover:border-pink-500/30 text-gray-300'
+                                    ]"
+                                >
+                                    <input
+                                        type="radio"
+                                        :value="spouse.id"
+                                        v-model="form.mother_spouse_id"
+                                        class="text-pink-500 focus:ring-pink-500 bg-gray-800 border-white/20 w-4 h-4"
+                                    />
+                                    <div class="flex-1 min-w-0">
+                                        <div class="truncate font-semibold">{{ spouse.name }}</div>
+                                        <div class="text-xs text-pink-400/80">
+                                            {{ spouse.marga ? `Marga ${spouse.marga}` : 'Marga belum diset' }}
+                                            <span class="text-gray-500 ml-1">• Istri ke-{{ idx + 1 }}</span>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <button
+                                v-if="form.mother_spouse_id"
+                                type="button"
+                                @click="form.mother_spouse_id = ''"
+                                class="text-xs text-gray-400 hover:text-red-400 transition-colors flex items-center gap-1 mt-1"
+                            >
+                                ✕ Kosongkan pilihan Ibu Kandung
+                            </button>
+                        </div>
+
+                        <!-- If parent has NO spouses -->
+                        <div v-else class="text-xs text-amber-300/90 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 leading-relaxed">
+                            ⚠️ <strong>{{ selectedParent?.name }}</strong> belum memiliki data istri di silsilah.
+                            Untuk menetapkan ibu kandung, silakan tambahkan data istri pada node <strong>{{ selectedParent?.name }}</strong> terlebih dahulu.
+                        </div>
+
+                        <div v-if="form.errors.mother_spouse_id" class="text-red-400 text-xs">{{ form.errors.mother_spouse_id }}</div>
                     </div>
 
                     <!-- Reparent Existing Children Checklist (Kasus Sisip Generasi Perantara) -->
@@ -161,17 +294,23 @@ const submit = () => {
                         </div>
                     </div>
 
-                    <!-- Tahun -->
-                    <div class="grid grid-cols-2 gap-4">
+                    <!-- Tanggal / Tahun Lahir & Wafat -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-gray-400 text-sm mb-1.5">Tahun Lahir</label>
-                            <input v-model="form.tahun_lahir" type="text" placeholder="Tahun lahir"
-                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                            <label class="block text-gray-400 text-sm mb-1.5 flex items-center justify-between">
+                                <span>Tanggal / Tahun Lahir</span>
+                                <span class="text-[11px] text-amber-400/90 font-mono">MM/DD/YYYY</span>
+                            </label>
+                            <DatePicker v-model="form.tahun_lahir" placeholder="MM/DD/YYYY" />
+                            <div v-if="form.errors.tahun_lahir" class="text-red-400 text-xs mt-1">{{ form.errors.tahun_lahir }}</div>
                         </div>
                         <div>
-                            <label class="block text-gray-400 text-sm mb-1.5">Tahun Wafat</label>
-                            <input v-model="form.tahun_wafat" type="text" placeholder="Kosongkan jika masih hidup"
-                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                            <label class="block text-gray-400 text-sm mb-1.5 flex items-center justify-between">
+                                <span>Tanggal / Tahun Wafat</span>
+                                <span class="text-[11px] text-gray-500 font-mono">MM/DD/YYYY (opsional)</span>
+                            </label>
+                            <DatePicker v-model="form.tahun_wafat" placeholder="Kosongkan jika masih hidup" />
+                            <div v-if="form.errors.tahun_wafat" class="text-red-400 text-xs mt-1">{{ form.errors.tahun_wafat }}</div>
                         </div>
                     </div>
                 </div>
@@ -198,9 +337,10 @@ const submit = () => {
 
                     <!-- Deskripsi -->
                     <div>
-                        <label class="block text-gray-400 text-sm mb-1.5">Deskripsi</label>
+                        <label class="block text-gray-400 text-sm mb-1.5">Deskripsi / Riwayat Tambahan</label>
                         <textarea v-model="form.deskripsi" rows="3" placeholder="Keterangan singkat..."
                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors resize-none"></textarea>
+                        <p class="text-[11px] text-gray-500 mt-1">Catatan: Data Ibu Kandung yang dipilih di atas akan otomatis disinkronkan ke profil dan deskripsi silsilah.</p>
                     </div>
                 </div>
 
@@ -233,6 +373,22 @@ const submit = () => {
                                 <label class="block text-gray-500 text-xs mb-1">Marga</label>
                                 <input v-model="spouse.marga" type="text" placeholder="Marga istri"
                                        class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-pink-500/40 transition-colors"/>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-gray-500 text-xs mb-1 flex items-center justify-between">
+                                    <span>Tgl Lahir Istri</span>
+                                    <span class="text-[10px] text-pink-400/80 font-mono">MM/DD/YYYY</span>
+                                </label>
+                                <DatePicker v-model="spouse.tahun_lahir" placeholder="MM/DD/YYYY" />
+                            </div>
+                            <div>
+                                <label class="block text-gray-500 text-xs mb-1 flex items-center justify-between">
+                                    <span>Tgl Wafat Istri</span>
+                                    <span class="text-[10px] text-gray-500 font-mono">Kosongkan jika hidup</span>
+                                </label>
+                                <DatePicker v-model="spouse.tahun_wafat" placeholder="Kosongkan jika hidup" />
                             </div>
                         </div>
                         <div>

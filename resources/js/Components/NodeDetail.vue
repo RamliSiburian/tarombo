@@ -17,6 +17,9 @@ const getWifeLabel = (index) => {
 };
 
 const extractedMotherFromDesc = computed(() => {
+    if (props.node?.mother) {
+        return props.node.mother.name + (props.node.mother.marga ? ` (Marga ${props.node.mother.marga})` : '');
+    }
     if (!props.node?.deskripsi) return null;
     const match = props.node.deskripsi.match(/Ibu Kandung:\s*([^\n\r]+)/i);
     return match ? match[1].trim() : null;

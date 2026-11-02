@@ -100,6 +100,9 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                     <div class="flex-1 min-w-0">
                         <div class="flex flex-wrap items-center gap-2 mb-1">
                             <h3 class="text-white font-semibold">{{ req.name }}</h3>
+                            <span v-if="req.is_self" class="text-xs text-purple-300 bg-purple-500/15 border border-purple-500/30 px-2 py-0.5 rounded-full font-semibold">
+                                👤 Pendaftaran Anggota
+                            </span>
                             <span v-if="req.marga" class="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
                                 Marga {{ req.marga }}
                             </span>

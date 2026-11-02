@@ -11,6 +11,8 @@ class NodeSpouse extends Model
         'node_id',
         'name',
         'marga',
+        'tahun_lahir',
+        'tahun_wafat',
         'foto',
         'deskripsi',
     ];

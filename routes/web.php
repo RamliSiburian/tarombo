@@ -4,7 +4,8 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\NodeController as AdminNodeController;
 use App\Http\Controllers\Admin\RequestController as AdminRequestController;
 use App\Http\Controllers\Admin\ImportController as AdminImportController;
-use App\Http\Controllers\Admin\MemberController as AdminMemberController;
+use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\NodeRequestController;
@@ -26,9 +27,16 @@ Route::get('/pohon', [TreeController::class, 'index'])->name('tree.index');
 Route::get('/api/nodes/{node}/ancestors', [TreeController::class, 'ancestors'])->name('tree.ancestors');
 Route::get('/api/nodes/search', [TreeController::class, 'search'])->name('tree.search');
 
-// Public node request form
+// Public node request form (including self-registration)
 Route::get('/request', [NodeRequestController::class, 'create'])->name('request.create');
 Route::post('/request', [NodeRequestController::class, 'store'])->name('request.store');
+
+// Public news & articles portal
+Route::get('/berita', [ArticleController::class, 'index'])->name('articles.index');
+Route::get('/berita/{slug}', [ArticleController::class, 'show'])->name('articles.show');
+
+// Redirect standalone register to request form
+Route::get('/register', fn() => redirect()->route('request.create'))->name('register');
 
 /*
 |--------------------------------------------------------------------------
@@ -77,11 +85,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/requests/{nodeRequest}/reject', [AdminRequestController::class, 'reject'])->name('requests.reject');
     Route::delete('/requests/{nodeRequest}', [AdminRequestController::class, 'destroy'])->name('requests.destroy');
 
-    // Members management
-    Route::get('/members', [AdminMemberController::class, 'index'])->name('members.index');
-    Route::post('/members/{user}/approve', [AdminMemberController::class, 'approve'])->name('members.approve');
-    Route::post('/members/{user}/reject', [AdminMemberController::class, 'reject'])->name('members.reject');
-    Route::delete('/members/{user}', [AdminMemberController::class, 'destroy'])->name('members.destroy');
+    // Berita & Kegiatan management
+    Route::resource('articles', AdminArticleController::class);
 });
 
 require __DIR__ . '/auth.php';

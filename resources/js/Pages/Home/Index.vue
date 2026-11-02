@@ -1,12 +1,16 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 
 const props = defineProps({
     stats: {
         type: Object,
         default: () => ({ total_nodes: 0, total_marga: 0 }),
+    },
+    articles: {
+        type: Array,
+        default: () => [],
     },
 });
 
@@ -103,39 +107,46 @@ onUnmounted(() => {
     if (observer) observer.disconnect();
 });
 
-// Berita/Artikel Batak
-const articles = [
+// Map category to icon/color
+const categoryMeta = {
+    kegiatan: { icon: '🎉', color: 'from-emerald-500/20 to-teal-500/10', border: 'border-emerald-500/30', label: 'Kegiatan' },
+    berita:   { icon: '📰', color: 'from-blue-500/20 to-indigo-500/10', border: 'border-blue-500/30', label: 'Berita' },
+    sejarah:  { icon: '🏛️', color: 'from-amber-500/20 to-yellow-500/10', border: 'border-amber-500/30', label: 'Sejarah' },
+    budaya:   { icon: '🪔', color: 'from-purple-500/20 to-violet-500/10', border: 'border-purple-500/30', label: 'Budaya' },
+};
+
+// Static fallback articles for when no articles exist in DB yet
+const staticFallback = [
     {
-        id: 1,
-        category: 'Sejarah',
-        date: '1 Oktober 2026',
+        id: 's1',
+        category: 'sejarah',
+        created_at: '2026-10-01',
         title: 'Si Raja Batak: Leluhur Marga-Marga Batak',
-        excerpt: 'Si Raja Batak dipercaya sebagai moyang dari semua marga Batak yang mendiami kawasan Toba dan sekitarnya. Kisah hidupnya menjadi fondasi dari sistem kekerabatan Batak.',
-        icon: '🏛️',
-        color: 'from-amber-500/20 to-yellow-500/10',
-        border: 'border-amber-500/30',
+        excerpt: 'Si Raja Batak dipercaya sebagai moyang dari semua marga Batak yang mendiami kawasan Toba dan sekitarnya.',
     },
     {
-        id: 2,
-        category: 'Budaya',
-        date: '25 September 2026',
+        id: 's2',
+        category: 'budaya',
+        created_at: '2026-09-25',
         title: 'Dalihan Na Tolu: Sistem Kekerabatan Orang Batak',
-        excerpt: 'Dalihan Na Tolu adalah falsafah hidup orang Batak yang mengatur hubungan kekerabatan antara Hula-hula, Dongan Tubu, dan Boru. Fondasi sosial yang tak ternilai.',
-        icon: '🤝',
-        color: 'from-red-500/20 to-rose-500/10',
-        border: 'border-red-500/30',
+        excerpt: 'Dalihan Na Tolu adalah falsafah hidup orang Batak yang mengatur hubungan antara Hula-hula, Dongan Tubu, dan Boru.',
     },
     {
-        id: 3,
-        category: 'Tradisi',
-        date: '18 September 2026',
+        id: 's3',
+        category: 'budaya',
+        created_at: '2026-09-18',
         title: 'Tradisi Mangongkal Holi: Menghormati Leluhur',
-        excerpt: 'Mangongkal Holi adalah upacara pemindahan tulang belulang leluhur yang menjadi salah satu ritual terpenting dalam budaya Batak untuk menghormati para nenek moyang.',
-        icon: '🪔',
-        color: 'from-purple-500/20 to-violet-500/10',
-        border: 'border-purple-500/30',
+        excerpt: 'Mangongkal Holi adalah upacara pemindahan tulang belulang leluhur yang menjadi salah satu ritual terpenting dalam budaya Batak.',
     },
 ];
+
+// Use dynamic articles from backend, fallback to static if empty (max 6 items)
+const displayArticles = computed(() => {
+    const list = props.articles && props.articles.length > 0 ? props.articles : staticFallback;
+    return list.slice(0, 6);
+});
+
+const formatArticleDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
 
 const features = [
     {
@@ -154,18 +165,18 @@ const features = [
         desc: 'Kontribusikan data silsilah keluarga Anda. Setiap pengajuan akan diverifikasi oleh admin.',
     },
     {
-        icon: '👥',
-        title: 'Keanggotaan Komunitas',
-        desc: 'Bergabunglah sebagai anggota untuk akses fitur eksklusif dan terhubung dengan sesama Batak.',
+        icon: '🪪',
+        title: 'Daftar Akun Anggota',
+        desc: 'Ajukan data silsilah untuk diri sendiri dan otomatis daftar sebagai anggota Punguan Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna.',
     },
 ];
 </script>
 
 <template>
     <Head>
-        <title>Tarombo Batak — Menelusuri Silsilah Leluhur Batak</title>
-        <meta name="description" content="Tarombo Batak adalah platform digital untuk menelusuri, mendokumentasikan, dan melestarikan silsilah leluhur suku Batak. Temukan akar keluarga Anda." />
-        <meta name="keywords" content="tarombo, silsilah batak, marga batak, pohon keluarga batak, leluhur batak" />
+        <title>Punguan Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna Se-Indonesia</title>
+        <meta name="description" content="Punguan Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna Se-Indonesia - Platform digital untuk menelusuri, mendokumentasikan, dan melestarikan silsilah marga Sihotang. Temukan akar keluarga Anda." />
+        <meta name="keywords" content="punguan sihotang, tarombo sihotang, silsilah sihotang, marga sihotang, raja sigodang ulu sihotang, sihotang dohot boruna" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
     </Head>
@@ -184,12 +195,14 @@ const features = [
                 <div class="flex items-center justify-between h-16">
                     <!-- Logo -->
                     <Link href="/" class="flex items-center gap-2.5 group">
-                        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500 to-red-700 flex items-center justify-center text-lg shadow-lg shadow-amber-500/30 group-hover:scale-105 transition-transform duration-200">
-                            🌳
-                        </div>
+                        <img
+                            src="/images/logo.png"
+                            alt="Logo Punguan Sihotang"
+                            class="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-200 drop-shadow-lg"
+                        />
                         <div>
-                            <span class="text-base font-bold text-white group-hover:text-amber-400 transition-colors duration-200" style="font-family: 'Cinzel', serif;">TAROMBO</span>
-                            <span class="block text-[10px] text-amber-400/70 leading-none tracking-widest uppercase">Batak</span>
+                            <span class="text-base font-bold text-white group-hover:text-amber-400 transition-colors duration-200" style="font-family: 'Cinzel', serif;">SIHOTANG</span>
+                            <span class="block text-[10px] text-amber-400/70 leading-none tracking-widest uppercase">Dohot Boruna</span>
                         </div>
                     </Link>
 
@@ -197,6 +210,7 @@ const features = [
                     <div class="hidden md:flex items-center gap-1">
                         <Link href="/" class="px-4 py-2 text-sm text-amber-400 font-medium rounded-lg bg-amber-500/10 hover:bg-amber-500/20 transition-colors">Beranda</Link>
                         <Link :href="route('tree.index')" class="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Pohon Silsilah</Link>
+                        <Link :href="route('articles.index')" class="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Berita & Kegiatan</Link>
                         <Link :href="route('request.create')" class="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Ajukan Data</Link>
                     </div>
 
@@ -222,8 +236,8 @@ const features = [
                             <Link :href="route('login')" class="px-4 py-1.5 text-sm text-gray-300 hover:text-white border border-white/20 hover:border-white/40 rounded-lg transition-all">
                                 Masuk
                             </Link>
-                            <Link :href="route('register')" class="px-4 py-1.5 text-sm font-medium text-gray-900 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 rounded-lg transition-all shadow-lg shadow-amber-500/30 hover:scale-[1.02]">
-                                Daftar
+                            <Link :href="route('request.create')" class="px-4 py-1.5 text-sm font-medium text-gray-900 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 rounded-lg transition-all shadow-lg shadow-amber-500/30 hover:scale-[1.02]">
+                                Ajukan Silsilah
                             </Link>
                         </template>
 
@@ -239,6 +253,7 @@ const features = [
                 <div v-show="mobileMenu" class="md:hidden pb-4 border-t border-white/10 mt-1 pt-3 space-y-1">
                     <Link href="/" class="block px-4 py-2.5 text-sm text-amber-400 bg-amber-500/10 rounded-lg">Beranda</Link>
                     <Link :href="route('tree.index')" class="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Pohon Silsilah</Link>
+                    <Link :href="route('articles.index')" class="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Berita & Kegiatan</Link>
                     <Link :href="route('request.create')" class="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Ajukan Data</Link>
                 </div>
             </div>
@@ -264,21 +279,21 @@ const features = [
                 <!-- Badge -->
                 <div class="motion-reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 text-xs font-medium tracking-wider uppercase mb-8 backdrop-blur-sm shadow-inner shadow-amber-500/10">
                     <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
-                    Platform Silsilah Batak Digital
+                    Silsilah Marga Sihotang Digital
                 </div>
 
                 <!-- Main Title -->
-                <h1 class="motion-reveal motion-delay-100 text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight tracking-tight" style="font-family: 'Cinzel', serif;">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500">Tarombo</span>
-                    <span class="block text-white mt-1">Batak</span>
+                <h1 class="motion-reveal motion-delay-100 text-3xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight tracking-tight" style="font-family: 'Cinzel', serif;">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500">PUNGUAN POMPARAN RAJA SIGODANG ULU SIHOTANG</span>
+                    <span class="block text-white mt-2 text-2xl sm:text-4xl lg:text-5xl">DOHOT BORUNA SE-INDONESIA</span>
                 </h1>
 
                 <!-- Subtitle -->
-                <p class="motion-reveal motion-delay-200 text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-4 leading-relaxed">
-                    Menelusuri, mendokumentasikan, dan melestarikan silsilah leluhur suku Batak untuk generasi mendatang.
+                <p class="motion-reveal motion-delay-200 text-base sm:text-lg text-gray-300 max-w-3xl mx-auto mb-4 leading-relaxed">
+                    Menelusuri, mendokumentasikan, dan melestarikan silsilah leluhur Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna untuk generasi mendatang.
                 </p>
                 <p class="motion-reveal motion-delay-200 text-sm text-gray-500 max-w-lg mx-auto mb-12 italic">
-                    "Anakkonhi do hamoraon di au" — Anak-anak adalah kekayaanku
+                    "Sisada lulu anak, sisada lulu boru" — Seia sekata dalam persaudaraan pomparan
                 </p>
 
                 <!-- CTA Buttons -->
@@ -292,11 +307,11 @@ const features = [
                         <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </Link>
                     <Link
-                        :href="route('register')"
+                        :href="route('request.create')"
                         class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/10 hover:border-amber-400/40 transition-all duration-200 backdrop-blur-sm hover:-translate-y-0.5 active:translate-y-0"
                     >
-                        <span class="text-lg">👥</span>
-                        <span>Daftar Keanggotaan</span>
+                        <span class="text-lg">🌳</span>
+                        <span>Ajukan & Daftar Anggota</span>
                     </Link>
                 </div>
 
@@ -386,44 +401,73 @@ const features = [
                             Kenali Budaya Batak
                         </h2>
                     </div>
-                    <span class="hidden sm:inline-flex items-center gap-1.5 text-xs text-amber-400/80 font-medium px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                        Portal Budaya Digital
-                    </span>
+                    <Link
+                        :href="route('articles.index')"
+                        class="hidden sm:inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-white font-medium px-3.5 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-200"
+                    >
+                        <span>Portal Berita & Kegiatan</span>
+                        <span>→</span>
+                    </Link>
                 </div>
 
                 <!-- Articles Grid with staggered motion -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <article
-                        v-for="(art, idx) in articles"
+                    <Link
+                        v-for="(art, idx) in displayArticles"
                         :key="art.id"
+                        :href="art.slug ? route('articles.show', art.slug) : route('articles.index')"
                         :class="[
                             'motion-reveal',
                             `motion-delay-${(idx + 1) * 100}`,
-                            'group p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/50 cursor-pointer bg-gradient-to-br',
-                            art.color,
-                            art.border,
+                            'group p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/50 cursor-pointer bg-gradient-to-br flex flex-col justify-between block',
+                            categoryMeta[art.category]?.color || 'from-amber-500/20 to-yellow-500/10',
+                            categoryMeta[art.category]?.border || 'border-amber-500/30',
                             'hover:border-amber-400/50'
                         ]"
                     >
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="text-2xl group-hover:scale-110 transition-transform duration-200">{{ art.icon }}</span>
-                            <span class="text-xs font-semibold tracking-wider uppercase text-amber-400/90 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30">
-                                {{ art.category }}
-                            </span>
+                        <div>
+                            <!-- Cover Image (if available from DB) -->
+                            <div v-if="art.image" class="-mx-6 -mt-6 mb-4 h-44 overflow-hidden rounded-t-2xl">
+                                <img :src="'/storage/' + art.image" :alt="art.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+                            </div>
+
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="text-2xl group-hover:scale-110 transition-transform duration-200">
+                                    {{ categoryMeta[art.category]?.icon || '📰' }}
+                                </span>
+                                <span class="text-xs font-semibold tracking-wider uppercase text-amber-400/90 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30">
+                                    {{ categoryMeta[art.category]?.label || art.category }}
+                                </span>
+                                <span v-if="art.event_date" class="text-xs text-emerald-400 ml-auto">📅 {{ formatArticleDate(art.event_date) }}</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-3 leading-snug group-hover:text-amber-400 transition-colors">
+                                {{ art.title }}
+                            </h3>
+                            <p class="text-sm text-gray-400 leading-relaxed mb-5 line-clamp-3">
+                                {{ art.excerpt || art.content }}
+                            </p>
                         </div>
-                        <h3 class="text-lg font-bold text-white mb-3 leading-snug group-hover:text-amber-400 transition-colors">
-                            {{ art.title }}
-                        </h3>
-                        <p class="text-sm text-gray-400 leading-relaxed mb-5 line-clamp-3">
-                            {{ art.excerpt }}
-                        </p>
-                        <div class="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-white/5">
-                            <span>{{ art.date }}</span>
+
+                        <div class="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-white/5 mt-auto">
+                            <span>{{ formatArticleDate(art.created_at) }}</span>
                             <span class="text-amber-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
                                 Baca Selengkapnya →
                             </span>
                         </div>
-                    </article>
+                    </Link>
+                </div>
+
+                <!-- Show More Articles Button (Poin: Button show more artikel merujuk ke portal berita) -->
+                <div class="text-center mt-12 motion-reveal">
+                    <Link
+                        :href="route('articles.index')"
+                        class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-gradient-to-r from-amber-500/15 via-amber-500/25 to-amber-500/15 hover:from-amber-500 hover:to-amber-600 hover:text-gray-950 text-amber-400 font-bold text-sm rounded-xl border border-amber-500/30 hover:border-amber-400 transition-all duration-300 shadow-xl shadow-black/40 hover:scale-[1.02]"
+                    >
+                        <span>📰 Lihat Semua Berita & Kegiatan</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </Link>
                 </div>
             </div>
         </section>
@@ -442,18 +486,18 @@ const features = [
 
                     <div class="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300">🤝</div>
                     <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight" style="font-family: 'Cinzel', serif;">
-                        Bergabunglah dengan <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">Komunitas Tarombo</span>
+                        Bergabunglah dengan <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">Punguan Sihotang</span>
                     </h2>
                     <p class="text-gray-400 text-base leading-relaxed mb-8 max-w-2xl mx-auto">
-                        Daftarkan diri sebagai anggota untuk berkontribusi dalam melengkapi data silsilah keluarga Anda,
-                        terhubung dengan sesama keturunan Batak, dan menjadi bagian dari pelestarian warisan budaya leluhur.
+                        Daftarkan diri sebagai anggota untuk melengkapi data silsilah keluarga Anda,
+                        terhubung dengan sesama Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna Se-Indonesia.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <Link
-                            :href="route('register')"
+                            :href="route('request.create')"
                             class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-gray-900 font-bold rounded-xl hover:from-amber-400 hover:to-amber-500 transition-all duration-200 shadow-xl shadow-amber-500/30 hover:scale-[1.02] active:scale-100"
                         >
-                            Daftar Sekarang — Gratis
+                            🌳 Ajukan Silsilah & Daftar Anggota
                         </Link>
                         <Link
                             :href="route('tree.index')"
@@ -472,20 +516,21 @@ const features = [
             <div class="max-w-7xl mx-auto px-6">
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
                     <!-- Logo -->
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-red-700 flex items-center justify-center text-base">🌳</div>
-                        <span class="text-sm font-bold text-white" style="font-family: 'Cinzel', serif;">TAROMBO BATAK</span>
+                    <div class="flex items-center gap-3">
+                        <img src="/images/logo.png" alt="Logo" class="w-9 h-9 object-contain" />
+                        <span class="text-xs sm:text-sm font-bold text-white tracking-wider" style="font-family: 'Cinzel', serif;">PUNGUAN POMPARAN RAJA SIGODANG ULU SIHOTANG DOHOT BORUNA SE-INDONESIA</span>
                     </div>
 
                     <!-- Links -->
-                    <div class="flex items-center gap-6 text-sm text-gray-400">
+                    <div class="flex flex-wrap items-center gap-6 text-sm text-gray-400">
                         <Link href="/" class="hover:text-amber-400 transition-colors">Beranda</Link>
                         <Link :href="route('tree.index')" class="hover:text-amber-400 transition-colors">Pohon Silsilah</Link>
+                        <Link :href="route('articles.index')" class="hover:text-amber-400 transition-colors">Berita & Kegiatan</Link>
                         <Link :href="route('request.create')" class="hover:text-amber-400 transition-colors">Ajukan Data</Link>
                         <Link :href="route('login')" class="hover:text-amber-400 transition-colors">Masuk</Link>
                     </div>
 
-                    <p class="text-xs text-gray-600">© {{ new Date().getFullYear() }} Tarombo Batak</p>
+                    <p class="text-xs text-gray-600">© {{ new Date().getFullYear() }} Punguan Sihotang Dohot Boruna</p>
                 </div>
             </div>
         </footer>

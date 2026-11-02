@@ -9,7 +9,7 @@ const navItems = [
     { label: 'Kelola Node', icon: '🌳', route: 'admin.nodes.index' },
     { label: 'Request Masuk', icon: '📬', route: 'admin.requests.index', badge: true },
     { label: 'Riwayat Request', icon: '📜', route: 'admin.requests.history' },
-    { label: 'Daftar Anggota', icon: '👥', route: 'admin.members.index', memberBadge: true },
+    { label: 'Berita & Kegiatan', icon: '📰', route: 'admin.articles.index' },
 ];
 
 const logout = () => router.post(route('logout'));
@@ -22,13 +22,11 @@ const logout = () => router.post(route('logout'));
             <div class="flex flex-col h-full">
                 <!-- Logo -->
                 <div class="p-4 border-b border-white/5">
-                    <Link :href="route('admin.dashboard')" class="flex items-center gap-3">
-                        <div class="w-9 h-9 flex-shrink-0 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center">
-                            <span class="text-gray-900 font-bold text-lg">T</span>
-                        </div>
+                    <Link :href="route('admin.dashboard')" class="flex items-center gap-2.5">
+                        <img src="/images/logo.png" alt="Logo" class="w-9 h-9 flex-shrink-0 object-contain" />
                         <div v-if="sidebarOpen" class="overflow-hidden">
-                            <div class="text-white font-bold text-base leading-tight whitespace-nowrap">Tarombo</div>
-                            <div class="text-amber-400 text-xs leading-tight whitespace-nowrap">Admin Panel</div>
+                            <div class="text-white font-bold text-sm leading-tight whitespace-nowrap font-serif">Punguan Sihotang</div>
+                            <div class="text-amber-400 text-[10px] leading-tight whitespace-nowrap uppercase tracking-wider">Admin Panel</div>
                         </div>
                     </Link>
                 </div>

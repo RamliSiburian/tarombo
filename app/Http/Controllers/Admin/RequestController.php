@@ -7,6 +7,7 @@ use App\Mail\RequestAccepted;
 use App\Mail\RequestRejected;
 use App\Models\Node;
 use App\Models\NodeRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -50,8 +51,9 @@ class RequestController extends Controller
             $sortOrder = !empty($validated['sort_order']) ? (int) $validated['sort_order'] : ($nodeRequest->sort_order ?: 1);
 
             $node = Node::create([
-                'parent_id'   => $nodeRequest->parent_node_id,
-                'name'        => $nodeRequest->name,
+                'parent_id'        => $nodeRequest->parent_node_id,
+                'mother_spouse_id' => $nodeRequest->mother_spouse_id,
+                'name'             => $nodeRequest->name,
                 'gender'      => $nodeRequest->gender,
                 'marga'       => $nodeRequest->marga,
                 'asal_daerah' => $nodeRequest->asal_daerah,
@@ -66,14 +68,24 @@ class RequestController extends Controller
 
             if ($nodeRequest->gender === 'male' && $nodeRequest->spouse_name) {
                 $node->spouses()->create([
-                    'name'       => $nodeRequest->spouse_name,
-                    'marga'      => $nodeRequest->spouse_marga,
-                    'foto'       => $nodeRequest->spouse_foto,
-                    'deskripsi'  => $nodeRequest->spouse_deskripsi,
+                    'name'        => $nodeRequest->spouse_name,
+                    'marga'       => $nodeRequest->spouse_marga,
+                    'tahun_lahir' => $nodeRequest->spouse_tahun_lahir,
+                    'tahun_wafat' => $nodeRequest->spouse_tahun_wafat,
+                    'foto'        => $nodeRequest->spouse_foto,
+                    'deskripsi'   => $nodeRequest->spouse_deskripsi,
                 ]);
             }
 
             $nodeRequest->update(['node_id' => $node->id]);
+        }
+
+        // If this request was for a member self-registration, activate the member account
+        if ($nodeRequest->user_id) {
+            User::where('id', $nodeRequest->user_id)->update([
+                'node_id'           => $node->id,
+                'membership_status' => 'approved',
+            ]);
         }
 
         // Update request status
@@ -107,6 +119,13 @@ class RequestController extends Controller
         // If a pending node was created for this request, delete it from the tree
         if ($nodeRequest->node_id && ($node = Node::find($nodeRequest->node_id))) {
             $node->delete();
+        }
+
+        // If this request was for a member self-registration, update membership status
+        if ($nodeRequest->user_id) {
+            User::where('id', $nodeRequest->user_id)->update([
+                'membership_status' => 'rejected',
+            ]);
         }
 
         $nodeRequest->update([

@@ -10,6 +10,7 @@ class NodeRequest extends Model
     protected $fillable = [
         'node_id',
         'parent_node_id',
+        'mother_spouse_id',
         'name',
         'gender',
         'marga',
@@ -20,10 +21,15 @@ class NodeRequest extends Model
         'deskripsi',
         'spouse_name',
         'spouse_marga',
+        'spouse_tahun_lahir',
+        'spouse_tahun_wafat',
         'spouse_foto',
         'spouse_deskripsi',
         'requester_name',
         'requester_email',
+        'requester_phone',
+        'is_self',
+        'user_id',
         'anak_ke',
         'sort_order',
         'status',
@@ -35,8 +41,14 @@ class NodeRequest extends Model
     protected $casts = [
         'anak_ke' => 'integer',
         'sort_order' => 'integer',
+        'is_self' => 'boolean',
         'reviewed_at' => 'datetime',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     public function node(): BelongsTo
     {

@@ -496,9 +496,9 @@ defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, getSvgElement, getHighl
         <!-- Legend & Instructions -->
         <div class="absolute bottom-4 left-4 z-10 bg-gray-900/90 backdrop-blur-md border border-white/10 rounded-xl p-3 text-xs space-y-1.5 shadow-2xl max-w-xs">
             <div class="flex items-center justify-between gap-3 mb-2 pb-1.5 border-b border-white/10">
-                <span class="text-[11px] text-amber-400 font-semibold flex items-center gap-1">
-                    <span>🏛️</span>
-                    <span>Tarombo Batak</span>
+                <span class="text-[11px] text-amber-400 font-semibold flex items-center gap-1.5">
+                    <img src="/images/logo.png" alt="Logo" class="w-4 h-4 object-contain" />
+                    <span>Punguan Sihotang</span>
                 </span>
                 <span class="text-[10px] text-gray-400">💡 Klik node untuk detail</span>
             </div>

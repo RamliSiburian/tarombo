@@ -48,12 +48,14 @@ onUnmounted(() => {
                     <div class="flex items-center gap-3 sm:gap-5 flex-1 min-w-0">
                         <!-- Logo -->
                         <Link :href="route('home')" class="flex items-center gap-2.5 group flex-shrink-0" title="Kembali ke Beranda">
-                            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                                <span class="text-gray-950 font-black text-lg">T</span>
-                            </div>
+                            <img
+                                src="/images/logo.png"
+                                alt="Logo Punguan Sihotang"
+                                class="h-10 w-auto object-contain group-hover:scale-105 transition-transform drop-shadow"
+                            />
                             <div class="hidden sm:block">
-                                <div class="text-white font-bold text-base leading-tight">Tarombo</div>
-                                <div class="text-amber-400 text-[11px] leading-tight font-medium">Silsilah Batak</div>
+                                <div class="text-white font-bold text-sm tracking-tight leading-tight font-serif">PUNGUAN SIHOTANG</div>
+                                <div class="text-amber-400 text-[9px] leading-tight font-medium uppercase tracking-wider">Pomparan Raja Sigodang Ulu</div>
                             </div>
                         </Link>
 
@@ -134,6 +136,15 @@ onUnmounted(() => {
                                         </Link>
 
                                         <Link
+                                            :href="route('articles.index')"
+                                            @click="closeDropdown"
+                                            class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-200 hover:text-white hover:bg-white/5 transition-colors"
+                                        >
+                                            <span class="text-base">📰</span>
+                                            <span class="font-medium">Berita & Kegiatan</span>
+                                        </Link>
+
+                                        <Link
                                             :href="route('request.create')"
                                             @click="closeDropdown"
                                             class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-amber-300 hover:text-amber-200 hover:bg-amber-500/10 transition-colors"
@@ -184,7 +195,7 @@ onUnmounted(() => {
                                                 <span class="text-xs text-gray-400">→</span>
                                             </Link>
                                             <Link
-                                                :href="route('register')"
+                                                :href="route('request.create')"
                                                 @click="closeDropdown"
                                                 class="flex items-center justify-between px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 text-sm font-semibold transition-colors"
                                             >

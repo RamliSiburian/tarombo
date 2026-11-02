@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import axios from 'axios';
 import AppLayout from '@/Layouts/AppLayout.vue';
+import DatePicker from '@/Components/DatePicker.vue';
 
 const props = defineProps({
     initialNodes: {
@@ -24,10 +25,15 @@ const form = useForm({
     foto: null,
     deskripsi: '',
     spouses: [
-        { name: '', marga: '', deskripsi: '' }
+        { name: '', marga: '', tahun_lahir: '', tahun_wafat: '', deskripsi: '' }
     ],
+    is_self: false,
     requester_name: '',
     requester_email: '',
+    email: '',
+    phone: '',
+    password: '',
+    password_confirmation: '',
 });
 
 const step = ref(1);
@@ -162,10 +168,17 @@ const isStep1Disabled = computed(() => {
 });
 
 const isStep3Disabled = computed(() => {
-    if (!form.requester_name || !form.requester_name.trim()) return true;
-    if (!form.requester_email || !form.requester_email.trim()) return true;
     if (form.processing) return true;
-    return false;
+    if (form.is_self) {
+        if (!form.email || !form.email.trim()) return true;
+        if (!form.password || form.password.length < 8) return true;
+        if (form.password !== form.password_confirmation) return true;
+        return false;
+    } else {
+        if (!form.requester_name || !form.requester_name.trim()) return true;
+        if (!form.requester_email || !form.requester_email.trim()) return true;
+        return false;
+    }
 });
 
 const getWifeLabel = (index) => {
@@ -174,7 +187,7 @@ const getWifeLabel = (index) => {
 };
 
 const addSpouse = () => {
-    form.spouses.push({ name: '', marga: '', deskripsi: '' });
+    form.spouses.push({ name: '', marga: '', tahun_lahir: '', tahun_wafat: '', deskripsi: '' });
 };
 
 const removeSpouse = (index) => {
@@ -212,8 +225,82 @@ const prevStep = () => {
 };
 
 const submit = () => {
-    form.post(route('request.store'), {
+    if (form.processing) return;
+
+    // Validate Step 1 first
+    if (isStep1Disabled.value) {
+        if (!form.parent_node_id) {
+            alert('Silakan cari dan pilih leluhur / ayah terlebih dahulu pada Langkah 1.');
+        } else if (!selectedParent.value?.spouses || selectedParent.value.spouses.length === 0) {
+            alert('Leluhur / ayah yang dipilih belum memiliki data istri di silsilah. Harap perbarui data istri ayah terlebih dahulu.');
+        } else if (!form.mother_spouse_id) {
+            alert('Silakan pilih salah satu istri dari ayah sebagai Ibu Kandung pada Langkah 1.');
+        } else if (!form.name || !form.name.trim()) {
+            alert('Silakan isi nama lengkap Anda pada Langkah 1.');
+        }
+        step.value = 1;
+        return;
+    }
+
+    // Validate Step 3
+    if (form.is_self) {
+        if (!form.email || !form.email.trim()) {
+            alert('Silakan masukkan alamat email aktif Anda untuk akun anggota.');
+            return;
+        }
+        if (!form.password) {
+            alert('Silakan buat kata sandi untuk akun anggota Anda.');
+            return;
+        }
+        if (form.password.length < 8) {
+            alert('Kata sandi minimal harus 8 karakter.');
+            return;
+        }
+        if (form.password !== form.password_confirmation) {
+            alert('Konfirmasi kata sandi tidak cocok. Harap periksa kembali.');
+            return;
+        }
+    } else {
+        if (!form.requester_name || !form.requester_name.trim()) {
+            alert('Silakan masukkan nama lengkap pemohon.');
+            return;
+        }
+        if (!form.requester_email || !form.requester_email.trim()) {
+            alert('Silakan masukkan alamat email pemohon.');
+            return;
+        }
+    }
+
+    // Filter out spouses with empty name before sending
+    const validSpouses = (form.spouses || []).filter(
+        (s) => s && s.name && s.name.trim() !== ''
+    );
+
+    form.transform((data) => ({
+        ...data,
+        is_self: data.is_self ? 1 : 0,
+        requester_name: data.is_self ? data.name : data.requester_name,
+        requester_email: data.is_self ? data.email : data.requester_email,
+        spouses: validSpouses,
+    })).post(route('request.store'), {
         forceFormData: true,
+        onError: (errors) => {
+            console.error('Validation errors:', errors);
+            if (errors.parent_node_id || errors.mother_spouse_id || errors.name || errors.gender) {
+                alert('Terdapat data yang belum lengkap pada Langkah 1: ' + (errors.mother_spouse_id || errors.parent_node_id || errors.name || errors.gender));
+                step.value = 1;
+            } else if (Object.keys(errors).some(k => k.startsWith('spouses') || k === 'foto')) {
+                alert('Terdapat kesalahan pada data di Langkah 2.');
+                step.value = 2;
+            } else if (errors.email) {
+                alert('Pendaftaran gagal: ' + errors.email);
+            } else if (errors.password) {
+                alert('Pendaftaran gagal: ' + errors.password);
+            } else {
+                const firstErr = Object.values(errors)[0];
+                alert('Gagal mengirim permintaan: ' + (firstErr || 'Harap periksa kembali data Anda.'));
+            }
+        },
     });
 };
 
@@ -225,12 +312,12 @@ const levelLabel = (level) => {
 
 <template>
     <Head>
-        <title>Daftar & Gabung ke Pohon Silsilah Batak - Form Pengajuan</title>
-        <meta name="description" content="Ajukan pendaftaran data diri Anda untuk bergabung ke dalam pohon silsilah suku Batak (Tarombo). Hubungkan silsilah Anda dengan leluhur dan marga tercatat." />
-        <meta name="keywords" content="daftar silsilah batak, pengajuan tarombo batak, daftar marga batak, silsilah keluarga batak" />
-        <meta property="og:title" content="Daftar ke Pohon Silsilah Batak - Tarombo Digital" />
-        <meta property="og:description" content="Ajukan pendaftaran data diri untuk bergabung ke dalam pohon silsilah suku Batak secara digital." />
-        <meta property="og:image" content="/images/bg-batak-parallax.jpg" />
+        <title>Ajukan Silsilah — Punguan Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna Se-Indonesia</title>
+        <meta name="description" content="Ajukan pendaftaran data silsilah ke dalam pohon silsilah Punguan Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna Se-Indonesia." />
+        <meta name="keywords" content="silsilah sihotang, daftar tarombo sihotang, raja sigodang ulu sihotang, punguan sihotang dohot boruna" />
+        <meta property="og:title" content="Ajukan Silsilah — Punguan Sihotang Dohot Boruna" />
+        <meta property="og:description" content="Ajukan data silsilah keluarga Anda ke dalam pohon silsilah Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna Se-Indonesia." />
+        <meta property="og:image" content="/images/logo.png" />
         <meta property="og:type" content="website" />
     </Head>
     <AppLayout>
@@ -240,10 +327,12 @@ const levelLabel = (level) => {
                 <!-- Header -->
                 <div class="text-center mb-10">
                     <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-full px-4 py-1.5 text-amber-400 text-sm font-medium mb-4">
-                        📝 Form Pendaftaran
+                        📝 Form Pengajuan Silsilah
                     </div>
-                    <h1 class="text-3xl font-bold text-white mb-3">Masuk ke Silsilah Batak</h1>
-                    <p class="text-gray-400">Isi data di bawah ini untuk mengajukan permintaan bergabung ke dalam pohon silsilah. Admin akan meninjau dan menghubungi Anda via email.</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3" style="font-family: 'Cinzel', serif;">
+                        Silsilah Pomparan Raja Sigodang Ulu Sihotang
+                    </h1>
+                    <p class="text-gray-400 text-sm">Isi data di bawah ini untuk mengajukan penambahan data ke dalam pohon silsilah atau mendaftar sebagai anggota keluarga.</p>
                 </div>
 
                 <!-- Progress Steps -->
@@ -438,16 +527,20 @@ const levelLabel = (level) => {
                                        class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
                             </div>
                             <div>
-                                <label class="block text-gray-400 text-sm mb-1.5">Tahun Lahir</label>
-                                <input v-model="form.tahun_lahir" type="text" placeholder="Contoh: 1980"
-                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                <label class="block text-gray-400 text-sm mb-1.5 flex items-center justify-between">
+                                    <span>Tanggal / Tahun Lahir</span>
+                                    <span class="text-[11px] text-amber-400/90 font-mono">MM/DD/YYYY</span>
+                                </label>
+                                <DatePicker v-model="form.tahun_lahir" placeholder="MM/DD/YYYY" />
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-gray-400 text-sm mb-1.5">Tahun Wafat (jika sudah almarhum)</label>
-                            <input v-model="form.tahun_wafat" type="text" placeholder="Kosongkan jika masih hidup"
-                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                            <label class="block text-gray-400 text-sm mb-1.5 flex items-center justify-between">
+                                <span>Tanggal / Tahun Wafat (jika sudah almarhum)</span>
+                                <span class="text-[11px] text-gray-500 font-mono">MM/DD/YYYY</span>
+                            </label>
+                            <DatePicker v-model="form.tahun_wafat" placeholder="Kosongkan jika masih hidup" />
                         </div>
 
                         <!-- Photo -->
@@ -511,6 +604,24 @@ const levelLabel = (level) => {
                                                class="w-full bg-gray-800 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-pink-500/40 transition-colors"/>
                                     </div>
                                 </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-gray-400 text-xs mb-1 flex items-center justify-between">
+                                            <span>Tanggal / Tahun Lahir Istri</span>
+                                            <span class="text-[10px] text-pink-400/80 font-mono">MM/DD/YYYY</span>
+                                        </label>
+                                        <DatePicker v-model="spouse.tahun_lahir" placeholder="MM/DD/YYYY" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-400 text-xs mb-1 flex items-center justify-between">
+                                            <span>Tanggal / Tahun Wafat Istri</span>
+                                            <span class="text-[10px] text-gray-500 font-mono">MM/DD/YYYY (opsional)</span>
+                                        </label>
+                                        <DatePicker v-model="spouse.tahun_wafat" placeholder="Kosongkan jika hidup" />
+                                    </div>
+                                </div>
+
                                 <div>
                                     <label class="block text-gray-400 text-xs mb-1">Keterangan Istri (opsional)</label>
                                     <input v-model="spouse.deskripsi" type="text" placeholder="Keterangan tambahan"
@@ -520,40 +631,151 @@ const levelLabel = (level) => {
                         </div>
                     </div>
 
-                    <!-- Step 3: Data Pemohon -->
+                    <!-- Step 3: Data Pemohon / Registrasi Anggota -->
                     <div v-if="step === 3" class="p-6 space-y-5">
-                        <h2 class="text-white font-semibold text-lg mb-1">Langkah 3: Data Pemohon</h2>
-                        <p class="text-gray-500 text-sm">Data ini digunakan untuk mengirimkan konfirmasi via email dan tidak akan ditampilkan di publik.</p>
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <h2 class="text-white font-semibold text-lg mb-1">Langkah 3: Data Pemohon & Keanggotaan</h2>
+                                <p class="text-gray-400 text-xs">Pilih apakah data silsilah ini diajukan untuk orang lain atau untuk diri Anda sendiri.</p>
+                            </div>
+                        </div>
+
+                        <!-- Toggle Tab: Untuk Orang Lain vs Untuk Diri Sendiri -->
+                        <div class="grid grid-cols-2 gap-2 p-1 bg-gray-800/90 rounded-xl border border-white/10">
+                            <button
+                                type="button"
+                                @click="form.is_self = false"
+                                :class="[
+                                    'py-3 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2',
+                                    !form.is_self
+                                        ? 'bg-amber-500 text-gray-950 shadow-lg shadow-amber-500/20 font-bold'
+                                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                ]"
+                            >
+                                <span class="text-base">👥</span>
+                                <span>Untuk Orang Lain</span>
+                            </button>
+                            <button
+                                type="button"
+                                @click="form.is_self = true"
+                                :class="[
+                                    'py-3 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2',
+                                    form.is_self
+                                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-gray-950 shadow-lg shadow-amber-500/20 font-bold'
+                                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                ]"
+                            >
+                                <span class="text-base">👤</span>
+                                <span>Untuk Diri Sendiri (Daftar Anggota)</span>
+                            </button>
+                        </div>
+
+                        <!-- Global Validation Errors Alert -->
+                        <div v-if="Object.keys(form.errors).length > 0" class="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs space-y-1.5 animate-pulse">
+                            <div class="font-bold text-red-400 flex items-center gap-1.5 text-sm">
+                                <span>⚠️</span>
+                                <span>Mohon periksa data berikut:</span>
+                            </div>
+                            <ul class="list-disc list-inside space-y-0.5 text-red-300/90 pl-1">
+                                <li v-for="(msg, field) in form.errors" :key="field">
+                                    {{ msg }}
+                                </li>
+                            </ul>
+                        </div>
 
                         <!-- Summary -->
                         <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
-                            <h3 class="text-gray-400 text-xs font-medium uppercase tracking-wider mb-3">Ringkasan Data</h3>
-                            <div class="grid grid-cols-2 gap-2 text-sm">
-                                <div class="text-gray-500">Nama:</div><div class="text-white font-medium">{{ form.name || '—' }}</div>
-                                <div class="text-gray-500">Gender:</div><div class="text-white">{{ form.gender === 'male' ? '♂ Laki-laki' : '♀ Perempuan' }}</div>
-                                <div class="text-gray-500">Marga:</div><div class="text-white">{{ form.marga || '—' }}</div>
-                                <div class="text-gray-500">Ayah / Leluhur:</div><div class="text-white">{{ selectedParent?.name || '—' }}</div>
-                                <div class="text-gray-500">Ibu Kandung:</div><div class="text-pink-300 font-medium">{{ selectedMother?.name ? `${selectedMother.name} (Marga ${selectedMother.marga || '-'})` : '—' }}</div>
-                                <div v-if="form.gender === 'male' && form.spouses.some(s => s.name)" class="text-gray-500">Istri Terdaftar:</div>
+                            <h3 class="text-gray-400 text-xs font-medium uppercase tracking-wider mb-2">Ringkasan Silsilah yang Diajukan</h3>
+                            <div class="grid grid-cols-2 gap-2 text-xs sm:text-sm">
+                                <div class="text-gray-400">Nama:</div><div class="text-white font-semibold">{{ form.name || '—' }}</div>
+                                <div class="text-gray-400">Jenis Kelamin:</div><div class="text-white">{{ form.gender === 'male' ? '♂ Laki-laki' : '♀ Perempuan' }}</div>
+                                <div class="text-gray-400">Marga:</div><div class="text-white">{{ form.marga || '—' }}</div>
+                                <div class="text-gray-400">Ayah / Leluhur:</div><div class="text-white">{{ selectedParent?.name || '—' }}</div>
+                                <div class="text-gray-400">Ibu Kandung:</div><div class="text-pink-300 font-medium">{{ selectedMother?.name ? `${selectedMother.name} (Marga ${selectedMother.marga || '-'})` : '—' }}</div>
+                                <div v-if="form.gender === 'male' && form.spouses.some(s => s.name)" class="text-gray-400">Istri Terdaftar:</div>
                                 <div v-if="form.gender === 'male' && form.spouses.some(s => s.name)" class="text-white">
                                     {{ form.spouses.filter(s => s.name).map((s, i) => `${getWifeLabel(i)}: ${s.name}`).join(', ') }}
                                 </div>
                             </div>
                         </div>
 
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-1.5">Nama Pemohon <span class="text-red-400">*</span></label>
-                            <input v-model="form.requester_name" type="text" placeholder="Nama lengkap Anda sebagai pemohon"
-                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
-                            <div v-if="form.errors.requester_name" class="text-red-400 text-xs mt-1">{{ form.errors.requester_name }}</div>
+                        <!-- Form MODE 1: Untuk Orang Lain -->
+                        <div v-if="!form.is_self" class="space-y-4 pt-1">
+                            <div>
+                                <label class="block text-gray-400 text-sm mb-1.5">Nama Pemohon <span class="text-red-400">*</span></label>
+                                <input v-model="form.requester_name" type="text" placeholder="Nama lengkap Anda sebagai pemohon"
+                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                <div v-if="form.errors.requester_name" class="text-red-400 text-xs mt-1">{{ form.errors.requester_name }}</div>
+                            </div>
+
+                            <div>
+                                <label class="block text-gray-400 text-sm mb-1.5">Email Pemohon <span class="text-red-400">*</span></label>
+                                <input v-model="form.requester_email" type="email" placeholder="email@contoh.com"
+                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                <div v-if="form.errors.requester_email" class="text-red-400 text-xs mt-1">{{ form.errors.requester_email }}</div>
+                                <p class="text-gray-500 text-xs mt-1">Konfirmasi dan notifikasi status pengajuan akan dikirimkan ke email ini.</p>
+                            </div>
                         </div>
 
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-1.5">Email Pemohon <span class="text-red-400">*</span></label>
-                            <input v-model="form.requester_email" type="email" placeholder="email@contoh.com"
-                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
-                            <div v-if="form.errors.requester_email" class="text-red-400 text-xs mt-1">{{ form.errors.requester_email }}</div>
-                            <p class="text-gray-600 text-xs mt-1">Konfirmasi akan dikirim ke email ini</p>
+                        <!-- Form MODE 2: Untuk Diri Sendiri (Daftar Akun Anggota) -->
+                        <div v-else class="space-y-4 pt-1">
+                            <!-- Banner info pendaftar -->
+                            <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3.5 flex items-center justify-between">
+                                <div>
+                                    <div class="text-amber-400 text-xs font-semibold uppercase tracking-wider">Nama Akun Anggota:</div>
+                                    <div class="text-white font-bold text-base mt-0.5">{{ form.name || '(Isi Nama Anda di Langkah 1)' }}</div>
+                                    <div v-if="form.marga" class="text-amber-200/80 text-xs">Marga {{ form.marga }}</div>
+                                </div>
+                                <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-semibold">
+                                    Calon Anggota
+                                </span>
+                            </div>
+
+                            <!-- Email -->
+                            <div>
+                                <label class="block text-gray-300 text-sm mb-1.5">Alamat Email <span class="text-red-400">*</span></label>
+                                <input v-model="form.email" type="email" placeholder="email@contoh.com"
+                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                <div v-if="form.errors.email" class="text-red-400 text-xs mt-1">{{ form.errors.email }}</div>
+                                <p class="text-gray-400 text-xs mt-1">Digunakan untuk login dan menerima link verifikasi email.</p>
+                            </div>
+
+                            <!-- Phone -->
+                            <div>
+                                <label class="block text-gray-300 text-sm mb-1.5">No. Handphone / WhatsApp (opsional)</label>
+                                <input v-model="form.phone" type="tel" placeholder="08xxxxxxxxxx"
+                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                <div v-if="form.errors.phone" class="text-red-400 text-xs mt-1">{{ form.errors.phone }}</div>
+                            </div>
+
+                            <!-- Password & Confirmation -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-gray-300 text-sm mb-1.5">Kata Sandi <span class="text-red-400">*</span></label>
+                                    <input v-model="form.password" type="password" placeholder="Minimal 8 karakter"
+                                           class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                    <div v-if="form.errors.password" class="text-red-400 text-xs mt-1">{{ form.errors.password }}</div>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-300 text-sm mb-1.5">Konfirmasi Kata Sandi <span class="text-red-400">*</span></label>
+                                    <input v-model="form.password_confirmation" type="password" placeholder="Ketik ulang kata sandi"
+                                           class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                    <div v-if="form.password && form.password_confirmation && form.password !== form.password_confirmation" class="text-red-400 text-xs mt-1">
+                                        Kata sandi tidak cocok.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notice: Alur Verifikasi Email & Admin -->
+                            <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-4 flex items-start gap-3">
+                                <span class="text-2xl flex-shrink-0">📧</span>
+                                <div class="space-y-1">
+                                    <div class="text-indigo-300 font-bold text-xs">Alur Pendaftaran Anggota:</div>
+                                    <p class="text-gray-300 text-xs leading-relaxed">
+                                        Setelah formulir dikirimkan, akun anggota Anda otomatis dibuat dan link verifikasi akan dikirim ke email Anda. Silakan verifikasi email Anda, kemudian Admin akan menyetujui penempatan data silsilah Anda.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -578,13 +800,8 @@ const levelLabel = (level) => {
                             Lanjut →
                         </button>
                         <button v-if="step === totalSteps" @click="submit" type="button"
-                                :disabled="isStep3Disabled"
-                                :class="[
-                                    'flex-1 font-semibold rounded-xl py-3 text-sm transition-all flex items-center justify-center gap-2',
-                                    isStep3Disabled
-                                        ? 'bg-emerald-500/20 text-gray-500 border border-emerald-500/10 cursor-not-allowed'
-                                        : 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/10 cursor-pointer'
-                                ]">
+                                :disabled="form.processing"
+                                class="flex-1 font-semibold rounded-xl py-3 text-sm transition-all flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/10 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                             <span v-if="form.processing" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                             {{ form.processing ? 'Mengirim...' : '✓ Kirim Permintaan' }}
                         </button>

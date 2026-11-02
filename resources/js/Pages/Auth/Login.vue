@@ -31,11 +31,11 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Log in" />
+        <Head title="Masuk — Punguan Sihotang" />
 
         <div class="mb-6 text-center">
-            <h2 class="text-xl font-bold text-white tracking-tight">Masuk ke Tarombo Batak</h2>
-            <p class="text-xs text-gray-400 mt-1">Masuk dengan akun anggota atau admin Anda</p>
+            <h2 class="text-xl font-bold text-white tracking-tight">Masuk ke Portal Anggota</h2>
+            <p class="text-xs text-gray-400 mt-1">Punguan Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna</p>
         </div>
 
         <div v-if="status" class="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-400">

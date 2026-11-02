@@ -1,11 +1,15 @@
 <template>
     <div class="flex items-center gap-3 group">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/25 group-hover:scale-105 transition-transform">
-            <span class="text-gray-950 font-extrabold text-2xl tracking-tighter">T</span>
-        </div>
+        <img
+            src="/images/logo.png"
+            alt="Logo Punguan Sihotang"
+            class="h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-200 drop-shadow-md"
+        />
         <div class="text-left">
-            <div class="text-white font-extrabold text-2xl tracking-tight leading-none">Tarombo</div>
-            <div class="text-amber-400 font-medium text-[11px] tracking-widest uppercase mt-1">Silsilah Batak</div>
+            <div class="text-white font-extrabold text-sm sm:text-base tracking-tight leading-none font-serif">PUNGUAN SIHOTANG</div>
+            <div class="text-amber-400 font-medium text-[9px] sm:text-[10px] tracking-wider uppercase mt-1 leading-tight max-w-[220px]">
+                Pomparan Raja Sigodang Ulu Sihotang Dohot Boruna
+            </div>
         </div>
     </div>
 </template>

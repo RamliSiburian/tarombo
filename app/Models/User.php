@@ -26,6 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'marga',
         'phone',
         'membership_status',
+        'node_id',
     ];
 
     public function isAdmin(): bool
@@ -46,6 +47,21 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isRejected(): bool
     {
         return $this->membership_status === 'rejected';
+    }
+
+    public function node(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Node::class, 'node_id');
+    }
+
+    public function nodeRequest(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(NodeRequest::class, 'user_id');
+    }
+
+    public function articles(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Article::class, 'author_id');
     }
 
     public function scopeMembers($query)
