@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
@@ -64,7 +64,7 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
     <AdminLayout>
         <template #title>
             Request Masuk
-            <span v-if="pendingCount > 0" class="ml-2 bg-amber-500 text-gray-900 text-xs font-bold px-2 py-0.5 rounded-full">
+            <span v-if="pendingCount > 0" class="ml-2 bg-primary-500 text-gray-900 text-xs font-bold px-2 py-0.5 rounded-full">
                 {{ pendingCount }}
             </span>
         </template>
@@ -72,7 +72,7 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
         <!-- Tabs -->
         <div class="flex gap-1 mb-6 bg-gray-900 border border-white/5 p-1 rounded-xl w-fit">
             <button v-for="tab in statusTabs" :key="tab.key" @click="setStatus(tab.key)"
-                    :class="['px-4 py-2 rounded-lg text-sm font-medium transition-all', activeStatus === tab.key ? 'bg-amber-500 text-gray-900' : 'text-gray-400 hover:text-white']">
+                    :class="['px-4 py-2 rounded-lg text-sm font-medium transition-all', activeStatus === tab.key ? 'bg-primary-500 text-gray-900' : 'text-gray-400 hover:text-white']">
                 {{ tab.icon }} {{ tab.label }}
                 <span v-if="tab.key === 'pending' && pendingCount > 0"
                       class="ml-1.5 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
@@ -103,7 +103,7 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                             <span v-if="req.is_self" class="text-xs text-purple-300 bg-purple-500/15 border border-purple-500/30 px-2 py-0.5 rounded-full font-semibold">
                                 👤 Pendaftaran Anggota
                             </span>
-                            <span v-if="req.marga" class="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
+                            <span v-if="req.marga" class="text-xs text-primary-400 bg-primary-500/10 border border-primary-500/20 px-2 py-0.5 rounded-full">
                                 Marga {{ req.marga }}
                             </span>
                             <span v-if="req.anak_ke || req.sort_order" class="text-xs text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-full">
@@ -132,9 +132,9 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                         </div>
 
                         <!-- Admin Note -->
-                        <div v-if="req.admin_note" class="text-xs bg-amber-500/5 border border-amber-500/15 rounded-lg px-3 py-2">
-                            <span class="text-amber-400">📝 Catatan Admin: </span>
-                            <span class="text-amber-300">{{ req.admin_note }}</span>
+                        <div v-if="req.admin_note" class="text-xs bg-primary-500/5 border border-primary-500/15 rounded-lg px-3 py-2">
+                            <span class="text-primary-400">📝 Catatan Admin: </span>
+                            <span class="text-primary-300">{{ req.admin_note }}</span>
                         </div>
                     </div>
 
@@ -171,7 +171,7 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
         <div v-if="requests.links?.length > 3" class="flex items-center gap-1 mt-4">
             <template v-for="link in requests.links" :key="link.label">
                 <Link v-if="link.url" :href="link.url"
-                      :class="['px-3 py-1.5 rounded-lg text-xs transition-colors', link.active ? 'bg-amber-500 text-gray-900 font-semibold' : 'text-gray-400 hover:text-white hover:bg-white/5']"
+                      :class="['px-3 py-1.5 rounded-lg text-xs transition-colors', link.active ? 'bg-primary-500 text-gray-900 font-semibold' : 'text-gray-400 hover:text-white hover:bg-white/5']"
                       v-html="link.label" />
             </template>
         </div>

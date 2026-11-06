@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
@@ -10,7 +10,7 @@ const props = defineProps({
 
 const statusLabel = (s) => ({ pending: 'Menunggu', accepted: 'Disetujui', rejected: 'Ditolak' }[s]);
 const statusClass = (s) => ({
-    pending:  'bg-amber-500/15 text-amber-400 border-amber-500/30',
+    pending:  'bg-primary-500/15 text-primary-400 border-primary-500/30',
     accepted: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
     rejected: 'bg-red-500/15 text-red-400 border-red-500/30',
 }[s]);
@@ -19,7 +19,7 @@ const categoryBadge = (cat) => {
     const map = {
         kegiatan: { label: 'Kegiatan', class: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' },
         berita:   { label: 'Berita', class: 'bg-blue-500/15 text-blue-400 border-blue-500/30' },
-        sejarah:  { label: 'Sejarah', class: 'bg-amber-500/15 text-amber-400 border-amber-500/30' },
+        sejarah:  { label: 'Sejarah', class: 'bg-primary-500/15 text-primary-400 border-primary-500/30' },
         budaya:   { label: 'Budaya', class: 'bg-pink-500/15 text-pink-400 border-pink-500/30' },
     };
     return map[cat] || { label: cat, class: 'bg-gray-500/15 text-gray-400 border-gray-500/30' };
@@ -70,19 +70,19 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
             </div>
 
             <!-- Request Stats Card -->
-            <div :class="['bg-gray-900 border rounded-2xl p-5 shadow-xl', stats.pending_requests > 0 ? 'border-amber-500/30' : 'border-white/5']">
+            <div :class="['bg-gray-900 border rounded-2xl p-5 shadow-xl', stats.pending_requests > 0 ? 'border-primary-500/30' : 'border-white/5']">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-3xl">📬</span>
-                    <span v-if="stats.pending_requests > 0" class="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded-full animate-pulse">
+                    <span v-if="stats.pending_requests > 0" class="text-xs text-primary-400 bg-primary-500/10 border border-primary-500/20 px-2 py-1 rounded-full animate-pulse">
                         Perlu Ditinjau
                     </span>
                 </div>
-                <div :class="['text-3xl font-bold', stats.pending_requests > 0 ? 'text-amber-400' : 'text-white']">
+                <div :class="['text-3xl font-bold', stats.pending_requests > 0 ? 'text-primary-400' : 'text-white']">
                     {{ stats.pending_requests }}
                 </div>
                 <div class="text-gray-400 text-sm mt-1">Request Pending</div>
                 <Link v-if="stats.pending_requests > 0" :href="route('admin.requests.index')"
-                      class="mt-3 block text-center bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-400 text-xs rounded-lg py-1.5 transition-colors">
+                      class="mt-3 block text-center bg-primary-500/15 hover:bg-primary-500/25 border border-primary-500/30 text-primary-400 text-xs rounded-lg py-1.5 transition-colors">
                     Tinjau Request →
                 </Link>
             </div>
@@ -91,9 +91,9 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
         <!-- Quick Actions -->
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
             <Link :href="route('admin.articles.create')"
-                  class="bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/20 rounded-xl p-4 text-center transition-all group">
+                  class="bg-primary-500/10 hover:bg-primary-500/15 border border-primary-500/20 rounded-xl p-4 text-center transition-all group">
                 <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">➕</div>
-                <div class="text-amber-300 text-sm font-medium">Buat Kegiatan</div>
+                <div class="text-primary-300 text-sm font-medium">Buat Kegiatan</div>
             </Link>
             <Link :href="route('admin.articles.index')"
                   class="bg-blue-500/10 hover:bg-blue-500/15 border border-blue-500/20 rounded-xl p-4 text-center transition-all group">
@@ -126,7 +126,7 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                     <h3 class="text-white font-semibold flex items-center gap-2">
                         <span>📰</span> Kegiatan & Berita Terbaru
                     </h3>
-                    <Link :href="route('admin.articles.index')" class="text-amber-400 text-xs hover:text-amber-300 transition-colors">Lihat semua →</Link>
+                    <Link :href="route('admin.articles.index')" class="text-primary-400 text-xs hover:text-primary-300 transition-colors">Lihat semua →</Link>
                 </div>
                 <div class="divide-y divide-white/5">
                     <div v-if="!recentArticles || recentArticles.length === 0" class="py-12 text-center text-gray-500 text-xs">
@@ -143,11 +143,11 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                                 <span :class="['px-1.5 py-0.2 rounded text-[10px] font-bold border', categoryBadge(art.category).class]">
                                     {{ categoryBadge(art.category).label }}
                                 </span>
-                                <span v-if="art.event_date" class="text-amber-300">📅 {{ formatDate(art.event_date) }}</span>
+                                <span v-if="art.event_date" class="text-primary-300">📅 {{ formatDate(art.event_date) }}</span>
                                 <span v-else>{{ formatDate(art.created_at) }}</span>
                             </div>
                         </div>
-                        <Link :href="route('admin.articles.edit', art.id)" class="text-xs text-gray-400 hover:text-amber-400 p-1">
+                        <Link :href="route('admin.articles.edit', art.id)" class="text-xs text-gray-400 hover:text-primary-400 p-1">
                             ✏️
                         </Link>
                     </div>
@@ -160,7 +160,7 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                     <h3 class="text-white font-semibold flex items-center gap-2">
                         <span>📬</span> Request Tambah Data Terbaru
                     </h3>
-                    <Link :href="route('admin.requests.index')" class="text-amber-400 text-xs hover:text-amber-300 transition-colors">Lihat semua →</Link>
+                    <Link :href="route('admin.requests.index')" class="text-primary-400 text-xs hover:text-primary-300 transition-colors">Lihat semua →</Link>
                 </div>
                 <div class="divide-y divide-white/5">
                     <div v-if="!recentRequests || recentRequests.length === 0" class="py-12 text-center text-gray-500 text-xs">

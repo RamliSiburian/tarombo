@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 
@@ -55,7 +55,7 @@ onUnmounted(() => {
                             />
                             <div class="hidden sm:block">
                                 <div class="text-white font-bold text-sm tracking-tight leading-tight font-serif">PUNGUAN SIHOTANG</div>
-                                <div class="text-amber-400 text-[9px] leading-tight font-medium uppercase tracking-wider">Pomparan Raja Sigodang Ulu</div>
+                                <div class="text-primary-400 text-[9px] leading-tight font-medium uppercase tracking-wider">Pomparan Raja Sigodang Ulu</div>
                             </div>
                         </Link>
 
@@ -71,9 +71,9 @@ onUnmounted(() => {
                             <button
                                 @click="dropdownOpen = !dropdownOpen"
                                 type="button"
-                                class="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs sm:text-sm font-medium transition-all shadow-md hover:border-amber-500/30"
+                                class="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs sm:text-sm font-medium transition-all shadow-md hover:border-primary-500/30"
                             >
-                                <div v-if="stats" class="flex items-center gap-1.5 text-xs text-amber-400 font-semibold">
+                                <div v-if="stats" class="flex items-center gap-1.5 text-xs text-primary-400 font-semibold">
                                     <span>👥 {{ stats.total_nodes }} Node</span>
                                     <span class="text-gray-600">•</span>
                                     <span>🏷️ {{ stats.total_marga }} Marga</span>
@@ -101,15 +101,15 @@ onUnmounted(() => {
                                     class="absolute right-0 mt-2 w-64 rounded-2xl bg-gray-900 border border-white/10 shadow-2xl overflow-hidden z-50 divide-y divide-white/10"
                                 >
                                     <!-- Stats Summary -->
-                                    <div v-if="stats" class="p-3.5 bg-gradient-to-br from-amber-500/10 via-white/5 to-transparent">
+                                    <div v-if="stats" class="p-3.5 bg-gradient-to-br from-primary-500/10 via-white/5 to-transparent">
                                         <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Statistik Silsilah</div>
                                         <div class="grid grid-cols-2 gap-2">
                                             <div class="bg-gray-800/80 border border-white/5 rounded-xl p-2 text-center">
-                                                <div class="text-amber-400 font-bold text-lg leading-tight">{{ stats.total_nodes }}</div>
+                                                <div class="text-primary-400 font-bold text-lg leading-tight">{{ stats.total_nodes }}</div>
                                                 <div class="text-gray-400 text-[10px]">Total Node</div>
                                             </div>
                                             <div class="bg-gray-800/80 border border-white/5 rounded-xl p-2 text-center">
-                                                <div class="text-amber-400 font-bold text-lg leading-tight">{{ stats.total_marga }}</div>
+                                                <div class="text-primary-400 font-bold text-lg leading-tight">{{ stats.total_marga }}</div>
                                                 <div class="text-gray-400 text-[10px]">Total Marga</div>
                                             </div>
                                         </div>
@@ -147,7 +147,7 @@ onUnmounted(() => {
                                         <Link
                                             :href="route('request.create')"
                                             @click="closeDropdown"
-                                            class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-amber-300 hover:text-amber-200 hover:bg-amber-500/10 transition-colors"
+                                            class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-primary-300 hover:text-primary-200 hover:bg-primary-500/10 transition-colors"
                                         >
                                             <span class="text-base">📝</span>
                                             <span class="font-medium">Ajukan Data</span>
@@ -161,7 +161,7 @@ onUnmounted(() => {
                                                 v-if="$page.props.auth.user.role === 'admin'"
                                                 :href="route('admin.dashboard')"
                                                 @click="closeDropdown"
-                                                class="flex items-center justify-between px-3 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-sm font-semibold transition-colors"
+                                                class="flex items-center justify-between px-3 py-2 rounded-xl bg-primary-500/10 hover:bg-primary-500/20 text-primary-400 text-sm font-semibold transition-colors"
                                             >
                                                 <span class="flex items-center gap-2">
                                                     <span>⚙️</span>
@@ -173,7 +173,7 @@ onUnmounted(() => {
                                                 v-else
                                                 :href="route('member.dashboard')"
                                                 @click="closeDropdown"
-                                                class="flex items-center justify-between px-3 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-sm font-semibold transition-colors"
+                                                class="flex items-center justify-between px-3 py-2 rounded-xl bg-primary-500/10 hover:bg-primary-500/20 text-primary-400 text-sm font-semibold transition-colors"
                                             >
                                                 <span class="flex items-center gap-2">
                                                     <span>👤</span>
@@ -197,13 +197,13 @@ onUnmounted(() => {
                                             <Link
                                                 :href="route('request.create')"
                                                 @click="closeDropdown"
-                                                class="flex items-center justify-between px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 text-sm font-semibold transition-colors"
+                                                class="flex items-center justify-between px-3 py-2 rounded-xl bg-primary-500/15 hover:bg-primary-500/25 text-primary-400 text-sm font-semibold transition-colors"
                                             >
                                                 <span class="flex items-center gap-2">
                                                     <span>👥</span>
                                                     <span>Daftar Anggota</span>
                                                 </span>
-                                                <span class="text-xs text-amber-400">→</span>
+                                                <span class="text-xs text-primary-400">→</span>
                                             </Link>
                                         </template>
                                     </div>

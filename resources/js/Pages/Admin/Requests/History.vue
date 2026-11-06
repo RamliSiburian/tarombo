@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
@@ -26,7 +26,7 @@ const genderIcon = (g) => g === 'female' ? '👩' : '👨';
 
         <div class="mb-4 flex items-center justify-between">
             <p class="text-gray-500 text-sm">Riwayat semua request yang telah ditinjau oleh admin.</p>
-            <Link :href="route('admin.requests.index')" class="text-amber-400 hover:text-amber-300 text-sm transition-colors">
+            <Link :href="route('admin.requests.index')" class="text-primary-400 hover:text-primary-300 text-sm transition-colors">
                 ← Request Aktif
             </Link>
         </div>
@@ -89,7 +89,7 @@ const genderIcon = (g) => g === 'female' ? '👩' : '👨';
             <div v-if="requests.links?.length > 3" class="px-5 py-3 border-t border-white/5 flex items-center gap-1">
                 <template v-for="link in requests.links" :key="link.label">
                     <Link v-if="link.url" :href="link.url"
-                          :class="['px-3 py-1.5 rounded-lg text-xs transition-colors', link.active ? 'bg-amber-500 text-gray-900 font-semibold' : 'text-gray-400 hover:text-white hover:bg-white/5']"
+                          :class="['px-3 py-1.5 rounded-lg text-xs transition-colors', link.active ? 'bg-primary-500 text-gray-900 font-semibold' : 'text-gray-400 hover:text-white hover:bg-white/5']"
                           v-html="link.label" />
                 </template>
             </div>

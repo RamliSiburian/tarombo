@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { Link } from '@inertiajs/vue3';
 </script>
@@ -7,7 +7,7 @@ import { Link } from '@inertiajs/vue3';
     <div class="min-h-screen flex flex-col justify-center items-center bg-gray-950 relative overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
         <!-- Background Gradients -->
         <div class="absolute inset-0 bg-gradient-to-b from-indigo-950/40 via-gray-950 to-gray-950 pointer-events-none"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/20 via-transparent to-transparent pointer-events-none"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary-900/20 via-transparent to-transparent pointer-events-none"></div>
 
         <div class="relative z-10 w-full sm:max-w-md flex flex-col items-center">
             <!-- Logo Header -->
@@ -24,11 +24,11 @@ import { Link } from '@inertiajs/vue3';
 
             <!-- Back to Home / Tree links -->
             <div class="mt-6 flex items-center justify-center gap-4 text-xs text-gray-400">
-                <Link :href="route('home')" class="hover:text-amber-400 transition-colors flex items-center gap-1">
+                <Link :href="route('home')" class="hover:text-primary-400 transition-colors flex items-center gap-1">
                     ← Beranda
                 </Link>
                 <span class="text-gray-700">•</span>
-                <Link :href="route('tree.index')" class="hover:text-amber-400 transition-colors flex items-center gap-1">
+                <Link :href="route('tree.index')" class="hover:text-primary-400 transition-colors flex items-center gap-1">
                     🌳 Pohon Silsilah
                 </Link>
             </div>

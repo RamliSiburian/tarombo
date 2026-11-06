@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref, computed } from 'vue';
 import {
     exportTreeAsPNG,
@@ -73,7 +73,7 @@ function handleExport() {
             <div class="p-6 space-y-5">
                 <!-- Scope Card -->
                 <div class="p-4 rounded-xl border transition-all"
-                     :class="selectedNode ? 'bg-amber-500/10 border-amber-500/30 text-amber-200' : 'bg-indigo-500/10 border-indigo-500/30 text-indigo-200'">
+                     :class="selectedNode ? 'bg-primary-500/10 border-primary-500/30 text-primary-200' : 'bg-indigo-500/10 border-indigo-500/30 text-indigo-200'">
                     <div class="flex items-center gap-2 font-semibold text-sm mb-1">
                         <span>{{ selectedNode ? '🎯 Scope: Garis Leluhur ke Atas' : '🌐 Scope: Seluruh Data Silsilah' }}</span>
                     </div>

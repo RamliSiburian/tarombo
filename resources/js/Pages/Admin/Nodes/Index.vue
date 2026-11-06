@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
@@ -69,7 +69,7 @@ function onImported() {
                     📂 Import CSV / JSON
                 </button>
                 <Link :href="route('admin.nodes.create')"
-                      class="bg-amber-500 hover:bg-amber-400 text-gray-900 font-semibold text-sm px-4 py-2.5 rounded-xl transition-colors flex items-center gap-2 whitespace-nowrap">
+                      class="bg-primary-500 hover:bg-primary-400 text-gray-900 font-semibold text-sm px-4 py-2.5 rounded-xl transition-colors flex items-center gap-2 whitespace-nowrap">
                     ➕ Tambah Node
                 </Link>
             </div>
@@ -78,7 +78,7 @@ function onImported() {
         <!-- Filter Status Tabs -->
         <div class="flex gap-1 mb-6 bg-gray-900 border border-white/5 p-1 rounded-xl w-fit">
             <button v-for="tab in statusTabs" :key="tab.key" @click="setStatus(tab.key)"
-                    :class="['px-4 py-2 rounded-lg text-sm font-medium transition-all', activeStatus === tab.key ? 'bg-amber-500 text-gray-900' : 'text-gray-400 hover:text-white']">
+                    :class="['px-4 py-2 rounded-lg text-sm font-medium transition-all', activeStatus === tab.key ? 'bg-primary-500 text-gray-900' : 'text-gray-400 hover:text-white']">
                 {{ tab.icon }} {{ tab.label }}
             </button>
         </div>
@@ -121,7 +121,7 @@ function onImported() {
                                 <span class="text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded-full">
                                     {{ levelBadge(node.level) }}
                                 </span>
-                                <span v-if="node.sort_order" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full" title="Posisi/Urutan Anak">
+                                <span v-if="node.sort_order" class="text-xs bg-primary-500/10 text-primary-400 border border-primary-500/20 px-2 py-0.5 rounded-full" title="Posisi/Urutan Anak">
                                     Anak ke-{{ node.sort_order }}
                                 </span>
                             </div>
@@ -156,7 +156,7 @@ function onImported() {
                 <div v-if="nodes.links?.length > 3" class="flex items-center gap-1">
                     <template v-for="(link, key) in nodes.links" :key="key">
                         <Link v-if="link.url" :href="link.url"
-                              :class="['px-3 py-1.5 rounded-lg text-xs transition-colors', link.active ? 'bg-amber-500 text-gray-900 font-semibold' : 'text-gray-400 hover:text-white hover:bg-white/5']"
+                              :class="['px-3 py-1.5 rounded-lg text-xs transition-colors', link.active ? 'bg-primary-500 text-gray-900 font-semibold' : 'text-gray-400 hover:text-white hover:bg-white/5']"
                               v-html="link.label" />
                         <span v-else class="px-3 py-1.5 text-xs text-gray-700" v-html="link.label"></span>
                     </template>

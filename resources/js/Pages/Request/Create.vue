@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import axios from 'axios';
@@ -326,7 +326,7 @@ const levelLabel = (level) => {
 
                 <!-- Header -->
                 <div class="text-center mb-10">
-                    <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-full px-4 py-1.5 text-amber-400 text-sm font-medium mb-4">
+                    <div class="inline-flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 rounded-full px-4 py-1.5 text-primary-400 text-sm font-medium mb-4">
                         📝 Form Pengajuan Silsilah
                     </div>
                     <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3" style="font-family: 'Cinzel', serif;">
@@ -341,10 +341,10 @@ const levelLabel = (level) => {
                         <div class="flex items-center gap-0">
                             <div :class="[
                                 'w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300',
-                                step >= s ? 'bg-amber-500 text-gray-900' : 'bg-gray-800 text-gray-500 border border-white/10'
+                                step >= s ? 'bg-primary-500 text-gray-900' : 'bg-gray-800 text-gray-500 border border-white/10'
                             ]">{{ s }}</div>
                         </div>
-                        <div v-if="s < totalSteps" :class="['w-16 h-0.5 transition-all duration-300', step > s ? 'bg-amber-500' : 'bg-gray-700']"></div>
+                        <div v-if="s < totalSteps" :class="['w-16 h-0.5 transition-all duration-300', step > s ? 'bg-primary-500' : 'bg-gray-700']"></div>
                     </template>
                 </div>
 
@@ -368,11 +368,11 @@ const levelLabel = (level) => {
                                     @focus="onFocusParentInput"
                                     type="text"
                                     placeholder="Ketik nama atau marga leluhur..."
-                                    class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 pr-10 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"
+                                    class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 pr-10 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-primary-500/50 transition-colors"
                                 />
 
                                 <div class="absolute right-3 flex items-center gap-2">
-                                    <div v-if="isSearchingParent" class="w-4 h-4 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
+                                    <div v-if="isSearchingParent" class="w-4 h-4 border-2 border-primary-400 border-t-transparent rounded-full animate-spin"></div>
                                     <button v-else-if="parentSearchQuery" @click="clearParentSelection" type="button" class="text-gray-400 hover:text-white text-xs p-1">
                                         ✕
                                     </button>
@@ -401,7 +401,7 @@ const levelLabel = (level) => {
                                         <div class="text-white font-medium text-sm">{{ node.name }}</div>
                                         <div class="text-gray-400 text-xs">{{ node.marga ? `Marga ${node.marga} · ` : '' }}{{ levelLabel(node.level) }}</div>
                                     </div>
-                                    <div class="text-xs text-amber-400 font-semibold flex items-center gap-1">
+                                    <div class="text-xs text-primary-400 font-semibold flex items-center gap-1">
                                         <span v-if="node.spouses?.length" class="text-pink-300">👩 {{ node.spouses.length }} Istri</span>
                                         <span v-else class="text-gray-500">Tanpa Istri</span>
                                         <span>➔</span>
@@ -441,9 +441,9 @@ const levelLabel = (level) => {
 
                                 <div class="space-y-2 pt-1">
                                     <label v-for="(spouse, idx) in selectedParent.spouses" :key="spouse.id"
-                                           :class="['flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer transition-all', form.mother_spouse_id == spouse.id ? 'border-amber-500 bg-amber-500/15 shadow-md shadow-amber-500/10' : 'border-white/10 bg-gray-900/80 hover:border-white/20']">
+                                           :class="['flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer transition-all', form.mother_spouse_id == spouse.id ? 'border-primary-500 bg-primary-500/15 shadow-md shadow-primary-500/10' : 'border-white/10 bg-gray-900/80 hover:border-white/20']">
                                         <input type="radio" :value="spouse.id" v-model="form.mother_spouse_id"
-                                               class="text-amber-500 bg-gray-800 border-white/20 focus:ring-amber-500 w-4 h-4"/>
+                                               class="text-primary-500 bg-gray-800 border-white/20 focus:ring-primary-500 w-4 h-4"/>
                                         <div class="flex-1 min-w-0">
                                             <div class="flex items-center gap-2">
                                                 <span class="text-xs px-2 py-0.5 rounded-full bg-pink-500/25 text-pink-300 font-semibold">
@@ -459,14 +459,14 @@ const levelLabel = (level) => {
                             </div>
 
                             <!-- Notice if Parent Has No Spouses -->
-                            <div v-else class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex items-start gap-3">
-                                <span class="text-amber-400 text-xl flex-shrink-0">⚠️</span>
+                            <div v-else class="bg-primary-500/10 border border-primary-500/30 rounded-2xl p-4 flex items-start gap-3">
+                                <span class="text-primary-400 text-xl flex-shrink-0">⚠️</span>
                                 <div class="space-y-1">
-                                    <div class="text-amber-300 font-semibold text-sm">Data Istri Belum Tersedia di Silsilah</div>
-                                    <p class="text-amber-200/80 text-xs leading-relaxed">
+                                    <div class="text-primary-300 font-semibold text-sm">Data Istri Belum Tersedia di Silsilah</div>
+                                    <p class="text-primary-200/80 text-xs leading-relaxed">
                                         Leluhur <strong>{{ selectedParent.name }}</strong> belum memiliki data istri yang terdaftar di silsilah. Harap perbarui data istri ayah terlebih dahulu sebelum mendaftarkan anak.
                                     </p>
-                                    <div class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-400/90 bg-amber-500/10 px-2.5 py-1 rounded-md mt-1 border border-amber-500/20">
+                                    <div class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-primary-400/90 bg-primary-500/10 px-2.5 py-1 rounded-md mt-1 border border-primary-500/20">
                                         <span>🔒</span>
                                         <span>Tombol "Lanjut" dinonaktifkan</span>
                                     </div>
@@ -478,7 +478,7 @@ const levelLabel = (level) => {
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">Nama Lengkap Anda <span class="text-red-400">*</span></label>
                             <input v-model="form.name" type="text" placeholder="Nama lengkap Anda"
-                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-primary-500/50 transition-colors"/>
                             <div v-if="form.errors.name" class="text-red-400 text-xs mt-1">{{ form.errors.name }}</div>
                         </div>
 
@@ -505,12 +505,12 @@ const levelLabel = (level) => {
                             <div>
                                 <label class="block text-gray-400 text-sm mb-1.5">Marga</label>
                                 <input v-model="form.marga" type="text" placeholder="Contoh: Simanjuntak, Siregar, dll"
-                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-primary-500/50 transition-colors"/>
                             </div>
                             <div>
                                 <label class="block text-gray-400 text-sm mb-1.5">Anak ke- (Urutan Kelahiran)</label>
                                 <input v-model="form.anak_ke" type="number" min="1" placeholder="Contoh: 1 (Sulung/Tertua)"
-                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-primary-500/50 transition-colors"/>
                                 <p class="text-gray-500 text-xs mt-1">Anak ke-1 posisi paling kiri, ke-2 di sebelahnya, dst.</p>
                             </div>
                         </div>
@@ -524,12 +524,12 @@ const levelLabel = (level) => {
                             <div>
                                 <label class="block text-gray-400 text-sm mb-1.5">Asal Daerah</label>
                                 <input v-model="form.asal_daerah" type="text" placeholder="Contoh: Medan, Tapanuli"
-                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-primary-500/50 transition-colors"/>
                             </div>
                             <div>
                                 <label class="block text-gray-400 text-sm mb-1.5 flex items-center justify-between">
                                     <span>Tanggal / Tahun Lahir</span>
-                                    <span class="text-[11px] text-amber-400/90 font-mono">MM/DD/YYYY</span>
+                                    <span class="text-[11px] text-primary-400/90 font-mono">MM/DD/YYYY</span>
                                 </label>
                                 <DatePicker v-model="form.tahun_lahir" placeholder="MM/DD/YYYY" />
                             </div>
@@ -553,7 +553,7 @@ const levelLabel = (level) => {
                                 <div v-else class="w-16 h-16 rounded-xl bg-gray-800 border border-white/10 flex items-center justify-center text-2xl flex-shrink-0">
                                     {{ form.gender === 'female' ? '👩' : '👨' }}
                                 </div>
-                                <label class="flex-1 cursor-pointer border-2 border-dashed border-white/10 hover:border-amber-500/30 rounded-xl px-4 py-3 text-center transition-colors">
+                                <label class="flex-1 cursor-pointer border-2 border-dashed border-white/10 hover:border-primary-500/30 rounded-xl px-4 py-3 text-center transition-colors">
                                     <span class="text-gray-400 text-sm">Klik untuk upload foto</span>
                                     <input type="file" class="hidden" accept="image/*" @change="onFotoChange"/>
                                 </label>
@@ -564,7 +564,7 @@ const levelLabel = (level) => {
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">Keterangan / Deskripsi Singkat</label>
                             <textarea v-model="form.deskripsi" rows="3" placeholder="Ceritakan singkat tentang Anda atau leluhur ini..."
-                                      class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors resize-none"></textarea>
+                                      class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-primary-500/50 transition-colors resize-none"></textarea>
                         </div>
 
                         <!-- Multi-Spouse Section with Ordered Wife Badges (Poin 2) -->
@@ -648,7 +648,7 @@ const levelLabel = (level) => {
                                 :class="[
                                     'py-3 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2',
                                     !form.is_self
-                                        ? 'bg-amber-500 text-gray-950 shadow-lg shadow-amber-500/20 font-bold'
+                                        ? 'bg-primary-500 text-gray-950 shadow-lg shadow-primary-500/20 font-bold'
                                         : 'text-gray-400 hover:text-white hover:bg-white/5'
                                 ]"
                             >
@@ -661,7 +661,7 @@ const levelLabel = (level) => {
                                 :class="[
                                     'py-3 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2',
                                     form.is_self
-                                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-gray-950 shadow-lg shadow-amber-500/20 font-bold'
+                                        ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-gray-950 shadow-lg shadow-primary-500/20 font-bold'
                                         : 'text-gray-400 hover:text-white hover:bg-white/5'
                                 ]"
                             >
@@ -704,14 +704,14 @@ const levelLabel = (level) => {
                             <div>
                                 <label class="block text-gray-400 text-sm mb-1.5">Nama Pemohon <span class="text-red-400">*</span></label>
                                 <input v-model="form.requester_name" type="text" placeholder="Nama lengkap Anda sebagai pemohon"
-                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-primary-500/50 transition-colors"/>
                                 <div v-if="form.errors.requester_name" class="text-red-400 text-xs mt-1">{{ form.errors.requester_name }}</div>
                             </div>
 
                             <div>
                                 <label class="block text-gray-400 text-sm mb-1.5">Email Pemohon <span class="text-red-400">*</span></label>
                                 <input v-model="form.requester_email" type="email" placeholder="email@contoh.com"
-                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-primary-500/50 transition-colors"/>
                                 <div v-if="form.errors.requester_email" class="text-red-400 text-xs mt-1">{{ form.errors.requester_email }}</div>
                                 <p class="text-gray-500 text-xs mt-1">Konfirmasi dan notifikasi status pengajuan akan dikirimkan ke email ini.</p>
                             </div>
@@ -720,13 +720,13 @@ const levelLabel = (level) => {
                         <!-- Form MODE 2: Untuk Diri Sendiri (Daftar Akun Anggota) -->
                         <div v-else class="space-y-4 pt-1">
                             <!-- Banner info pendaftar -->
-                            <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3.5 flex items-center justify-between">
+                            <div class="bg-primary-500/10 border border-primary-500/30 rounded-xl p-3.5 flex items-center justify-between">
                                 <div>
-                                    <div class="text-amber-400 text-xs font-semibold uppercase tracking-wider">Nama Akun Anggota:</div>
+                                    <div class="text-primary-400 text-xs font-semibold uppercase tracking-wider">Nama Akun Anggota:</div>
                                     <div class="text-white font-bold text-base mt-0.5">{{ form.name || '(Isi Nama Anda di Langkah 1)' }}</div>
-                                    <div v-if="form.marga" class="text-amber-200/80 text-xs">Marga {{ form.marga }}</div>
+                                    <div v-if="form.marga" class="text-primary-200/80 text-xs">Marga {{ form.marga }}</div>
                                 </div>
-                                <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-semibold">
+                                <span class="px-3 py-1 rounded-full bg-primary-500/20 text-primary-300 text-xs font-semibold">
                                     Calon Anggota
                                 </span>
                             </div>
@@ -735,7 +735,7 @@ const levelLabel = (level) => {
                             <div>
                                 <label class="block text-gray-300 text-sm mb-1.5">Alamat Email <span class="text-red-400">*</span></label>
                                 <input v-model="form.email" type="email" placeholder="email@contoh.com"
-                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-primary-500/50 transition-colors"/>
                                 <div v-if="form.errors.email" class="text-red-400 text-xs mt-1">{{ form.errors.email }}</div>
                                 <p class="text-gray-400 text-xs mt-1">Digunakan untuk login dan menerima link verifikasi email.</p>
                             </div>
@@ -744,7 +744,7 @@ const levelLabel = (level) => {
                             <div>
                                 <label class="block text-gray-300 text-sm mb-1.5">No. Handphone / WhatsApp (opsional)</label>
                                 <input v-model="form.phone" type="tel" placeholder="08xxxxxxxxxx"
-                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                       class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-primary-500/50 transition-colors"/>
                                 <div v-if="form.errors.phone" class="text-red-400 text-xs mt-1">{{ form.errors.phone }}</div>
                             </div>
 
@@ -753,13 +753,13 @@ const levelLabel = (level) => {
                                 <div>
                                     <label class="block text-gray-300 text-sm mb-1.5">Kata Sandi <span class="text-red-400">*</span></label>
                                     <input v-model="form.password" type="password" placeholder="Minimal 8 karakter"
-                                           class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                           class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-primary-500/50 transition-colors"/>
                                     <div v-if="form.errors.password" class="text-red-400 text-xs mt-1">{{ form.errors.password }}</div>
                                 </div>
                                 <div>
                                     <label class="block text-gray-300 text-sm mb-1.5">Konfirmasi Kata Sandi <span class="text-red-400">*</span></label>
                                     <input v-model="form.password_confirmation" type="password" placeholder="Ketik ulang kata sandi"
-                                           class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                           class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-primary-500/50 transition-colors"/>
                                     <div v-if="form.password && form.password_confirmation && form.password !== form.password_confirmation" class="text-red-400 text-xs mt-1">
                                         Kata sandi tidak cocok.
                                     </div>
@@ -790,13 +790,13 @@ const levelLabel = (level) => {
                                 :class="[
                                     'flex-1 font-semibold rounded-xl py-3 text-sm transition-all flex items-center justify-center gap-1.5',
                                     isStep1Disabled 
-                                        ? 'bg-amber-500/20 text-gray-500 border border-amber-500/10 cursor-not-allowed' 
-                                        : 'bg-amber-500 hover:bg-amber-400 text-gray-900 cursor-pointer shadow-lg shadow-amber-500/10'
+                                        ? 'bg-primary-500/20 text-gray-500 border border-primary-500/10 cursor-not-allowed' 
+                                        : 'bg-primary-500 hover:bg-primary-400 text-gray-900 cursor-pointer shadow-lg shadow-primary-500/10'
                                 ]">
                             Lanjut →
                         </button>
                         <button v-else-if="step < totalSteps" @click="nextStep" type="button"
-                                class="flex-1 bg-amber-500 hover:bg-amber-400 text-gray-900 font-semibold rounded-xl py-3 text-sm transition-all shadow-lg shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-1.5">
+                                class="flex-1 bg-primary-500 hover:bg-primary-400 text-gray-900 font-semibold rounded-xl py-3 text-sm transition-all shadow-lg shadow-primary-500/10 cursor-pointer flex items-center justify-center gap-1.5">
                             Lanjut →
                         </button>
                         <button v-if="step === totalSteps" @click="submit" type="button"

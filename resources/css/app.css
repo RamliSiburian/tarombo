@@ -1,3 +1,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --color-primary-50:  #fdf4f4;
+        --color-primary-100: #fbe8e8;
+        --color-primary-200: #f5c6c6;
+        --color-primary-300: #e89090;
+        --color-primary-400: #d45555;
+        --color-primary-500: #BC0202;
+        --color-primary-600: #830000;
+        --color-primary-700: #6C1A1A;
+        --color-primary-800: #4a1212;
+        --color-primary-900: #2d0a0a;
+        --color-primary-950: #1a0404;
+    }
+}
+
+@layer components {
+    /* Scrollbar Styling - Batak Red Theme (subtle) */
+    ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #4a1212;
+        border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #6C1A1A;
+    }
+
+    /* Selection color - subtle red */
+    ::selection {
+        background-color: rgba(108, 26, 26, 0.45);
+        color: #fff;
+    }
+}

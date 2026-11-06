@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
@@ -36,7 +36,7 @@ const categoryBadge = (cat) => {
     const map = {
         kegiatan: { label: 'Kegiatan', class: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' },
         berita:   { label: 'Berita', class: 'bg-blue-500/15 text-blue-400 border-blue-500/30' },
-        sejarah:  { label: 'Sejarah', class: 'bg-amber-500/15 text-amber-400 border-amber-500/30' },
+        sejarah:  { label: 'Sejarah', class: 'bg-primary-500/15 text-primary-400 border-primary-500/30' },
         budaya:   { label: 'Budaya', class: 'bg-pink-500/15 text-pink-400 border-pink-500/30' },
     };
     return map[cat] || { label: cat, class: 'bg-gray-500/15 text-gray-400 border-gray-500/30' };
@@ -58,7 +58,7 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
             </div>
             <Link
                 :href="route('admin.articles.create')"
-                class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-bold text-xs sm:text-sm transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2"
+                class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 text-gray-950 font-bold text-xs sm:text-sm transition-all shadow-lg shadow-primary-500/20 flex items-center justify-center gap-2"
             >
                 <span>➕</span>
                 <span>Tambah Kegiatan / Berita</span>
@@ -72,35 +72,35 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                 <button
                     type="button"
                     @click="filterCategory('')"
-                    :class="['px-3 py-1.5 rounded-lg text-xs font-medium transition-colors', !currentCategory ? 'bg-amber-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white']"
+                    :class="['px-3 py-1.5 rounded-lg text-xs font-medium transition-colors', !currentCategory ? 'bg-primary-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white']"
                 >
                     Semua
                 </button>
                 <button
                     type="button"
                     @click="filterCategory('kegiatan')"
-                    :class="['px-3 py-1.5 rounded-lg text-xs font-medium transition-colors', currentCategory === 'kegiatan' ? 'bg-amber-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white']"
+                    :class="['px-3 py-1.5 rounded-lg text-xs font-medium transition-colors', currentCategory === 'kegiatan' ? 'bg-primary-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white']"
                 >
                     🎉 Kegiatan
                 </button>
                 <button
                     type="button"
                     @click="filterCategory('berita')"
-                    :class="['px-3 py-1.5 rounded-lg text-xs font-medium transition-colors', currentCategory === 'berita' ? 'bg-amber-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white']"
+                    :class="['px-3 py-1.5 rounded-lg text-xs font-medium transition-colors', currentCategory === 'berita' ? 'bg-primary-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white']"
                 >
                     📰 Berita
                 </button>
                 <button
                     type="button"
                     @click="filterCategory('sejarah')"
-                    :class="['px-3 py-1.5 rounded-lg text-xs font-medium transition-colors', currentCategory === 'sejarah' ? 'bg-amber-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white']"
+                    :class="['px-3 py-1.5 rounded-lg text-xs font-medium transition-colors', currentCategory === 'sejarah' ? 'bg-primary-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white']"
                 >
                     📜 Sejarah
                 </button>
                 <button
                     type="button"
                     @click="filterCategory('budaya')"
-                    :class="['px-3 py-1.5 rounded-lg text-xs font-medium transition-colors', currentCategory === 'budaya' ? 'bg-amber-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white']"
+                    :class="['px-3 py-1.5 rounded-lg text-xs font-medium transition-colors', currentCategory === 'budaya' ? 'bg-primary-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white']"
                 >
                     🏺 Budaya
                 </button>
@@ -112,7 +112,7 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                     v-model="searchQuery"
                     type="text"
                     placeholder="Cari judul..."
-                    class="bg-gray-900 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-amber-500/50"
+                    class="bg-gray-900 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-primary-500/50"
                 />
                 <button type="submit" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-xs font-medium border border-white/10">
                     Cari
@@ -124,7 +124,7 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
         <div v-if="articles.data.length === 0" class="text-center py-16 bg-gray-900 border border-white/5 rounded-2xl">
             <div class="text-4xl mb-3">📰</div>
             <p class="text-gray-400 text-sm">Belum ada data kegiatan atau berita</p>
-            <Link :href="route('admin.articles.create')" class="inline-block mt-3 text-xs text-amber-400 hover:underline">
+            <Link :href="route('admin.articles.create')" class="inline-block mt-3 text-xs text-primary-400 hover:underline">
                 Tambah kegiatan pertama →
             </Link>
         </div>
@@ -168,7 +168,7 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
 
                     <!-- Content -->
                     <div class="p-5">
-                        <div v-if="art.event_date" class="text-xs text-amber-400 font-semibold mb-1 flex items-center gap-1.5">
+                        <div v-if="art.event_date" class="text-xs text-primary-400 font-semibold mb-1 flex items-center gap-1.5">
                             <span>📅 Tanggal Acara:</span>
                             <span>{{ formatDate(art.event_date) }}</span>
                         </div>
@@ -213,7 +213,7 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                     :class="[
                         'px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors',
                         link.active
-                            ? 'bg-amber-500 text-gray-900 border-amber-500 font-bold'
+                            ? 'bg-primary-500 text-gray-900 border-primary-500 font-bold'
                             : 'bg-gray-900 text-gray-400 border-white/10 hover:border-white/20 hover:text-white'
                     ]"
                 />

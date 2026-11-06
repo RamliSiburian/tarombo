@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
 
@@ -26,7 +26,7 @@ const logout = () => router.post(route('logout'));
                         <img src="/images/logo.png" alt="Logo" class="w-9 h-9 flex-shrink-0 object-contain" />
                         <div v-if="sidebarOpen" class="overflow-hidden">
                             <div class="text-white font-bold text-sm leading-tight whitespace-nowrap font-serif">Punguan Sihotang</div>
-                            <div class="text-amber-400 text-[10px] leading-tight whitespace-nowrap uppercase tracking-wider">Admin Panel</div>
+                            <div class="text-primary-400 text-[10px] leading-tight whitespace-nowrap uppercase tracking-wider">Admin Panel</div>
                         </div>
                     </Link>
                 </div>
@@ -40,7 +40,7 @@ const logout = () => router.post(route('logout'));
                         :class="[
                             'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200',
                             route().current(item.route)
-                                ? 'bg-amber-500/15 text-amber-400 font-medium'
+                                ? 'bg-primary-500/15 text-primary-400 font-medium'
                                 : 'text-gray-400 hover:text-white hover:bg-white/5'
                         ]"
                     >
@@ -53,7 +53,7 @@ const logout = () => router.post(route('logout'));
                         </span>
                         <!-- Member pending approval badge -->
                         <span v-if="sidebarOpen && item.memberBadge && $page.props.pendingMemberCount > 0"
-                              class="bg-amber-500 text-gray-950 text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center animate-pulse"
+                              class="bg-primary-500 text-gray-950 text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center animate-pulse"
                               title="Anggota menunggu persetujuan">
                             {{ $page.props.pendingMemberCount }}
                         </span>
@@ -88,7 +88,7 @@ const logout = () => router.post(route('logout'));
                 </h1>
                 <div class="flex items-center gap-3 text-sm text-gray-400">
                     <span>{{ $page.props.auth.user?.name }}</span>
-                    <div class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold">
+                    <div class="w-8 h-8 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center text-primary-400 font-bold">
                         {{ $page.props.auth.user?.name?.charAt(0) }}
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+﻿import * as d3 from 'd3';
 
 /**
  * Utility for exporting genealogy tree in Visual (PNG/SVG) and Data Table (CSV/PDF) formats.
@@ -191,11 +191,11 @@ export function generateTreeSVG(treeData, selectedNode = null, ancestorIdsSet = 
             strokeDash = '4 4';
         } else if (isTargetNode) {
             cardFill = '#2e1065';
-            cardStroke = '#f59e0b';
+            cardStroke = '#BC0202';
             strokeWidth = '2.5';
         } else if (isRoot) {
             cardFill = '#1e1b4b';
-            cardStroke = '#fbbf24';
+            cardStroke = '#d4524a';
             strokeWidth = '2';
         } else if (d.data.gender === 'female') {
             cardFill = '#2a0a18';
@@ -211,7 +211,7 @@ export function generateTreeSVG(treeData, selectedNode = null, ancestorIdsSet = 
             spouseText = `💍 ${escapeXml(firstSpouse)}${d.data.spouses.length > 1 ? ` (+${d.data.spouses.length - 1})` : ''}`;
         }
 
-        const genderDotColor = d.data.gender === 'female' ? '#ec4899' : (isTargetNode ? '#f59e0b' : '#818cf8');
+        const genderDotColor = d.data.gender === 'female' ? '#ec4899' : (isTargetNode ? '#BC0202' : '#818cf8');
 
         nodesSvg += `
             <g class="tree-node" transform="translate(${d.x}, ${d.y})">
@@ -270,12 +270,12 @@ export function generateTreeSVG(treeData, selectedNode = null, ancestorIdsSet = 
     <rect x="${viewBoxX}" y="${viewBoxY}" width="${totalWidth}" height="${totalHeight}" fill="url(#bgGrad)" />
 
     <!-- Ambient Decorative Light -->
-    <circle cx="${viewBoxX + 100}" cy="${viewBoxY + 100}" r="250" fill="#f59e0b" opacity="0.04" />
+    <circle cx="${viewBoxX + 100}" cy="${viewBoxY + 100}" r="250" fill="#BC0202" opacity="0.04" />
     <circle cx="${viewBoxX + totalWidth - 100}" cy="${viewBoxY + totalHeight - 100}" r="300" fill="#6366f1" opacity="0.05" />
 
     <!-- Header Section -->
     <g class="header" transform="translate(${viewBoxX + totalWidth / 2}, ${viewBoxY + 50})">
-        <text x="0" y="0" text-anchor="middle" fill="#fbbf24" font-size="20px" font-weight="900" letter-spacing="2">
+        <text x="0" y="0" text-anchor="middle" fill="#d4524a" font-size="20px" font-weight="900" letter-spacing="2">
             🏛️ ${escapeXml(titleText)}
         </text>
         <text x="0" y="24" text-anchor="middle" fill="#e2e8f0" font-size="13px" font-weight="600">

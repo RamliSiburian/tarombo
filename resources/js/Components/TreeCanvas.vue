@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import * as d3 from 'd3';
 import axios from 'axios';
@@ -71,7 +71,7 @@ async function onNodeClick(node) {
 }
 
 function getNodeColor(node, isHighlighted, isSelected) {
-    if (isSelected) return '#f59e0b';
+    if (isSelected) return '#BC0202';
     if (isHighlighted) return '#a78bfa';
     if (node.gender === 'female') return '#ec4899';
     return '#6366f1';
@@ -108,7 +108,7 @@ function updateHighlights() {
         .transition().duration(300)
         .attr('stroke', d => {
             if (d.data.status === 'pending') return '#64748b';
-            if (d.data.id === selectedNodeId.value) return '#f59e0b';
+            if (d.data.id === selectedNodeId.value) return '#BC0202';
             if (highlightedIds.value.has(d.data.id)) return '#a78bfa';
             return d.data.gender === 'female' ? '#f472b6' : '#6366f1';
         })
@@ -469,7 +469,7 @@ defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, getSvgElement, getHighl
             <div class="absolute inset-0 bg-gradient-to-r from-gray-950/85 via-transparent to-gray-950/85"></div>
             
             <!-- Ambient Batak Cultural Lights -->
-            <div class="absolute -top-32 -left-32 w-[500px] h-[500px] bg-amber-600/10 rounded-full blur-[120px]"></div>
+            <div class="absolute -top-32 -left-32 w-[500px] h-[500px] bg-primary-600/10 rounded-full blur-[120px]"></div>
             <div class="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px]"></div>
         </div>
 
@@ -486,7 +486,7 @@ defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, getSvgElement, getHighl
             </button>
             <div class="w-full h-px bg-white/15 my-0.5"></div>
             <!-- Export Icon Button with Tooltip -->
-            <button @click="emit('export')" class="w-9 h-9 bg-amber-500/20 hover:bg-amber-500 border border-amber-500/40 rounded-xl text-amber-300 hover:text-gray-950 flex items-center justify-center transition-all shadow-xl hover:scale-105 backdrop-blur-md" title="Export Silsilah">
+            <button @click="emit('export')" class="w-9 h-9 bg-primary-500/20 hover:bg-primary-500 border border-primary-500/40 rounded-xl text-primary-300 hover:text-gray-950 flex items-center justify-center transition-all shadow-xl hover:scale-105 backdrop-blur-md" title="Export Silsilah">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                 </svg>
@@ -496,7 +496,7 @@ defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, getSvgElement, getHighl
         <!-- Legend & Instructions -->
         <div class="absolute bottom-4 left-4 z-10 bg-gray-900/90 backdrop-blur-md border border-white/10 rounded-xl p-3 text-xs space-y-1.5 shadow-2xl max-w-xs">
             <div class="flex items-center justify-between gap-3 mb-2 pb-1.5 border-b border-white/10">
-                <span class="text-[11px] text-amber-400 font-semibold flex items-center gap-1.5">
+                <span class="text-[11px] text-primary-400 font-semibold flex items-center gap-1.5">
                     <img src="/images/logo.png" alt="Logo" class="w-4 h-4 object-contain" />
                     <span>Punguan Sihotang</span>
                 </span>
@@ -519,7 +519,7 @@ defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, getSvgElement, getHighl
                 <span class="text-gray-300 text-[11px]">Jalur silsilah terpilih</span>
             </div>
             <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></div>
+                <div class="w-3 h-3 rounded-full bg-primary-400 shadow-sm shadow-primary-400/50"></div>
                 <span class="text-gray-300 text-[11px]">Node terpilih</span>
             </div>
         </div>

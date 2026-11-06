@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
@@ -81,7 +81,7 @@ const submit = () => {
                         v-model="form.title"
                         type="text"
                         placeholder="Contoh: Pesta Bona Taon Parsadaan Marga Siburian 2026"
-                        class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"
+                        class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-primary-500/50 transition-colors"
                     />
                     <div v-if="form.errors.title" class="text-red-400 text-xs mt-1">{{ form.errors.title }}</div>
                 </div>
@@ -94,7 +94,7 @@ const submit = () => {
                         </label>
                         <select
                             v-model="form.category"
-                            class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors"
+                            class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500/50 transition-colors"
                         >
                             <option value="kegiatan">🎉 Kegiatan / Acara Marga</option>
                             <option value="berita">📰 Berita & Warta Komunitas</option>
@@ -111,7 +111,7 @@ const submit = () => {
                         <input
                             v-model="form.event_date"
                             type="date"
-                            class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors"
+                            class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500/50 transition-colors"
                         />
                         <div v-if="form.errors.event_date" class="text-red-400 text-xs mt-1">{{ form.errors.event_date }}</div>
                     </div>
@@ -130,7 +130,7 @@ const submit = () => {
                             🖼️
                         </div>
 
-                        <label class="flex-1 w-full cursor-pointer border-2 border-dashed border-white/10 hover:border-amber-500/40 rounded-xl px-5 py-4 text-center transition-colors">
+                        <label class="flex-1 w-full cursor-pointer border-2 border-dashed border-white/10 hover:border-primary-500/40 rounded-xl px-5 py-4 text-center transition-colors">
                             <span class="text-sm text-gray-300">Pilih foto dari komputer (JPG, PNG, WebP maks 2MB)</span>
                             <input type="file" accept="image/*" @change="onImageChange" class="hidden" />
                         </label>
@@ -147,7 +147,7 @@ const submit = () => {
                         v-model="form.excerpt"
                         rows="2"
                         placeholder="Ringkasan 1-2 kalimat untuk cuplikan di beranda..."
-                        class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors resize-none"
+                        class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-primary-500/50 transition-colors resize-none"
                     ></textarea>
                     <div v-if="form.errors.excerpt" class="text-red-400 text-xs mt-1">{{ form.errors.excerpt }}</div>
                 </div>
@@ -161,7 +161,7 @@ const submit = () => {
                         v-model="form.content"
                         rows="8"
                         placeholder="Tuliskan detail jadwal kegiatan, lokasi, susunan panitia, atau isi berita..."
-                        class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors resize-y leading-relaxed"
+                        class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-primary-500/50 transition-colors resize-y leading-relaxed"
                     ></textarea>
                     <div v-if="form.errors.content" class="text-red-400 text-xs mt-1">{{ form.errors.content }}</div>
                 </div>
@@ -172,7 +172,7 @@ const submit = () => {
                         v-model="form.is_published"
                         type="checkbox"
                         id="is_published"
-                        class="rounded border-white/20 bg-gray-800 text-amber-500 focus:ring-amber-500 w-5 h-5 cursor-pointer"
+                        class="rounded border-white/20 bg-gray-800 text-primary-500 focus:ring-primary-500 w-5 h-5 cursor-pointer"
                     />
                     <label for="is_published" class="text-sm font-medium text-gray-200 cursor-pointer">
                         Publikasikan langsung (dapat dilihat oleh pengunjung website)
@@ -190,7 +190,7 @@ const submit = () => {
                     <button
                         type="submit"
                         :disabled="form.processing"
-                        class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-bold text-sm shadow-lg shadow-amber-500/20 transition-all flex items-center gap-2 disabled:opacity-50 cursor-pointer"
+                        class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 text-gray-950 font-bold text-sm shadow-lg shadow-primary-500/20 transition-all flex items-center gap-2 disabled:opacity-50 cursor-pointer"
                     >
                         <span v-if="form.processing" class="w-4 h-4 border-2 border-gray-950 border-t-transparent rounded-full animate-spin"></span>
                         <span>{{ isEditing ? 'Simpan Perubahan' : '✓ Publikasikan Sekarang' }}</span>

@@ -111,7 +111,7 @@ onUnmounted(() => {
 const categoryMeta = {
     kegiatan: { icon: '🎉', color: 'from-emerald-500/20 to-teal-500/10', border: 'border-emerald-500/30', label: 'Kegiatan' },
     berita:   { icon: '📰', color: 'from-blue-500/20 to-indigo-500/10', border: 'border-blue-500/30', label: 'Berita' },
-    sejarah:  { icon: '🏛️', color: 'from-amber-500/20 to-yellow-500/10', border: 'border-amber-500/30', label: 'Sejarah' },
+    sejarah:  { icon: '🏛️', color: 'from-primary-500/20 to-primary-500/10', border: 'border-primary-500/30', label: 'Sejarah' },
     budaya:   { icon: '🪔', color: 'from-purple-500/20 to-violet-500/10', border: 'border-purple-500/30', label: 'Budaya' },
 };
 
@@ -181,11 +181,11 @@ const features = [
         <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
     </Head>
 
-    <div class="min-h-screen bg-gray-950 text-white selection:bg-amber-500 selection:text-gray-950" style="font-family: 'Inter', sans-serif;">
+    <div class="min-h-screen bg-gray-950 text-white selection:bg-primary-500 selection:text-gray-950" style="font-family: 'Inter', sans-serif;">
 
         <!-- ═══ TOP SCROLL PROGRESS BAR ═══ -->
         <div
-            class="fixed top-0 left-0 h-[2.5px] bg-gradient-to-r from-amber-500 via-amber-400 to-red-500 z-[60] pointer-events-none transition-all duration-75 ease-out shadow-sm shadow-amber-500/50"
+            class="fixed top-0 left-0 h-[2.5px] bg-gradient-to-r from-primary-500 via-primary-400 to-red-500 z-[60] pointer-events-none transition-all duration-75 ease-out shadow-sm shadow-primary-500/50"
             :style="{ width: scrollProgress + '%' }"
         ></div>
 
@@ -201,14 +201,14 @@ const features = [
                             class="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-200 drop-shadow-lg"
                         />
                         <div>
-                            <span class="text-base font-bold text-white group-hover:text-amber-400 transition-colors duration-200" style="font-family: 'Cinzel', serif;">SIHOTANG</span>
-                            <span class="block text-[10px] text-amber-400/70 leading-none tracking-widest uppercase">Dohot Boruna</span>
+                            <span class="text-base font-bold text-white group-hover:text-primary-400 transition-colors duration-200" style="font-family: 'Cinzel', serif;">SIHOTANG</span>
+                            <span class="block text-[10px] text-primary-400/70 leading-none tracking-widest uppercase">Dohot Boruna</span>
                         </div>
                     </Link>
 
                     <!-- Desktop Nav -->
                     <div class="hidden md:flex items-center gap-1">
-                        <Link href="/" class="px-4 py-2 text-sm text-amber-400 font-medium rounded-lg bg-amber-500/10 hover:bg-amber-500/20 transition-colors">Beranda</Link>
+                        <Link href="/" class="px-4 py-2 text-sm text-primary-400 font-medium rounded-lg bg-primary-500/10 hover:bg-primary-500/20 transition-colors">Beranda</Link>
                         <Link :href="route('tree.index')" class="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Pohon Silsilah</Link>
                         <Link :href="route('articles.index')" class="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Berita & Kegiatan</Link>
                         <Link :href="route('request.create')" class="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Ajukan Data</Link>
@@ -220,14 +220,14 @@ const features = [
                             <Link
                                 v-if="$page.props.auth.user.role === 'admin'"
                                 :href="route('admin.dashboard')"
-                                class="px-4 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-amber-600 to-red-700 rounded-lg hover:opacity-90 transition-opacity shadow-lg"
+                                class="px-4 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-red-700 rounded-lg hover:opacity-90 transition-opacity shadow-lg"
                             >
                                 Admin Panel
                             </Link>
                             <Link
                                 v-else
                                 :href="route('member.dashboard')"
-                                class="px-4 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-amber-600 to-red-700 rounded-lg hover:opacity-90 transition-opacity shadow-lg"
+                                class="px-4 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-red-700 rounded-lg hover:opacity-90 transition-opacity shadow-lg"
                             >
                                 Dashboard
                             </Link>
@@ -236,7 +236,7 @@ const features = [
                             <Link :href="route('login')" class="px-4 py-1.5 text-sm text-gray-300 hover:text-white border border-white/20 hover:border-white/40 rounded-lg transition-all">
                                 Masuk
                             </Link>
-                            <Link :href="route('request.create')" class="px-4 py-1.5 text-sm font-medium text-gray-900 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 rounded-lg transition-all shadow-lg shadow-amber-500/30 hover:scale-[1.02]">
+                            <Link :href="route('request.create')" class="px-4 py-1.5 text-sm font-medium text-gray-900 bg-gradient-to-r from-primary-400 to-primary-500 hover:from-primary-300 hover:to-primary-400 rounded-lg transition-all shadow-lg shadow-primary-500/30 hover:scale-[1.02]">
                                 Ajukan Silsilah
                             </Link>
                         </template>
@@ -251,7 +251,7 @@ const features = [
 
                 <!-- Mobile Menu -->
                 <div v-show="mobileMenu" class="md:hidden pb-4 border-t border-white/10 mt-1 pt-3 space-y-1">
-                    <Link href="/" class="block px-4 py-2.5 text-sm text-amber-400 bg-amber-500/10 rounded-lg">Beranda</Link>
+                    <Link href="/" class="block px-4 py-2.5 text-sm text-primary-400 bg-primary-500/10 rounded-lg">Beranda</Link>
                     <Link :href="route('tree.index')" class="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Pohon Silsilah</Link>
                     <Link :href="route('articles.index')" class="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Berita & Kegiatan</Link>
                     <Link :href="route('request.create')" class="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Ajukan Data</Link>
@@ -265,27 +265,27 @@ const features = [
             <div class="absolute inset-0">
                 <div class="absolute inset-0 bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950"></div>
                 <!-- Ambient glowing orb (GPU-accelerated float) -->
-                <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[650px] h-[380px] bg-amber-600/15 rounded-full blur-[100px] pointer-events-none animate-ambient-glow"></div>
-                <div class="absolute bottom-1/4 left-1/3 w-[450px] h-[280px] bg-red-700/10 rounded-full blur-[90px] pointer-events-none animate-ambient-glow" style="animation-delay: -5s;"></div>
+                <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[650px] h-[380px] bg-primary-700/10 rounded-full blur-[120px] pointer-events-none animate-ambient-glow"></div>
+                <div class="absolute bottom-1/4 left-1/3 w-[450px] h-[280px] bg-primary-900/15 rounded-full blur-[100px] pointer-events-none animate-ambient-glow" style="animation-delay: -5s;"></div>
                 <!-- Batak pattern overlay (subtle) -->
-                <div class="absolute inset-0 opacity-5" style="background-image: repeating-linear-gradient(45deg, #d97706 0px, #d97706 1px, transparent 1px, transparent 20px), repeating-linear-gradient(-45deg, #d97706 0px, #d97706 1px, transparent 1px, transparent 20px);"></div>
+                <div class="absolute inset-0 opacity-5" style="background-image: repeating-linear-gradient(45deg, #830000 0px, #830000 1px, transparent 1px, transparent 20px), repeating-linear-gradient(-45deg, #830000 0px, #830000 1px, transparent 1px, transparent 20px);"></div>
             </div>
 
             <!-- Decorative top border -->
-            <div class="absolute top-16 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent"></div>
+            <div class="absolute top-16 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-500/40 to-transparent"></div>
 
             <!-- Content -->
             <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
                 <!-- Badge -->
-                <div class="motion-reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 text-xs font-medium tracking-wider uppercase mb-8 backdrop-blur-sm shadow-inner shadow-amber-500/10">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                <!-- <div class="motion-reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary-700/50 bg-primary-900/40 text-primary-300 text-xs font-medium tracking-wider uppercase mb-8 backdrop-blur-sm">
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary-400 animate-ping"></span>
                     Silsilah Marga Sihotang Digital
-                </div>
+                </div> -->
 
                 <!-- Main Title -->
                 <h1 class="motion-reveal motion-delay-100 text-3xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight tracking-tight" style="font-family: 'Cinzel', serif;">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500">PUNGUAN POMPARAN RAJA SIGODANG ULU SIHOTANG</span>
-                    <span class="block text-white mt-2 text-2xl sm:text-4xl lg:text-5xl">DOHOT BORUNA SE-INDONESIA</span>
+                    <span class="text-white">PUNGUAN POMPARAN RAJA SIGODANG ULU SIHOTANG</span>
+                    <span class="block text-primary-400/80 mt-2 text-2xl sm:text-4xl lg:text-5xl">DOHOT BORUNA SE-INDONESIA</span>
                 </h1>
 
                 <!-- Subtitle -->
@@ -300,7 +300,7 @@ const features = [
                 <div class="motion-reveal motion-delay-300 flex flex-col sm:flex-row gap-4 justify-center mb-16">
                     <Link
                         :href="route('tree.index')"
-                        class="group inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-gray-900 font-bold rounded-xl hover:from-amber-400 hover:to-amber-500 transition-all duration-200 shadow-xl shadow-amber-500/30 hover:shadow-amber-500/50 hover:-translate-y-0.5 active:translate-y-0"
+                        class="group inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-primary-700 hover:bg-primary-600 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-black/40 hover:shadow-primary-700/30 border border-primary-600/50 hover:-translate-y-0.5 active:translate-y-0"
                     >
                         <span class="text-lg">🌳</span>
                         <span>Jelajahi Pohon Silsilah</span>
@@ -308,7 +308,7 @@ const features = [
                     </Link>
                     <Link
                         :href="route('request.create')"
-                        class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/10 hover:border-amber-400/40 transition-all duration-200 backdrop-blur-sm hover:-translate-y-0.5 active:translate-y-0"
+                        class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/10 hover:border-primary-400/40 transition-all duration-200 backdrop-blur-sm hover:-translate-y-0.5 active:translate-y-0"
                     >
                         <span class="text-lg">🌳</span>
                         <span>Ajukan & Daftar Anggota</span>
@@ -321,24 +321,24 @@ const features = [
                     class="motion-reveal motion-delay-400 flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16 p-6 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-sm max-w-3xl mx-auto"
                 >
                     <div class="text-center group">
-                        <div class="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-amber-200 via-amber-400 to-amber-500 tracking-tight" style="font-family: 'Cinzel', serif;">
+                        <div class="text-4xl sm:text-5xl font-bold text-white tracking-tight" style="font-family: 'Cinzel', serif;">
                             {{ displayNodes.toLocaleString() }}
                         </div>
-                        <div class="text-xs sm:text-sm text-gray-400 mt-1.5 font-medium tracking-wide">Tokoh Terdaftar</div>
+                        <div class="text-xs sm:text-sm text-gray-500 mt-1.5 font-medium tracking-wide">Tokoh Terdaftar</div>
                     </div>
                     <div class="hidden sm:block w-px h-14 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
                     <div class="text-center group">
-                        <div class="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-amber-200 via-amber-400 to-amber-500 tracking-tight" style="font-family: 'Cinzel', serif;">
+                        <div class="text-4xl sm:text-5xl font-bold text-white tracking-tight" style="font-family: 'Cinzel', serif;">
                             {{ displayMarga }}
                         </div>
-                        <div class="text-xs sm:text-sm text-gray-400 mt-1.5 font-medium tracking-wide">Marga Tercatat</div>
+                        <div class="text-xs sm:text-sm text-gray-500 mt-1.5 font-medium tracking-wide">Marga Tercatat</div>
                     </div>
                     <div class="hidden sm:block w-px h-14 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
                     <div class="text-center group">
-                        <div class="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-amber-200 via-amber-400 to-amber-500 tracking-tight" style="font-family: 'Cinzel', serif;">
+                        <div class="text-4xl sm:text-5xl font-bold text-white tracking-tight" style="font-family: 'Cinzel', serif;">
                             ∞
                         </div>
-                        <div class="text-xs sm:text-sm text-gray-400 mt-1.5 font-medium tracking-wide">Warisan Budaya</div>
+                        <div class="text-xs sm:text-sm text-gray-500 mt-1.5 font-medium tracking-wide">Warisan Budaya</div>
                     </div>
                 </div>
             </div>
@@ -346,7 +346,7 @@ const features = [
             <!-- Scroll indicator -->
             <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-600 animate-bounce">
                 <span class="text-xs tracking-widest uppercase text-gray-500 font-medium">Gulir</span>
-                <svg class="w-4 h-4 text-amber-500/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                <svg class="w-4 h-4 text-primary-500/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </div>
         </section>
 
@@ -376,11 +376,11 @@ const features = [
                         :class="[
                             'motion-reveal',
                             `motion-delay-${(idx + 1) * 100}`,
-                            'group p-6 rounded-2xl bg-gray-900/60 border border-white/5 hover:border-amber-500/40 hover:bg-gray-900/90 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-amber-500/10 cursor-default'
+                            'group p-6 rounded-2xl bg-gray-900/60 border border-white/5 hover:border-primary-500/40 hover:bg-gray-900/90 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary-500/10 cursor-default'
                         ]"
                     >
                         <div class="text-3xl mb-4 group-hover:scale-110 transition-transform duration-200">{{ f.icon }}</div>
-                        <h3 class="text-base font-semibold text-white mb-2 group-hover:text-amber-400 transition-colors">{{ f.title }}</h3>
+                        <h3 class="text-base font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors">{{ f.title }}</h3>
                         <p class="text-sm text-gray-500 leading-relaxed group-hover:text-gray-400 transition-colors">{{ f.desc }}</p>
                     </div>
                 </div>
@@ -394,7 +394,7 @@ const features = [
                 <!-- Header -->
                 <div class="motion-reveal flex items-end justify-between mb-12">
                     <div>
-                        <div class="inline-block px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-medium tracking-wider uppercase mb-4">
+                        <div class="inline-block px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-medium tracking-wider uppercase mb-4">
                             Artikel & Sejarah
                         </div>
                         <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight" style="font-family: 'Cinzel', serif;">
@@ -403,7 +403,7 @@ const features = [
                     </div>
                     <Link
                         :href="route('articles.index')"
-                        class="hidden sm:inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-white font-medium px-3.5 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-200"
+                        class="hidden sm:inline-flex items-center gap-1.5 text-xs text-primary-400 hover:text-white font-medium px-3.5 py-1.5 rounded-lg bg-primary-500/10 hover:bg-primary-500/20 border border-primary-500/20 hover:border-primary-500/40 transition-all duration-200"
                     >
                         <span>Portal Berita & Kegiatan</span>
                         <span>→</span>
@@ -420,9 +420,9 @@ const features = [
                             'motion-reveal',
                             `motion-delay-${(idx + 1) * 100}`,
                             'group p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/50 cursor-pointer bg-gradient-to-br flex flex-col justify-between block',
-                            categoryMeta[art.category]?.color || 'from-amber-500/20 to-yellow-500/10',
-                            categoryMeta[art.category]?.border || 'border-amber-500/30',
-                            'hover:border-amber-400/50'
+                            categoryMeta[art.category]?.color || 'from-primary-500/20 to-primary-500/10',
+                            categoryMeta[art.category]?.border || 'border-primary-500/30',
+                            'hover:border-primary-400/50'
                         ]"
                     >
                         <div>
@@ -435,12 +435,12 @@ const features = [
                                 <span class="text-2xl group-hover:scale-110 transition-transform duration-200">
                                     {{ categoryMeta[art.category]?.icon || '📰' }}
                                 </span>
-                                <span class="text-xs font-semibold tracking-wider uppercase text-amber-400/90 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30">
+                                <span class="text-xs font-semibold tracking-wider uppercase text-primary-400/90 px-2.5 py-0.5 rounded-full bg-primary-500/15 border border-primary-500/30">
                                     {{ categoryMeta[art.category]?.label || art.category }}
                                 </span>
                                 <span v-if="art.event_date" class="text-xs text-emerald-400 ml-auto">📅 {{ formatArticleDate(art.event_date) }}</span>
                             </div>
-                            <h3 class="text-lg font-bold text-white mb-3 leading-snug group-hover:text-amber-400 transition-colors">
+                            <h3 class="text-lg font-bold text-white mb-3 leading-snug group-hover:text-primary-400 transition-colors">
                                 {{ art.title }}
                             </h3>
                             <p class="text-sm text-gray-400 leading-relaxed mb-5 line-clamp-3">
@@ -450,7 +450,7 @@ const features = [
 
                         <div class="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-white/5 mt-auto">
                             <span>{{ formatArticleDate(art.created_at) }}</span>
-                            <span class="text-amber-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                            <span class="text-primary-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
                                 Baca Selengkapnya →
                             </span>
                         </div>
@@ -461,7 +461,7 @@ const features = [
                 <div class="text-center mt-12 motion-reveal">
                     <Link
                         :href="route('articles.index')"
-                        class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-gradient-to-r from-amber-500/15 via-amber-500/25 to-amber-500/15 hover:from-amber-500 hover:to-amber-600 hover:text-gray-950 text-amber-400 font-bold text-sm rounded-xl border border-amber-500/30 hover:border-amber-400 transition-all duration-300 shadow-xl shadow-black/40 hover:scale-[1.02]"
+                        class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-gradient-to-r from-primary-500/15 via-primary-500/25 to-primary-500/15 hover:from-primary-500 hover:to-primary-600 hover:text-gray-950 text-primary-400 font-bold text-sm rounded-xl border border-primary-500/30 hover:border-primary-400 transition-all duration-300 shadow-xl shadow-black/40 hover:scale-[1.02]"
                     >
                         <span>📰 Lihat Semua Berita & Kegiatan</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -475,18 +475,18 @@ const features = [
         <!-- ═══ CTA KEANGGOTAAN ═══ -->
         <section class="py-24 relative overflow-hidden">
             <div class="absolute inset-0">
-                <div class="absolute inset-0 bg-gradient-to-br from-amber-950/25 via-red-950/20 to-gray-950"></div>
-                <div class="absolute inset-0 opacity-5" style="background-image: repeating-linear-gradient(45deg, #d97706 0px, #d97706 1px, transparent 1px, transparent 30px), repeating-linear-gradient(-45deg, #d97706 0px, #d97706 1px, transparent 1px, transparent 30px);"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-gray-950 via-primary-950/10 to-gray-950"></div>
+                <div class="absolute inset-0 opacity-3" style="background-image: repeating-linear-gradient(45deg, #4a1212 0px, #4a1212 1px, transparent 1px, transparent 40px), repeating-linear-gradient(-45deg, #4a1212 0px, #4a1212 1px, transparent 1px, transparent 40px);"></div>
             </div>
 
             <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
-                <div class="motion-reveal p-8 sm:p-14 rounded-3xl border border-amber-500/25 bg-gray-900/70 backdrop-blur-md shadow-2xl shadow-black/60 relative overflow-hidden group">
+                <div class="motion-reveal p-8 sm:p-14 rounded-3xl border border-white/10 bg-gray-900/60 backdrop-blur-md shadow-2xl shadow-black/60 relative overflow-hidden group">
                     <!-- Subtle top glow inside card -->
-                    <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-40 bg-amber-500/20 rounded-full blur-2xl pointer-events-none group-hover:bg-amber-500/30 transition-all duration-500"></div>
+                    <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-40 bg-primary-800/20 rounded-full blur-2xl pointer-events-none group-hover:bg-primary-700/25 transition-all duration-500"></div>
 
                     <div class="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300">🤝</div>
                     <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight" style="font-family: 'Cinzel', serif;">
-                        Bergabunglah dengan <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">Punguan Sihotang</span>
+                        Bergabunglah dengan <span class="text-primary-400">Punguan Sihotang</span>
                     </h2>
                     <p class="text-gray-400 text-base leading-relaxed mb-8 max-w-2xl mx-auto">
                         Daftarkan diri sebagai anggota untuk melengkapi data silsilah keluarga Anda,
@@ -495,7 +495,7 @@ const features = [
                     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <Link
                             :href="route('request.create')"
-                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-gray-900 font-bold rounded-xl hover:from-amber-400 hover:to-amber-500 transition-all duration-200 shadow-xl shadow-amber-500/30 hover:scale-[1.02] active:scale-100"
+                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-primary-700 hover:bg-primary-600 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-black/40 border border-primary-600/50 hover:scale-[1.02] active:scale-100"
                         >
                             🌳 Ajukan Silsilah & Daftar Anggota
                         </Link>
@@ -523,11 +523,11 @@ const features = [
 
                     <!-- Links -->
                     <div class="flex flex-wrap items-center gap-6 text-sm text-gray-400">
-                        <Link href="/" class="hover:text-amber-400 transition-colors">Beranda</Link>
-                        <Link :href="route('tree.index')" class="hover:text-amber-400 transition-colors">Pohon Silsilah</Link>
-                        <Link :href="route('articles.index')" class="hover:text-amber-400 transition-colors">Berita & Kegiatan</Link>
-                        <Link :href="route('request.create')" class="hover:text-amber-400 transition-colors">Ajukan Data</Link>
-                        <Link :href="route('login')" class="hover:text-amber-400 transition-colors">Masuk</Link>
+                        <Link href="/" class="hover:text-primary-400 transition-colors">Beranda</Link>
+                        <Link :href="route('tree.index')" class="hover:text-primary-400 transition-colors">Pohon Silsilah</Link>
+                        <Link :href="route('articles.index')" class="hover:text-primary-400 transition-colors">Berita & Kegiatan</Link>
+                        <Link :href="route('request.create')" class="hover:text-primary-400 transition-colors">Ajukan Data</Link>
+                        <Link :href="route('login')" class="hover:text-primary-400 transition-colors">Masuk</Link>
                     </div>
 
                     <p class="text-xs text-gray-600">© {{ new Date().getFullYear() }} Punguan Sihotang Dohot Boruna</p>
@@ -547,7 +547,7 @@ const features = [
             <button
                 v-show="showScrollTop"
                 @click="scrollToTop"
-                class="fixed bottom-6 right-6 z-40 p-3 rounded-full bg-gray-900/90 text-amber-400 border border-amber-500/30 hover:border-amber-400 hover:bg-amber-500/10 backdrop-blur-md shadow-xl shadow-black/50 hover:scale-110 active:scale-95 transition-all duration-200 group focus:outline-none"
+                class="fixed bottom-6 right-6 z-40 p-3 rounded-full bg-gray-900/90 text-primary-400 border border-primary-500/30 hover:border-primary-400 hover:bg-primary-500/10 backdrop-blur-md shadow-xl shadow-black/50 hover:scale-110 active:scale-95 transition-all duration-200 group focus:outline-none"
                 aria-label="Kembali ke atas"
                 title="Kembali ke atas"
             >
@@ -584,16 +584,16 @@ const features = [
 @keyframes ambientGlow {
     0%, 100% {
         transform: scale(1) translate3d(0, 0, 0);
-        opacity: 0.18;
+        opacity: 0.10;
     }
     50% {
-        transform: scale(1.08) translate3d(0, -12px, 0);
-        opacity: 0.28;
+        transform: scale(1.06) translate3d(0, -8px, 0);
+        opacity: 0.17;
     }
 }
 
 .animate-ambient-glow {
-    animation: ambientGlow 9s ease-in-out infinite;
+    animation: ambientGlow 12s ease-in-out infinite;
 }
 
 /* Accessibility: Disable motion if user prefers reduced motion */

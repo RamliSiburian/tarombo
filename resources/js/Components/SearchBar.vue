@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref, watch } from 'vue';
 import axios from 'axios';
 
@@ -55,11 +55,11 @@ const genderIcon = (gender) => gender === 'female' ? '👩' : '👨';
 
 <template>
     <div class="relative w-full">
-        <div class="flex items-center gap-2 bg-gray-800/90 backdrop-blur-md border border-white/10 rounded-xl px-3 py-1.5 h-9 focus-within:border-amber-500/50 focus-within:bg-gray-800 transition-all shadow-inner">
+        <div class="flex items-center gap-2 bg-gray-800/90 backdrop-blur-md border border-white/10 rounded-xl px-3 py-1.5 h-9 focus-within:border-primary-500/50 focus-within:bg-gray-800 transition-all shadow-inner">
             <svg v-if="!loading" class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
-            <div v-else class="w-3.5 h-3.5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+            <div v-else class="w-3.5 h-3.5 border-2 border-primary-400 border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
 
             <input
                 v-model="query"

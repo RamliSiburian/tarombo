@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref, computed } from 'vue';
 import axios from 'axios';
 
@@ -122,7 +122,7 @@ function close() {
                     <h3 class="text-lg font-bold text-white">Import Data Silsilah</h3>
                     <span class="text-xs px-2 py-0.5 rounded-full border font-medium"
                           :class="step === 'upload' ? 'bg-indigo-500/10 border-indigo-500/30 text-indigo-300'
-                               : step === 'preview' ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
+                               : step === 'preview' ? 'bg-primary-500/10 border-primary-500/30 text-primary-300'
                                : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'">
                         {{ step === 'upload' ? 'Langkah 1 · Upload File' : step === 'preview' ? 'Langkah 2 · Preview' : 'Selesai ✓' }}
                     </span>
@@ -168,16 +168,16 @@ function close() {
                     <div class="p-3 rounded-xl bg-gray-800/60 border border-white/5 text-xs text-gray-400">
                         <p class="font-semibold text-gray-300 mb-2">Kolom yang Didukung:</p>
                         <div class="grid grid-cols-2 gap-x-4 gap-y-1">
-                            <div><span class="text-amber-400 font-mono">name</span> — Nama tokoh <span class="text-red-400">*wajib</span></div>
-                            <div><span class="text-amber-400 font-mono">gender</span> — male / female <span class="text-red-400">*wajib</span></div>
-                            <div><span class="text-amber-400 font-mono">parent_name</span> — Nama ayah (kosong = root)</div>
-                            <div><span class="text-amber-400 font-mono">marga</span> — Nama marga</div>
-                            <div><span class="text-amber-400 font-mono">asal_daerah</span> — Asal daerah</div>
-                            <div><span class="text-amber-400 font-mono">tahun_lahir</span> — Tahun lahir</div>
-                            <div><span class="text-amber-400 font-mono">tahun_wafat</span> — Tahun wafat</div>
-                            <div><span class="text-amber-400 font-mono">deskripsi</span> — Keterangan</div>
-                            <div><span class="text-amber-400 font-mono">spouse_names</span> — Nama istri (pisah |)</div>
-                            <div><span class="text-amber-400 font-mono">spouse_margas</span> — Marga istri (pisah |)</div>
+                            <div><span class="text-primary-400 font-mono">name</span> — Nama tokoh <span class="text-red-400">*wajib</span></div>
+                            <div><span class="text-primary-400 font-mono">gender</span> — male / female <span class="text-red-400">*wajib</span></div>
+                            <div><span class="text-primary-400 font-mono">parent_name</span> — Nama ayah (kosong = root)</div>
+                            <div><span class="text-primary-400 font-mono">marga</span> — Nama marga</div>
+                            <div><span class="text-primary-400 font-mono">asal_daerah</span> — Asal daerah</div>
+                            <div><span class="text-primary-400 font-mono">tahun_lahir</span> — Tahun lahir</div>
+                            <div><span class="text-primary-400 font-mono">tahun_wafat</span> — Tahun wafat</div>
+                            <div><span class="text-primary-400 font-mono">deskripsi</span> — Keterangan</div>
+                            <div><span class="text-primary-400 font-mono">spouse_names</span> — Nama istri (pisah |)</div>
+                            <div><span class="text-primary-400 font-mono">spouse_margas</span> — Marga istri (pisah |)</div>
                         </div>
                     </div>
 
@@ -219,8 +219,8 @@ function close() {
                             <div class="text-2xl font-bold text-emerald-400">{{ preview.to_insert.length }}</div>
                             <div class="text-xs text-gray-400 mt-0.5">Siap Diimport</div>
                         </div>
-                        <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
-                            <div class="text-2xl font-bold text-amber-400">{{ preview.skipped.length }}</div>
+                        <div class="p-3 rounded-xl bg-primary-500/10 border border-primary-500/20 text-center">
+                            <div class="text-2xl font-bold text-primary-400">{{ preview.skipped.length }}</div>
                             <div class="text-xs text-gray-400 mt-0.5">Dilewati (Duplikat)</div>
                         </div>
                     </div>
@@ -272,8 +272,8 @@ function close() {
                     </div>
 
                     <!-- Skipped -->
-                    <div v-if="preview.skipped.length > 0" class="p-3 rounded-xl bg-amber-500/5 border border-amber-500/20">
-                        <div class="text-xs font-semibold text-amber-400 mb-2">⏭ {{ preview.skipped.length }} Baris Dilewati (Duplikat):</div>
+                    <div v-if="preview.skipped.length > 0" class="p-3 rounded-xl bg-primary-500/5 border border-primary-500/20">
+                        <div class="text-xs font-semibold text-primary-400 mb-2">⏭ {{ preview.skipped.length }} Baris Dilewati (Duplikat):</div>
                         <div v-for="s in preview.skipped" :key="s.row"
                              class="text-xs text-gray-400 py-0.5">
                             <span class="font-mono text-gray-600">Baris {{ s.row }}:</span> {{ s.reason }}
@@ -297,7 +297,7 @@ function close() {
                         <div class="text-5xl mb-4">🎉</div>
                         <h4 class="text-xl font-bold text-white mb-2">Import Selesai!</h4>
                         <p class="text-emerald-400 font-semibold text-lg">{{ importResult.inserted }} node berhasil diimport</p>
-                        <p class="text-gray-400 text-sm mt-2">Semua node kini berstatus <strong class="text-amber-400">Pending</strong> — silakan ACC di halaman Kelola Node.</p>
+                        <p class="text-gray-400 text-sm mt-2">Semua node kini berstatus <strong class="text-primary-400">Pending</strong> — silakan ACC di halaman Kelola Node.</p>
 
                         <div v-if="importResult.failed?.length > 0"
                              class="mt-6 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-left">

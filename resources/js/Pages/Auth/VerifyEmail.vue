@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 defineProps({
@@ -20,7 +20,7 @@ const submit = () => form.post(route('verification.send'));
             <!-- Card -->
             <div class="bg-gray-900/80 backdrop-blur-md border border-white/10 rounded-2xl p-8 shadow-2xl text-center">
                 <!-- Icon -->
-                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-amber-500/20 to-amber-700/20 border border-amber-500/30 flex items-center justify-center text-4xl">
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary-500/20 to-primary-700/20 border border-primary-500/30 flex items-center justify-center text-4xl">
                     📧
                 </div>
 
@@ -49,7 +49,7 @@ const submit = () => form.post(route('verification.send'));
                     <button
                         type="submit"
                         :disabled="form.processing"
-                        class="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-gray-900 font-bold hover:from-amber-400 hover:to-amber-500 transition-all shadow-lg shadow-amber-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-gray-900 font-bold hover:from-primary-400 hover:to-primary-500 transition-all shadow-lg shadow-primary-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {{ form.processing ? 'Mengirim...' : '🔁 Kirim Ulang Email Verifikasi' }}
                     </button>

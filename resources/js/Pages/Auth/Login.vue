@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import Checkbox from '@/Components/Checkbox.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
@@ -48,7 +48,7 @@ const submit = () => {
                 <input
                     id="email"
                     type="email"
-                    class="w-full px-4 py-2.5 bg-gray-950/60 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                    class="w-full px-4 py-2.5 bg-gray-950/60 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
                     v-model="form.email"
                     placeholder="nama@email.com"
                     required
@@ -63,7 +63,7 @@ const submit = () => {
                 <input
                     id="password"
                     type="password"
-                    class="w-full px-4 py-2.5 bg-gray-950/60 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                    class="w-full px-4 py-2.5 bg-gray-950/60 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
                     v-model="form.password"
                     placeholder="••••••••"
                     required
@@ -77,7 +77,7 @@ const submit = () => {
                     <input
                         type="checkbox"
                         v-model="form.remember"
-                        class="rounded border-white/20 bg-gray-950 text-amber-500 focus:ring-amber-500 focus:ring-offset-gray-900"
+                        class="rounded border-white/20 bg-gray-950 text-primary-500 focus:ring-primary-500 focus:ring-offset-gray-900"
                     />
                     <span class="ms-2 text-xs text-gray-400">Ingat saya</span>
                 </label>
@@ -85,7 +85,7 @@ const submit = () => {
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="text-xs text-gray-400 hover:text-amber-400 transition-colors"
+                    class="text-xs text-gray-400 hover:text-primary-400 transition-colors"
                 >
                     Lupa kata sandi?
                 </Link>
@@ -94,7 +94,7 @@ const submit = () => {
             <div class="pt-2">
                 <button
                     type="submit"
-                    class="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-bold text-sm rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2"
+                    class="w-full py-3 px-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 text-gray-950 font-bold text-sm rounded-xl shadow-lg shadow-primary-500/20 transition-all flex items-center justify-center gap-2"
                     :class="{ 'opacity-50 cursor-not-allowed': form.processing }"
                     :disabled="form.processing"
                 >

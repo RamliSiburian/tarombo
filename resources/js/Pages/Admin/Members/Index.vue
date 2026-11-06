@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref, watch } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
@@ -93,7 +93,7 @@ const cleanPhone = (phone) => {
                         Kelola data pendaftaran anggota, tinjau verifikasi email, dan berikan persetujuan keanggotaan.
                     </p>
                 </div>
-                <div v-if="stats.pending > 0" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold animate-pulse">
+                <div v-if="stats.pending > 0" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-500/10 border border-primary-500/30 text-primary-400 text-xs font-semibold animate-pulse">
                     <span>⚠️</span>
                     <span>{{ stats.pending }} Pendaftaran Menunggu Persetujuan</span>
                 </div>
@@ -106,7 +106,7 @@ const cleanPhone = (phone) => {
                     @click="applyFilter('')"
                     :class="[
                         'p-5 rounded-2xl border text-left transition-all',
-                        currentStatus === '' ? 'bg-amber-500/10 border-amber-500/40 shadow-lg shadow-amber-500/5' : 'bg-gray-900 border-white/5 hover:border-white/20'
+                        currentStatus === '' ? 'bg-primary-500/10 border-primary-500/40 shadow-lg shadow-primary-500/5' : 'bg-gray-900 border-white/5 hover:border-white/20'
                     ]"
                 >
                     <div class="flex items-center justify-between mb-2">
@@ -122,15 +122,15 @@ const cleanPhone = (phone) => {
                     @click="applyFilter('pending')"
                     :class="[
                         'p-5 rounded-2xl border text-left transition-all',
-                        currentStatus === 'pending' ? 'bg-amber-500/15 border-amber-500 shadow-lg shadow-amber-500/10' : 'bg-gray-900 border-white/5 hover:border-amber-500/30'
+                        currentStatus === 'pending' ? 'bg-primary-500/15 border-primary-500 shadow-lg shadow-primary-500/10' : 'bg-gray-900 border-white/5 hover:border-primary-500/30'
                     ]"
                 >
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-amber-400 text-xs font-medium uppercase tracking-wider">Menunggu Persetujuan</span>
+                        <span class="text-primary-400 text-xs font-medium uppercase tracking-wider">Menunggu Persetujuan</span>
                         <span class="text-xl">⏳</span>
                     </div>
-                    <div class="text-3xl font-bold text-amber-400">{{ stats.pending }}</div>
-                    <div class="text-xs text-amber-400/70 mt-1">Perlu ditinjau admin</div>
+                    <div class="text-3xl font-bold text-primary-400">{{ stats.pending }}</div>
+                    <div class="text-xs text-primary-400/70 mt-1">Perlu ditinjau admin</div>
                 </button>
 
                 <!-- Approved -->
@@ -175,7 +175,7 @@ const cleanPhone = (phone) => {
                         v-model="search"
                         type="text"
                         placeholder="Cari nama, marga, email, no HP..."
-                        class="w-full pl-10 pr-4 py-2 bg-gray-950 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"
+                        class="w-full pl-10 pr-4 py-2 bg-gray-950 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary-500/50 transition-colors"
                     />
                 </div>
 
@@ -185,7 +185,7 @@ const cleanPhone = (phone) => {
                         @click="applyFilter('')"
                         :class="[
                             'px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap',
-                            currentStatus === '' ? 'bg-amber-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5'
+                            currentStatus === '' ? 'bg-primary-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5'
                         ]"
                     >
                         Semua ({{ stats.total }})
@@ -194,11 +194,11 @@ const cleanPhone = (phone) => {
                         @click="applyFilter('pending')"
                         :class="[
                             'px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5',
-                            currentStatus === 'pending' ? 'bg-amber-500 text-gray-950 font-bold' : 'text-amber-400/80 hover:text-amber-300 hover:bg-amber-500/10'
+                            currentStatus === 'pending' ? 'bg-primary-500 text-gray-950 font-bold' : 'text-primary-400/80 hover:text-primary-300 hover:bg-primary-500/10'
                         ]"
                     >
                         <span>Menunggu</span>
-                        <span v-if="stats.pending > 0" class="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-400 text-gray-950 font-black">
+                        <span v-if="stats.pending > 0" class="px-1.5 py-0.2 rounded-full text-[10px] bg-primary-400 text-gray-950 font-black">
                             {{ stats.pending }}
                         </span>
                     </button>
@@ -254,12 +254,12 @@ const cleanPhone = (phone) => {
                                 <!-- Anggota -->
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500/20 to-amber-700/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-sm flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500/20 to-primary-700/20 border border-primary-500/30 flex items-center justify-center text-primary-400 font-bold text-sm flex-shrink-0">
                                             {{ member.name?.charAt(0).toUpperCase() }}
                                         </div>
                                         <div>
                                             <div class="font-semibold text-white">{{ member.name }}</div>
-                                            <div v-if="member.marga" class="text-xs text-amber-400 font-medium">
+                                            <div v-if="member.marga" class="text-xs text-primary-400 font-medium">
                                                 Marga {{ member.marga }}
                                             </div>
                                             <div v-else class="text-xs text-gray-600 italic">Tanpa marga</div>
@@ -315,9 +315,9 @@ const cleanPhone = (phone) => {
                                     <!-- Pending -->
                                     <span
                                         v-if="member.membership_status === 'pending'"
-                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/15 border border-amber-500/30 text-amber-400"
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary-500/15 border border-primary-500/30 text-primary-400"
                                     >
-                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                                        <span class="w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></span>
                                         Menunggu Persetujuan
                                     </span>
                                     <!-- Approved -->
@@ -390,7 +390,7 @@ const cleanPhone = (phone) => {
                             :href="link.url || '#'"
                             :class="[
                                 'px-3 py-1.5 rounded-lg text-xs transition-colors',
-                                link.active ? 'bg-amber-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5',
+                                link.active ? 'bg-primary-500 text-gray-950 font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5',
                                 !link.url ? 'opacity-40 cursor-not-allowed pointer-events-none' : ''
                             ]"
                             v-html="link.label"

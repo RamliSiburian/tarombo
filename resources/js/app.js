@@ -1,4 +1,4 @@
-import '../css/app.css';
+﻿import '../css/app.css';
 import './bootstrap';
 
 import { createInertiaApp } from '@inertiajs/vue3';
@@ -26,7 +26,7 @@ createInertiaApp({
             .mount(el);
     },
     progress: {
-        color: '#f59e0b',
+        color: '#BC0202',
         showSpinner: true,
     },
 });

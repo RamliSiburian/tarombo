@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
@@ -239,7 +239,7 @@ onUnmounted(() => {
                 @input="onManualInput"
                 :placeholder="placeholder"
                 :disabled="disabled"
-                class="w-full bg-gray-800 border border-white/10 rounded-xl pl-4 pr-20 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors tracking-wide"
+                class="w-full bg-gray-800 border border-white/10 rounded-xl pl-4 pr-20 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-primary-500/50 transition-colors tracking-wide"
                 @focus="isOpen = true"
             />
 
@@ -257,7 +257,7 @@ onUnmounted(() => {
                 <button
                     type="button"
                     @click="toggleOpen"
-                    class="p-1.5 text-amber-400 hover:text-amber-300 transition-colors rounded-lg hover:bg-amber-500/10 active:scale-95"
+                    class="p-1.5 text-primary-400 hover:text-primary-300 transition-colors rounded-lg hover:bg-primary-500/10 active:scale-95"
                     title="Buka Kalender"
                 >
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -278,7 +278,7 @@ onUnmounted(() => {
         >
             <div
                 v-if="isOpen"
-                class="absolute left-0 mt-2 z-50 w-72 sm:w-80 bg-gray-900 border border-amber-500/30 rounded-2xl p-4 shadow-2xl shadow-black/80 backdrop-blur-xl"
+                class="absolute left-0 mt-2 z-50 w-72 sm:w-80 bg-gray-900 border border-primary-500/30 rounded-2xl p-4 shadow-2xl shadow-black/80 backdrop-blur-xl"
             >
                 <!-- Header: Month & Year Selector -->
                 <div class="flex items-center justify-between gap-1 mb-3 pb-3 border-b border-white/10">
@@ -297,7 +297,7 @@ onUnmounted(() => {
                         <!-- Month Dropdown -->
                         <select
                             v-model="viewMonth"
-                            class="bg-gray-800 border border-white/10 rounded-lg px-2 py-1 text-white text-xs font-semibold focus:outline-none focus:border-amber-500/50 cursor-pointer"
+                            class="bg-gray-800 border border-white/10 rounded-lg px-2 py-1 text-white text-xs font-semibold focus:outline-none focus:border-primary-500/50 cursor-pointer"
                         >
                             <option v-for="(name, idx) in monthNames" :key="idx" :value="idx + 1">
                                 {{ name }}
@@ -310,7 +310,7 @@ onUnmounted(() => {
                             type="number"
                             min="1000"
                             max="2100"
-                            class="w-20 bg-gray-800 border border-white/10 rounded-lg px-2 py-1 text-white text-xs font-semibold text-center focus:outline-none focus:border-amber-500/50"
+                            class="w-20 bg-gray-800 border border-white/10 rounded-lg px-2 py-1 text-white text-xs font-semibold text-center focus:outline-none focus:border-primary-500/50"
                         />
                     </div>
 
@@ -344,9 +344,9 @@ onUnmounted(() => {
                             'h-8 w-8 mx-auto flex items-center justify-center rounded-lg text-xs transition-all font-medium',
                             !item.isCurrentMonth ? 'text-gray-600 hover:text-gray-400' : 'text-gray-200',
                             item.isSelected
-                                ? 'bg-amber-500 text-gray-950 font-bold shadow-md shadow-amber-500/20 scale-105'
+                                ? 'bg-primary-500 text-gray-950 font-bold shadow-md shadow-primary-500/20 scale-105'
                                 : 'hover:bg-white/10',
-                            item.isToday && !item.isSelected ? 'border border-amber-500/50 text-amber-300 font-bold' : ''
+                            item.isToday && !item.isSelected ? 'border border-primary-500/50 text-primary-300 font-bold' : ''
                         ]"
                     >
                         {{ item.day }}
@@ -358,7 +358,7 @@ onUnmounted(() => {
                     <button
                         type="button"
                         @click="setToday"
-                        class="text-amber-400 hover:text-amber-300 font-medium px-2 py-1 rounded hover:bg-amber-500/10 transition-colors"
+                        class="text-primary-400 hover:text-primary-300 font-medium px-2 py-1 rounded hover:bg-primary-500/10 transition-colors"
                     >
                         Hari Ini
                     </button>

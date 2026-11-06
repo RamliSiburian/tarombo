@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { computed } from 'vue';
 
 const props = defineProps({
@@ -38,7 +38,7 @@ const cleanDeskripsi = computed(() => {
             <div class="flex items-start justify-between p-5 border-b border-white/10">
                 <div class="flex-1 min-w-0 pr-4">
                     <h2 class="text-white font-bold text-lg leading-tight truncate">{{ node.name }}</h2>
-                    <p v-if="node.marga" class="text-amber-400 text-sm mt-0.5 font-medium">Marga {{ node.marga }}</p>
+                    <p v-if="node.marga" class="text-primary-400 text-sm mt-0.5 font-medium">Marga {{ node.marga }}</p>
                 </div>
                 <button @click="emit('close')" class="text-gray-500 hover:text-white transition-colors flex-shrink-0 mt-1">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,7 +186,7 @@ const cleanDeskripsi = computed(() => {
             <!-- Footer -->
             <div class="p-4 border-t border-white/10 space-y-2">
                 <button @click="emit('exportLineage')"
-                        class="w-full py-2.5 px-4 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 font-semibold text-xs rounded-xl flex items-center justify-center gap-2 transition-colors">
+                        class="w-full py-2.5 px-4 bg-primary-500/10 hover:bg-primary-500/20 border border-primary-500/30 text-primary-300 font-semibold text-xs rounded-xl flex items-center justify-center gap-2 transition-colors">
                     <span>📥 Export Garis Leluhur Node Ini</span>
                 </button>
                 <p class="text-gray-600 text-[11px] text-center">Klik di luar panel atau tekan × untuk menutup</p>

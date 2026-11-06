@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref, computed, watch } from 'vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
@@ -154,7 +154,7 @@ const submit = () => {
                     <div>
                         <label class="block text-gray-400 text-sm mb-1.5">Parent (Orang Tua / Induk)</label>
                         <select v-model="form.parent_id"
-                                class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors">
+                                class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500/50 transition-colors">
                             <option value="">— Tidak ada (root) —</option>
                             <option v-for="p in parents" :key="p.id" :value="p.id">
                                 {{ p.name }} {{ p.marga ? `(${p.marga})` : '' }} — Gen {{ p.level + 1 }}
@@ -214,7 +214,7 @@ const submit = () => {
                         </div>
 
                         <!-- If parent has NO spouses -->
-                        <div v-else class="text-xs text-amber-300/90 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 leading-relaxed">
+                        <div v-else class="text-xs text-primary-300/90 bg-primary-500/10 border border-primary-500/20 rounded-lg p-3 leading-relaxed">
                             ⚠️ <strong>{{ selectedParent?.name }}</strong> belum memiliki data istri di silsilah.
                             Untuk menetapkan ibu kandung, silakan tambahkan data istri pada node <strong>{{ selectedParent?.name }}</strong> terlebih dahulu.
                         </div>
@@ -251,7 +251,7 @@ const submit = () => {
                     <div>
                         <label class="block text-gray-400 text-sm mb-1.5">Nama <span class="text-red-400">*</span></label>
                         <input v-model="form.name" type="text" required placeholder="Nama lengkap"
-                               class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                               class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-primary-500/50 transition-colors"/>
                         <div v-if="form.errors.name" class="text-red-400 text-xs mt-1">{{ form.errors.name }}</div>
                     </div>
 
@@ -260,7 +260,7 @@ const submit = () => {
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">Gender <span class="text-red-400">*</span></label>
                             <select v-model="form.gender"
-                                    class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors">
+                                    class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500/50 transition-colors">
                                 <option value="male">♂ Laki-laki</option>
                                 <option value="female">♀ Perempuan</option>
                             </select>
@@ -268,7 +268,7 @@ const submit = () => {
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">Status</label>
                             <select v-model="form.status"
-                                    class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors">
+                                    class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500/50 transition-colors">
                                 <option value="active">✅ Aktif</option>
                                 <option value="pending">⏳ Pending</option>
                             </select>
@@ -276,7 +276,7 @@ const submit = () => {
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">Urutan Posisi (Sort Order)</label>
                             <input v-model="form.sort_order" type="number" min="1" required
-                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500/50 transition-colors"/>
                         </div>
                     </div>
 
@@ -285,12 +285,12 @@ const submit = () => {
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">Marga</label>
                             <input v-model="form.marga" type="text" placeholder="Marga"
-                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-primary-500/50 transition-colors"/>
                         </div>
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">Asal Daerah</label>
                             <input v-model="form.asal_daerah" type="text" placeholder="Asal daerah"
-                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-primary-500/50 transition-colors"/>
                         </div>
                     </div>
 
@@ -299,7 +299,7 @@ const submit = () => {
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5 flex items-center justify-between">
                                 <span>Tanggal / Tahun Lahir</span>
-                                <span class="text-[11px] text-amber-400/90 font-mono">MM/DD/YYYY</span>
+                                <span class="text-[11px] text-primary-400/90 font-mono">MM/DD/YYYY</span>
                             </label>
                             <DatePicker v-model="form.tahun_lahir" placeholder="MM/DD/YYYY" />
                             <div v-if="form.errors.tahun_lahir" class="text-red-400 text-xs mt-1">{{ form.errors.tahun_lahir }}</div>
@@ -327,7 +327,7 @@ const submit = () => {
                                 <img v-if="fotoPreview" :src="fotoPreview" class="w-full h-full object-cover"/>
                                 <span v-else class="text-2xl">{{ form.gender === 'female' ? '👩' : '👨' }}</span>
                             </div>
-                            <label class="flex-1 cursor-pointer border-2 border-dashed border-white/10 hover:border-amber-500/30 rounded-xl px-4 py-3 text-center transition-colors">
+                            <label class="flex-1 cursor-pointer border-2 border-dashed border-white/10 hover:border-primary-500/30 rounded-xl px-4 py-3 text-center transition-colors">
                                 <div class="text-gray-400 text-sm">Klik untuk upload / ganti foto</div>
                                 <div class="text-gray-600 text-xs mt-0.5">JPG, PNG, WebP maks 2MB</div>
                                 <input type="file" class="hidden" accept="image/*" @change="onFotoChange"/>
@@ -339,7 +339,7 @@ const submit = () => {
                     <div>
                         <label class="block text-gray-400 text-sm mb-1.5">Deskripsi / Riwayat Tambahan</label>
                         <textarea v-model="form.deskripsi" rows="3" placeholder="Keterangan singkat..."
-                                  class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors resize-none"></textarea>
+                                  class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-primary-500/50 transition-colors resize-none"></textarea>
                         <p class="text-[11px] text-gray-500 mt-1">Catatan: Data Ibu Kandung yang dipilih di atas akan otomatis disinkronkan ke profil dan deskripsi silsilah.</p>
                     </div>
                 </div>
@@ -406,7 +406,7 @@ const submit = () => {
                         Batal
                     </Link>
                     <button type="submit" :disabled="form.processing"
-                            class="flex-1 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-gray-900 font-semibold rounded-xl py-3 text-sm transition-all flex items-center justify-center gap-2">
+                            class="flex-1 bg-primary-500 hover:bg-primary-400 disabled:opacity-50 text-gray-900 font-semibold rounded-xl py-3 text-sm transition-all flex items-center justify-center gap-2">
                         <span v-if="form.processing" class="w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full animate-spin"></span>
                         {{ form.processing ? 'Menyimpan...' : (isEdit ? '✓ Update Node' : '✓ Simpan Node') }}
                     </button>
