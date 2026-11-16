@@ -68,6 +68,7 @@ class NodeController extends Controller
             'deskripsi'        => 'nullable|string|max:1000',
             'status'           => 'required|in:active,pending',
             'sort_order'       => 'nullable|integer|min:1',
+            'order_confirmed'  => 'nullable|boolean',
             'reparent_children'   => 'nullable|array',
             'reparent_children.*' => 'exists:nodes,id',
             // Spouses
@@ -183,6 +184,7 @@ class NodeController extends Controller
             'deskripsi'        => 'nullable|string|max:1000',
             'status'           => 'required|in:active,pending',
             'sort_order'       => 'nullable|integer|min:1',
+            'order_confirmed'  => 'nullable|boolean',
             'spouses'          => 'nullable|array',
             'spouses.*.name'      => 'required|string|max:255',
             'spouses.*.marga'     => 'nullable|string|max:100',

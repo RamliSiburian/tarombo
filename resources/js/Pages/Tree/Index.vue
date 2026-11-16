@@ -40,6 +40,14 @@ const closePanel = () => {
     searchHighlightId.value = null;
     treeRef.value?.resetView();
 };
+
+const handleSelectNode = async (targetNode) => {
+    if (!targetNode?.id) return;
+    if (treeRef.value) {
+        await treeRef.value.selectNode(targetNode);
+        treeRef.value.centerOnNode(targetNode.id);
+    }
+};
 </script>
 
 <template>
@@ -84,7 +92,7 @@ const closePanel = () => {
                 >
                     <div v-if="panelOpen"
                          class="absolute right-4 top-4 bottom-4 w-[340px] md:w-[360px] bg-gray-900/95 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden shadow-2xl z-30">
-                        <NodeDetail :node="selectedNode" @close="closePanel" @export-lineage="showExportModal = true" />
+                        <NodeDetail :node="selectedNode" @close="closePanel" @export-lineage="showExportModal = true" @select-node="handleSelectNode" />
                     </div>
                 </transition>
             </div>

@@ -22,13 +22,56 @@ class Node extends Model
         'status',
         'level',
         'sort_order',
+        'order_confirmed',
     ];
 
     protected $casts = [
-        'level' => 'integer',
-        'sort_order' => 'integer',
-        'mother_spouse_id' => 'integer',
+        'level'           => 'integer',
+        'sort_order'      => 'integer',
+        'mother_spouse_id'=> 'integer',
+        'order_confirmed' => 'boolean',
     ];
+
+    protected $appends = ['has_sibling_conflict', 'conflicting_siblings'];
+
+    protected ?array $cachedConflictingSiblings = null;
+
+    /**
+     * Sibling nodes that share the exact same sort_order and have unconfirmed order
+     */
+    public function getConflictingSiblingsAttribute(): array
+    {
+        if (!$this->parent_id || $this->order_confirmed) {
+            return [];
+        }
+
+        if ($this->cachedConflictingSiblings !== null) {
+            return $this->cachedConflictingSiblings;
+        }
+
+        return $this->cachedConflictingSiblings = static::where('parent_id', $this->parent_id)
+            ->where('id', '!=', $this->id)
+            ->where('sort_order', $this->sort_order)
+            ->where('status', 'active')
+            ->orderBy('id', 'asc')
+            ->get(['id', 'name', 'marga', 'sort_order', 'order_confirmed', 'gender'])
+            ->toArray();
+    }
+
+    /**
+     * A node has a sibling conflict when:
+     *  - It has a parent (is not root)
+     *  - Its order is NOT yet confirmed by admin
+     *  - Another active sibling shares the same sort_order
+     */
+    public function getHasSiblingConflictAttribute(): bool
+    {
+        if (!$this->parent_id || $this->order_confirmed) {
+            return false;
+        }
+
+        return count($this->conflicting_siblings) > 0;
+    }
 
     // Relationships
     public function parent(): BelongsTo

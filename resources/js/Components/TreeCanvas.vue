@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import * as d3 from 'd3';
 import axios from 'axios';
@@ -271,12 +271,50 @@ function buildTree() {
         })
         .attr('stroke', d => {
             if (d.data.status === 'pending') return '#64748b';
+            if (d.data.has_sibling_conflict) return '#f59e0b'; // orange = conflict
             return d.data.gender === 'female' ? '#f472b6' : '#6366f1';
         })
-        .attr('stroke-width', d => d.data.status === 'pending' ? 1.5 : 1)
-        .attr('stroke-dasharray', d => d.data.status === 'pending' ? '4 4' : 'none')
+        .attr('stroke-width', d => {
+            if (d.data.status === 'pending') return 1.5;
+            if (d.data.has_sibling_conflict) return 2;
+            return 1;
+        })
+        .attr('stroke-dasharray', d => {
+            if (d.data.status === 'pending') return '4 4';
+            if (d.data.has_sibling_conflict) return '5 3'; // dashed orange for conflict
+            return 'none';
+        })
         .attr('opacity', d => d.data.status === 'pending' ? 0.6 : 1)
         .style('filter', d => d.data.status === 'pending' ? 'none' : 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))');
+
+    // ⚠️ Conflict badge (top-left of card) for sibling order conflicts
+    nodeEnter.filter(d => d.data.has_sibling_conflict && d.data.status !== 'pending')
+        .append('g')
+        .attr('class', 'conflict-badge')
+        .attr('transform', `translate(${-NODE_WIDTH / 2 + 2}, ${-NODE_HEIGHT / 2 - 8})`)
+        .each(function() {
+            const g = d3.select(this);
+            // badge pill background
+            g.append('rect')
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('width', 110)
+                .attr('height', 16)
+                .attr('rx', 8)
+                .attr('fill', '#78350f')
+                .attr('stroke', '#f59e0b')
+                .attr('stroke-width', 1);
+            // badge text
+            g.append('text')
+                .attr('x', 55)
+                .attr('y', 11)
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#fcd34d')
+                .attr('font-size', '9px')
+                .attr('font-weight', '700')
+                .attr('font-family', 'Inter, sans-serif')
+                .text('⚠ Urutan Belum Pasti');
+        });
 
     // Gender indicator dot
     nodeEnter.append('circle')
@@ -448,7 +486,7 @@ function getHighlightedIds() {
     return highlightedIds.value;
 }
 
-defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, getSvgElement, getHighlightedIds });
+defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, selectNode: onNodeClick, getSvgElement, getHighlightedIds });
 </script>
 
 <template>
@@ -521,6 +559,10 @@ defineExpose({ zoomIn, zoomOut, resetView, centerOnNode, getSvgElement, getHighl
             <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-primary-400 shadow-sm shadow-primary-400/50"></div>
                 <span class="text-gray-300 text-[11px]">Node terpilih</span>
+            </div>
+            <div class="flex items-center gap-2 pt-1 border-t border-white/10 mt-0.5">
+                <div class="w-3 h-3 rounded border-2 border-dashed border-yellow-500 bg-yellow-900/40 flex-shrink-0"></div>
+                <span class="text-yellow-300/90 text-[11px]">⚠ Urutan saudara belum pasti</span>
             </div>
         </div>
 

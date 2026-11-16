@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { ref, computed, watch } from 'vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
@@ -67,6 +67,7 @@ const form = useForm({
     deskripsi:        extractCleanDeskripsi(props.node?.deskripsi),
     status:           props.node?.status           || 'active',
     sort_order:       props.node?.sort_order       || 1,
+    order_confirmed:  props.node?.order_confirmed  ?? false,
     reparent_children: [],
     spouses: props.node?.spouses?.map(s => ({
         name: s.name,
@@ -274,9 +275,48 @@ const submit = () => {
                             </select>
                         </div>
                         <div>
-                            <label class="block text-gray-400 text-sm mb-1.5">Urutan Posisi (Sort Order)</label>
+                            <label class="block text-gray-400 text-sm mb-1.5">Urutan Kelahiran (Anak ke-)</label>
+                            <!-- Conflict warning -->
+                            <div v-if="props.node?.has_sibling_conflict"
+                                 class="mb-2 flex items-start gap-2 bg-yellow-500/10 border border-yellow-500/30 rounded-xl px-3 py-2.5">
+                                <span class="text-yellow-400 text-base flex-shrink-0 mt-0.5">⚠️</span>
+                                <div>
+                                    <div class="text-yellow-300 text-xs font-semibold">Konflik Urutan Terdeteksi</div>
+                                    <p class="text-yellow-200/70 text-[11px] mt-0.5 leading-relaxed">
+                                        Ada saudara kandung lain dengan urutan <strong>Anak ke-{{ props.node?.sort_order }}</strong> yang sama:
+                                    </p>
+                                    <div v-if="props.node?.conflicting_siblings?.length" class="mt-2 space-y-1">
+                                        <div v-for="sib in props.node.conflicting_siblings" :key="sib.id" 
+                                             class="text-[11px] bg-yellow-500/10 border border-yellow-500/20 rounded-lg px-2.5 py-1.5 flex items-center justify-between text-yellow-200">
+                                            <span>
+                                                <strong class="text-white">{{ sib.name }}</strong>
+                                                <span v-if="sib.marga" class="text-yellow-300/70"> (Marga {{ sib.marga }})</span>
+                                            </span>
+                                            <span class="text-[10px] bg-yellow-500/20 px-2 py-0.5 rounded font-bold">
+                                                Anak ke-{{ sib.sort_order }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p class="text-yellow-200/60 text-[10px] mt-2 italic">
+                                        Perbaiki nomor urutan dan centang <em>Konfirmasi</em> untuk menyelesaikan konflik ini.
+                                    </p>
+                                </div>
+                            </div>
                             <input v-model="form.sort_order" type="number" min="1" required
-                                   class="w-full bg-gray-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500/50 transition-colors"/>
+                                   :class="[
+                                       'w-full bg-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none transition-colors',
+                                       props.node?.has_sibling_conflict && !form.order_confirmed
+                                           ? 'border border-yellow-500/50 focus:border-yellow-400/70'
+                                           : 'border border-white/10 focus:border-primary-500/50'
+                                   ]"/>
+                            <!-- Confirm checkbox -->
+                            <label class="mt-2 flex items-center gap-2.5 cursor-pointer group">
+                                <input type="checkbox" v-model="form.order_confirmed"
+                                       class="w-4 h-4 rounded bg-gray-800 border-white/20 text-primary-500 focus:ring-primary-500 cursor-pointer"/>
+                                <span class="text-xs text-gray-400 group-hover:text-gray-200 transition-colors">
+                                    ✅ Konfirmasi urutan ini sudah benar
+                                </span>
+                            </label>
                         </div>
                     </div>
 

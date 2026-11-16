@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
@@ -6,6 +6,7 @@ const props = defineProps({
     stats: Object,
     recentRequests: Array,
     recentArticles: Array,
+    conflictNodes: { type: Array, default: () => [] },
 });
 
 const statusLabel = (s) => ({ pending: 'Menunggu', accepted: 'Disetujui', rejected: 'Ditolak' }[s]);
@@ -85,6 +86,58 @@ const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: '2-
                       class="mt-3 block text-center bg-primary-500/15 hover:bg-primary-500/25 border border-primary-500/30 text-primary-400 text-xs rounded-lg py-1.5 transition-colors">
                     Tinjau Request →
                 </Link>
+            </div>
+
+            <!-- Conflict Stats Card -->
+            <div :class="['bg-gray-900 border rounded-2xl p-5 shadow-xl', stats.conflict_nodes > 0 ? 'border-yellow-500/40' : 'border-white/5']">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-3xl">⚠️</span>
+                    <span v-if="stats.conflict_nodes > 0" class="text-xs text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 px-2 py-1 rounded-full animate-pulse">
+                        Perlu Diselesaikan
+                    </span>
+                </div>
+                <div :class="['text-3xl font-bold', stats.conflict_nodes > 0 ? 'text-yellow-400' : 'text-white']">
+                    {{ stats.conflict_nodes ?? 0 }}
+                </div>
+                <div class="text-gray-400 text-sm mt-1">Konflik Urutan Saudara</div>
+                <Link v-if="stats.conflict_nodes > 0" :href="route('admin.nodes.index')"
+                      class="mt-3 block text-center bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 text-xs rounded-lg py-1.5 transition-colors">
+                    Selesaikan Konflik →
+                </Link>
+                <div v-else class="mt-3 text-xs text-gray-600 text-center">Semua urutan sudah benar ✓</div>
+            </div>
+        </div>
+        <!-- ⚠️ Conflict Resolution Panel -->
+        <div v-if="conflictNodes && conflictNodes.length > 0" class="mb-8 bg-yellow-950/30 border border-yellow-500/30 rounded-2xl overflow-hidden shadow-xl">
+            <div class="flex items-center gap-3 px-5 py-4 border-b border-yellow-500/20 bg-yellow-500/5">
+                <span class="text-xl">⚠️</span>
+                <div>
+                    <div class="text-yellow-300 font-semibold text-sm">Konflik Urutan Kelahiran Terdeteksi</div>
+                    <p class="text-yellow-200/60 text-xs mt-0.5">
+                        Node berikut memiliki urutan anak yang sama dengan saudaranya. Silakan perbaiki nomor urutan dan centang "Konfirmasi" di form edit.
+                    </p>
+                </div>
+            </div>
+            <div class="divide-y divide-yellow-500/10">
+                <div v-for="node in conflictNodes" :key="node.id"
+                     class="flex items-center justify-between px-5 py-3 hover:bg-yellow-500/5 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="text-yellow-500 text-sm">⚠</span>
+                        <div>
+                            <span class="text-white text-sm font-medium">{{ node.name }}</span>
+                            <span v-if="node.marga" class="text-gray-400 text-xs ml-2">Marga {{ node.marga }}</span>
+                            <div class="text-yellow-200/60 text-xs mt-0.5">
+                                Mengklaim <strong class="text-yellow-300">Anak ke-{{ node.sort_order }}</strong>
+                                <span v-if="node.parent"> dari <span class="text-gray-300">{{ node.parent.name }}</span></span>
+                                — sama dengan saudara lain
+                            </div>
+                        </div>
+                    </div>
+                    <Link :href="route('admin.nodes.edit', node.id)"
+                          class="flex-shrink-0 text-xs bg-yellow-500/15 hover:bg-yellow-500/25 text-yellow-300 border border-yellow-500/30 px-3 py-1.5 rounded-lg transition-colors">
+                        Edit & Perbaiki →
+                    </Link>
+                </div>
             </div>
         </div>
 

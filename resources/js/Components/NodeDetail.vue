@@ -1,11 +1,11 @@
-﻿<script setup>
+<script setup>
 import { computed } from 'vue';
 
 const props = defineProps({
     node: { type: Object, default: null },
 });
 
-const emit = defineEmits(['close', 'exportLineage']);
+const emit = defineEmits(['close', 'exportLineage', 'selectNode']);
 
 const formatYear = (year) => year || '—';
 const genderLabel = (gender) => gender === 'female' ? '♀ Perempuan' : '♂ Laki-laki';
@@ -57,9 +57,93 @@ const cleanDeskripsi = computed(() => {
                     <span class="text-5xl">{{ node.gender === 'female' ? '👩' : '👨' }}</span>
                 </div>
 
-                <!-- Gender badge -->
-                <div :class="['inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full border', genderClass(node.gender)]">
-                    {{ genderLabel(node.gender) }}
+                <!-- Badges row -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <!-- Gender badge -->
+                    <div :class="['inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full border', genderClass(node.gender)]">
+                        {{ genderLabel(node.gender) }}
+                    </div>
+
+                    <!-- Birth order badge -->
+                    <div v-if="node.level > 0" 
+                         :class="[
+                            'inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full border',
+                            node.has_sibling_conflict
+                                ? 'bg-amber-500/15 border-amber-500/30 text-amber-300'
+                                : 'bg-white/5 border-white/10 text-gray-300'
+                         ]">
+                        <span v-if="node.has_sibling_conflict">⚠️</span>
+                        <span>Anak ke-{{ node.sort_order || 1 }}</span>
+                    </div>
+
+                    <!-- Conflict status indicator -->
+                    <div v-if="node.has_sibling_conflict"
+                         class="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        <span>Urutan Tabrakan</span>
+                    </div>
+                </div>
+
+                <!-- ⚠️ Conflict Urutan Kelahiran Section -->
+                <div v-if="node.has_sibling_conflict"
+                     class="bg-gradient-to-br from-amber-950/50 to-yellow-950/30 border border-amber-500/40 rounded-xl p-3.5 space-y-3 shadow-xl shadow-amber-950/20">
+                    <div class="flex items-start gap-2.5">
+                        <span class="text-amber-400 text-lg flex-shrink-0 mt-0.5">⚠️</span>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2">
+                                <h4 class="text-amber-300 font-bold text-xs uppercase tracking-wider">
+                                    Urutan Belum Pasti
+                                </h4>
+                                <span class="text-[10px] bg-amber-500/25 text-amber-200 font-bold px-2 py-0.5 rounded-full border border-amber-500/30 flex-shrink-0">
+                                    Urutan Anak ke-{{ node.sort_order || 1 }}
+                                </span>
+                            </div>
+                            <p class="text-amber-200/90 text-xs mt-1.5 leading-relaxed">
+                                Node ini tercatat pada urutan <strong class="text-white font-bold underline decoration-amber-400">Anak ke-{{ node.sort_order || 1 }}</strong>, namun urutan ini <span class="text-amber-300 font-semibold">tabrakan / sama</span> dengan saudaranya:
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Daftar Saudara yang Urutannya Sama -->
+                    <div class="space-y-1.5 pt-2 border-t border-amber-500/20">
+                        <div class="text-[11px] text-amber-300/80 font-medium flex items-center justify-between">
+                            <span>Saudara dengan urutan ke-{{ node.sort_order || 1 }} yang sama:</span>
+                            <span v-if="node.conflicting_siblings?.length" class="text-[10px] text-amber-400/90 font-semibold">
+                                {{ node.conflicting_siblings.length }} Orang
+                            </span>
+                        </div>
+
+                        <div v-if="node.conflicting_siblings && node.conflicting_siblings.length > 0" class="space-y-1.5">
+                            <div v-for="sibling in node.conflicting_siblings" :key="sibling.id"
+                                 @click="emit('selectNode', sibling)"
+                                 class="flex items-center justify-between bg-black/40 hover:bg-amber-500/15 border border-amber-500/20 hover:border-amber-500/40 rounded-lg p-2.5 transition-all cursor-pointer group"
+                                 title="Klik untuk melihat node ini di pohon silsilah">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <span class="text-base flex-shrink-0">{{ sibling.gender === 'female' ? '👩' : '👨' }}</span>
+                                    <div class="min-w-0">
+                                        <div class="text-white text-xs font-bold truncate group-hover:text-amber-200 transition-colors">
+                                            {{ sibling.name }}
+                                        </div>
+                                        <div class="text-[10px] text-amber-300/70 truncate">
+                                            <span v-if="sibling.marga">Marga {{ sibling.marga }} • </span>
+                                            <span>Sama-sama tercatat sebagai Anak ke-{{ sibling.sort_order }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-1 text-amber-400 text-xs font-semibold group-hover:translate-x-0.5 transition-transform flex-shrink-0 ml-2">
+                                    <span>Lihat</span>
+                                    <span>→</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-else class="text-[11px] text-amber-300/70 italic bg-black/20 rounded-lg p-2">
+                            Tidak ada saudara konflik lainnya.
+                        </div>
+                    </div>
+
+                    <div class="text-[10px] text-amber-300/60 italic leading-snug pt-0.5">
+                        💡 Nomor urut akan dipastikan setelah disetujui oleh admin punguan berdasarkan bukti tarombo yang valid.
+                    </div>
                 </div>
 
                 <!-- Info grid -->
